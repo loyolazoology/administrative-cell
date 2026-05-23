@@ -1,0 +1,5 @@
+# GitHub Pages Jekyll configuration
+markdown: kramdown
+theme: null
+plugins: []
+exclude: ['.git', '.gitignore', 'README.md']
