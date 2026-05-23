@@ -338,7 +338,19 @@ tbody tr:hover td{background:rgba(123,29,46,.015)}
 </style>
 </head>
 <body>
-
+<script>
+// Redirect to login if no session AND not in local development
+if (typeof sessionStorage !== 'undefined') {
+  const stored = sessionStorage.getItem('azb_user');
+  if (!stored && window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1')) {
+    // On GitHub Pages, check if parameters exist
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('dev')) {
+      window.location.href = 'login.html';
+    }
+  }
+}
+</script>
 <div id="gloader"><div class="lring"></div><span id="gmsg">Loading system…</span></div>
 <div id="toast-area"></div>
 
@@ -677,7 +689,6 @@ tbody tr:hover td{background:rgba(123,29,46,.015)}
 </div><!-- app -->
 
 <!-- ══════════════════════ MODALS ══════════════════════ -->
-
 <!-- Student Modal -->
 <div class="modal-ov hidden" id="m-student">
   <div class="modal-box lg">
@@ -685,6 +696,7 @@ tbody tr:hover td{background:rgba(123,29,46,.015)}
     <div class="modal-bd">
       <div class="g3">
         <div class="f"><label>Full Name *</label><input id="ms-name" type="text"></div>
+        <div class="f"><label>Department Number</label><input id="ms-deptno" type="text" placeholder="e.g. 25-001"></div>
         <div class="f"><label>Date of Birth</label><input id="ms-dob" type="date"></div>
         <div class="f"><label>Contact No.</label><input id="ms-con" type="tel"></div>
         <div class="f span2"><label>Address</label><input id="ms-addr" type="text" placeholder="Door no., Street, City – PIN"></div>
@@ -854,6 +866,30 @@ tbody tr:hover td{background:rgba(123,29,46,.015)}
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
 
+// Add retry logic to api() function
+async function api(action, payload) {
+  const params = new URLSearchParams({ action, payload: JSON.stringify(payload || {}) });
+  try {
+    const r = await fetch(GAS_URL + '?' + params, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!r.ok) {
+      if (r.status === 401) {
+        sessionStorage.removeItem('azb_user');
+        window.location.href = 'login.html';
+        return { ok: false, error: 'Unauthorized' };
+      }
+      throw new Error('HTTP ' + r.status);
+    }
+    return r.json();
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+}
 // ── AUTH CHECK ──
 const CU = (() => { try { return JSON.parse(sessionStorage.getItem('azb_user')); } catch { return null; } })();
 if (!CU || CU.role !== 'admin') window.location.href = 'login.html';
@@ -1206,7 +1242,7 @@ function renderStTable() {
   let d=[...ALL_STUDENTS];
   const q=(document.getElementById('s-q')?.value||'').toLowerCase();
   const cf=document.getElementById('s-fcls')?.value||'', af=document.getElementById('s-fay')?.value||'', sta=document.getElementById('s-factive')?.value||'';
-  if(q)   d=d.filter(s=>(s.Name||'').toLowerCase().includes(q)||(s.Batch||'').toLowerCase().includes(q));
+  if(q)   d=d.filter(s=>(s.Name||'').toLowerCase().includes(q)||(s.Batch||'').toLowerCase().includes(q)||(s.DeptNo||'').toLowerCase().includes(q));
   if(cf)  d=d.filter(s=>s.Class===cf);
   if(af)  d=d.filter(s=>s.AcademicYear===af);
   if(sta) d=d.filter(s=>s.Active===sta);
@@ -1216,6 +1252,7 @@ function renderStTable() {
   if(count) count.textContent=`Showing ${d.length} student${d.length!==1?'s':''}`;
   tbody.innerHTML=d.map(s=>`<tr>
     <td><strong>${esc(s.Name)}</strong></td>
+    <td style="font-size:11.5px">${esc(s.DeptNo||'—')}</td>
     <td style="font-size:11.5px">${esc(s.Batch||'—')}</td>
     <td style="font-size:11.5px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.Class)}</td>
     <td>${esc(s.Semester||'—')}</td><td>${esc(s.Shift||'—')}</td><td>${esc(s.Section||'—')}</td>
@@ -1231,7 +1268,7 @@ function filterSt(){renderStTable();}
 
 function openAddSt() {
   EDIT_ST=null; document.getElementById('m-st-t').textContent='Add Student';
-  ['ms-name','ms-dob','ms-con','ms-addr','ms-email','ms-fa','ms-mo','ms-pc','ms-batch','ms-sec'].forEach(id=>sv(id,''));
+  ['ms-name','ms-deptno','ms-dob','ms-con','ms-addr','ms-email','ms-fa','ms-mo','ms-pc','ms-batch','ms-sec'].forEach(id=>sv(id,''));
   sv('ms-cls',''); sv('ms-sem',''); sv('ms-shift',''); sv('ms-active','TRUE');
   const ay=ALL_AY.find(a=>a.Active==='TRUE'); if(ay) sv('ms-ay',ay.Label);
   openM('m-student');
@@ -1239,7 +1276,7 @@ function openAddSt() {
 function editSt(id) {
   const s=ALL_STUDENTS.find(x=>x.ID===id); if(!s) return; EDIT_ST=id;
   document.getElementById('m-st-t').textContent='Edit Student';
-  sv('ms-name',s.Name); sv('ms-dob',s.DOB); sv('ms-con',s.Contact); sv('ms-addr',s.Address);
+  sv('ms-name',s.Name); sv('ms-deptno',s.DeptNo); sv('ms-dob',s.DOB); sv('ms-con',s.Contact); sv('ms-addr',s.Address);
   sv('ms-email',s.Email); sv('ms-fa',s.Father); sv('ms-mo',s.Mother); sv('ms-pc',s.ParentContact);
   sv('ms-cls',s.Class); sv('ms-batch',s.Batch); sv('ms-ay',s.AcademicYear);
   sv('ms-sem',s.Semester); sv('ms-shift',s.Shift); sv('ms-sec',s.Section);
@@ -1249,7 +1286,7 @@ async function saveSt() {
   const name=v('ms-name'), cls=v('ms-cls'), ay=v('ms-ay');
   if(!name||!cls||!ay){toast('Name, Class and Academic Year required.','err');return;}
   loader('Saving student…');
-  const r=await api('saveStudent',{id:EDIT_ST,name,dob:v('ms-dob'),address:v('ms-addr'),cls,batch:v('ms-batch'),semester:v('ms-sem'),shift:v('ms-shift'),section:v('ms-sec'),ay,contact:v('ms-con'),email:v('ms-email'),father:v('ms-fa'),mother:v('ms-mo'),pcon:v('ms-pc'),active:document.getElementById('ms-active').value});
+  const r=await api('saveStudent',{id:EDIT_ST,name,deptno:v('ms-deptno'),dob:v('ms-dob'),address:v('ms-addr'),cls,batch:v('ms-batch'),semester:v('ms-sem'),shift:v('ms-shift'),section:v('ms-sec'),ay,contact:v('ms-con'),email:v('ms-email'),father:v('ms-fa'),mother:v('ms-mo'),pcon:v('ms-pc'),active:document.getElementById('ms-active').value});
   hideLoader(); if(!r.ok){toast(r.error||'Save failed.','err');return;}
   closeM('m-student'); await loadFreshStudents();
   api('addLog',{user:CU.username,action:EDIT_ST?'EDIT STUDENT':'ADD STUDENT',detail:name});
@@ -1543,14 +1580,32 @@ async function doChangePw() {
 
 // ── CSV IMPORT ──
 function openImport(){IMPORT_DATA=[];document.getElementById('imp-prev').innerHTML='';document.getElementById('imp-ok').disabled=true;document.getElementById('csv-inp').value='';fillAYSelects();openM('m-import');}
-function dlCSVTemplate(){const h='Name,DOB,Address,Class,Batch,Semester,Shift,Section,Contact,Email,FatherName,MotherName,ParentContact';const r='Aarthi Murugan,2005-03-12,"12 Anna Nagar, Chennai",I B.Sc. Advanced Zoology & Biotechnology,25-UAZ-001,Semester I,Shift 1,A,9876543210,student@mail.com,Father Name,Mother Name,9876543200';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h+'\n'+r],{type:'text/csv'}));a.download='azb_students_template.csv';a.click();}
+function dlCSVTemplate(){
+  const h='Name,DeptNo,DOB,Address,Class,Batch,Semester,Shift,Section,Contact,Email,FatherName,MotherName,ParentContact';
+  const r='Aarthi Murugan,25-001,2005-03-12,"12 Anna Nagar, Chennai",I B.Sc. Advanced Zoology & Biotechnology,25-UAZ-001,Semester I,Shift 1,A,9876543210,student@mail.com,Father Name,Mother Name,9876543200';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([h+'\n'+r],{type:'text/csv'}));
+  a.download='azb_students_template.csv';
+  a.click();
+}
 function handleCSV(inp){
   const file=inp.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
     const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
     const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-    IMPORT_DATA=lines.slice(1).map(line=>{const vals=[];let cur='',inQ=false;for(let ch of line){if(ch==='"'){inQ=!inQ}else if(ch===','&&!inQ){vals.push(cur.trim());cur=''}else cur+=ch;}vals.push(cur.trim());const o={};hdrs.forEach((h,i)=>o[h]=vals[i]||'');return{name:o.Name,dob:o.DOB,address:o.Address,cls:o.Class,batch:o.Batch,semester:o.Semester,shift:o.Shift,section:o.Section,contact:o.Contact,email:o.Email,father:o.FatherName,mother:o.MotherName,pcon:o.ParentContact};}).filter(s=>s.name);
+    IMPORT_DATA=lines.slice(1).map(line=>{
+      const vals=[];let cur='',inQ=false;
+      for(let ch of line){if(ch==='"'){inQ=!inQ}else if(ch===','&&!inQ){vals.push(cur.trim());cur=''}else cur+=ch;}
+      vals.push(cur.trim());
+      const o={};
+      hdrs.forEach((h,i)=>o[h]=vals[i]||'');
+      return{
+        name:o.Name,deptno:o.DeptNo,dob:o.DOB,address:o.Address,cls:o.Class,batch:o.Batch,
+        semester:o.Semester,shift:o.Shift,section:o.Section,contact:o.Contact,email:o.Email,
+        father:o.FatherName,mother:o.MotherName,pcon:o.ParentContact
+      };
+    }).filter(s=>s.name);
     document.getElementById('imp-prev').innerHTML=`<div class="info-band info-green" style="margin-top:10px"><i class="fa-solid fa-circle-check"></i><span><strong>${IMPORT_DATA.length}</strong> valid records found. Select year and click Import.</span></div>`;
     document.getElementById('imp-ok').disabled=false;
   };
