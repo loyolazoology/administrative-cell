@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Years</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --gold:#C49A3C;--gold-light:#D4AF5A;--gold-pale:#FBF6EC;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);--shadow:0 4px 14px rgba(0,0,0,.07);
+}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.sec-header{margin-bottom:20px}
+.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}
+.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.toolbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-xs{padding:4px 9px;font-size:11px}
+.btn-sm{padding:6px 11px;font-size:12px}
+/* AY GRID */
+.ay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.ay-card{background:var(--white);border:1.5px solid var(--border2);border-radius:var(--r3);padding:20px;transition:all .2s;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.ay-card.active-card{border-color:rgba(139,38,53,.3)}
+.ay-card.active-card::before{content:'';display:block;position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--maroon),var(--gold))}
+.ay-year{font-family:var(--font-serif);font-size:24px;font-weight:700;margin-bottom:3px}
+.ay-dates{font-size:12px;color:var(--c3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.badge-gray{background:var(--bg2);color:var(--c3);border-color:var(--border)}
+.ay-stats{display:flex;gap:14px;margin:10px 0;font-size:12px;color:var(--c3)}
+.ay-stat-val{font-weight:700;color:var(--c2);font-size:14px}
+.ay-actions{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.36);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal-box{background:var(--white);border-radius:14px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 70px rgba(0,0,0,.2);animation:mIn .2s ease}
+.modal-box.lg{max-width:760px}
+@keyframes mIn{from{opacity:0;transform:translateY(-6px)scale(.98)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--white);z-index:2}
+.modal-head h3{font-family:var(--font-serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.modal-cl{width:30px;height:30px;border-radius:50%;background:none;border:none;cursor:pointer;color:var(--c3);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:14px}
+.modal-cl:hover{background:var(--bg2)}
+.modal-body{padding:18px 20px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border2);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field input,.field select{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--font-sans)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+/* PROMOTE */
+.promote-map{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow-y:auto;padding-right:4px}
+.promote-row{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r2)}
+.promote-from{font-size:12.5px;font-weight:600;flex:1;color:var(--c2)}
+.promote-arrow{color:var(--gold);font-size:15px;flex-shrink:0}
+.promote-to{flex:1}
+.promote-to select{font-size:12px;padding:5px 8px;border:1.5px solid var(--border);border-radius:var(--r2);background:var(--white);width:100%;font-family:var(--font-sans)}
+.promote-to select:focus{outline:none;border-color:var(--maroon)}
+.info-band{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--r);font-size:12.5px;border:1px solid;margin-top:10px}
+.info-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.info-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+/* CONFIRMATION STEP */
+.confirm-step{display:none}
+.confirm-step.show{display:block}
+.confirm-step .summary-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+.confirm-step .summary-table th{background:var(--bg2);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3);border-bottom:1.5px solid var(--border)}
+.confirm-step .summary-table td{padding:7px 10px;border-bottom:1px solid var(--border2)}
+.step-indicator{display:flex;gap:8px;margin-bottom:16px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
+.step-dot.active{background:var(--maroon)}
+@media(max-width:640px){.g2{grid-template-columns:1fr!important}.ay-grid{grid-template-columns:1fr}body{padding:14px}}
+</style>
+</head>
+<body>
+<div class="sec-header">
+  <h2>Academic Years</h2>
+  <p>Manage academic years and promote students to the next class.</p>
+</div>
+<div class="toolbar">
+  <button class="btn btn-gold btn-sm" onclick="openPromote()"><i class="fa-solid fa-arrow-up"></i> Promote Students</button>
+  <button class="btn btn-primary btn-sm" onclick="openAdd()"><i class="fa-solid fa-plus"></i> New Year</button>
+</div>
+<div class="ay-grid" id="ay-grid">
+  <div style="color:var(--c4);font-size:13px;padding:20px">Loading academic years…</div>
+</div>
+
+<!-- ADD AY MODAL -->
+<div class="modal-ov" id="m-ay" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-calendar-plus" style="color:var(--maroon)"></i>New Academic Year</h3>
+      <button class="modal-cl" onclick="closeAdd()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="g2">
+        <div class="field"><label>Label <span style="color:var(--maroon)">*</span></label><input id="ay-lbl" type="text" placeholder="2026–2027"></div>
+        <div class="field"><label>Set as Active Year?</label>
+          <select id="ay-act"><option value="TRUE">Yes — current year</option><option value="FALSE">No</option></select>
+        </div>
+        <div class="field"><label>Start Date</label><input id="ay-s" type="date"></div>
+        <div class="field"><label>End Date</label><input id="ay-e" type="date"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeAdd()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAY()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROMOTE MODAL (2-step) -->
+<div class="modal-ov" id="m-promote" style="display:none">
+  <div class="modal-box lg">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-arrow-up" style="color:var(--gold)"></i>Promote Students</h3>
+      <button class="modal-cl" onclick="closePromote()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="step-indicator">
+        <div class="step-dot active" id="sdot-1"></div>
+        <div class="step-dot" id="sdot-2"></div>
+      </div>
+
+      <!-- STEP 1: Mapping -->
+      <div id="prom-step1">
+        <div class="g2" style="margin-bottom:14px">
+          <div class="field"><label>From Academic Year <span style="color:var(--maroon)">*</span></label>
+            <select id="prom-from" onchange="buildPromoteMap()"><option value="">— Select —</option></select>
+          </div>
+          <div class="field"><label>To Academic Year <span style="color:var(--maroon)">*</span></label>
+            <select id="prom-to"><option value="">— Select —</option></select>
+          </div>
+        </div>
+        <div style="font-size:11.5px;font-weight:700;color:var(--c2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">
+          <i class="fa-solid fa-map" style="color:var(--gold);margin-right:5px"></i>Map each class to next year's equivalent:
+        </div>
+        <div class="promote-map" id="promote-map"></div>
+        <div class="info-band info-amber" style="margin-top:10px">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Students mapped to <strong>Graduate (Remove)</strong> will not be copied. Records in the target year are never overwritten.</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: Confirmation -->
+      <div id="prom-step2" style="display:none">
+        <div class="info-band info-green" style="margin-top:0;margin-bottom:12px">
+          <i class="fa-solid fa-circle-check"></i>
+          <span id="confirm-summary">Please review the promotion details below before proceeding.</span>
+        </div>
+        <table class="summary-table">
+          <thead><tr><th>From Class</th><th>→ To Class</th><th>Students</th></tr></thead>
+          <tbody id="confirm-table"></tbody>
+        </table>
+        <div style="margin-top:12px;padding:11px 14px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--r);font-size:12px;color:var(--red)">
+          <i class="fa-solid fa-triangle-exclamation"></i> This action <strong>cannot be undone</strong>. Students will be copied to <strong id="confirm-to-ay">the target year</strong>.
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closePromote()">Cancel</button>
+      <button class="btn btn-ghost" id="btn-prom-back" onclick="promBack()" style="display:none"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <button class="btn btn-gold" id="btn-prom-next" onclick="promNext()"><i class="fa-solid fa-arrow-right"></i> Review</button>
+      <button class="btn btn-primary" id="btn-prom-confirm" onclick="doPromote()" style="display:none"><i class="fa-solid fa-check"></i> Confirm &amp; Promote</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
+function fmtDate(d){if(!d||!d.trim()||d==='—')return '—';try{return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch{return d}}
+
+let ALL_AY=[], ALL_CLASSES=[], ALL_STUDENTS=[];
+
+async function loadAll(){
+  try{
+    const[ayR,clsR,stR]=await Promise.all([gasCall('getAcademicYears',{}),gasCall('getClasses',{}),gasCall('getStudents',{})]);
+    if(ayR.ok) ALL_AY=ayR.data||[];
+    if(clsR.ok) ALL_CLASSES=clsR.data||[];
+    if(stR.ok) ALL_STUDENTS=stR.data||[];
+    renderGrid();
+    const active=ALL_AY.find(a=>a.Active==='TRUE');
+    window.parent.postMessage({type:'updateAY',label:active?active.Label:'No Active Year'},'*');
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+
+function countStudents(ay){return ALL_STUDENTS.filter(s=>s.AcademicYear===ay&&s.Active!=='FALSE').length}
+
+function renderGrid(){
+  const grid=document.getElementById('ay-grid');
+  if(!ALL_AY.length){grid.innerHTML='<p style="color:var(--c3);padding:20px">No academic years defined yet.</p>';return}
+  grid.innerHTML=ALL_AY.map(ay=>{
+    const cnt=countStudents(ay.Label);
+    const clsCnt=[...new Set(ALL_STUDENTS.filter(s=>s.AcademicYear===ay.Label&&s.Active!=='FALSE').map(s=>s.Class))].length;
+    return `<div class="ay-card ${ay.Active==='TRUE'?'active-card':''}">
+      <div class="ay-year">${esc(ay.Label)}</div>
+      <div class="ay-dates"><i class="fa-regular fa-calendar" style="color:var(--c4)"></i>${fmtDate(ay.StartDate)} → ${fmtDate(ay.EndDate)}</div>
+      <span class="badge ${ay.Active==='TRUE'?'badge-green':'badge-gray'}">${ay.Active==='TRUE'?'● Active':'Inactive'}</span>
+      <div class="ay-stats">
+        <div><div class="ay-stat-val">${cnt}</div><div>Students</div></div>
+        <div><div class="ay-stat-val">${clsCnt}</div><div>Classes</div></div>
+      </div>
+      <div class="ay-actions">
+        ${ay.Active!=='TRUE'?`<button class="btn btn-primary btn-xs" onclick="activateAY('${ay.ID}')"><i class="fa-solid fa-check"></i> Set Active</button>`:'<span style="font-size:11.5px;color:var(--green);font-weight:600"><i class="fa-solid fa-circle-check"></i> Current Year</span>'}
+        <button class="btn btn-ghost btn-xs" onclick="deleteAY('${ay.ID}')"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAdd(){['ay-lbl','ay-s','ay-e'].forEach(id=>sv(id,''));sv('ay-act','TRUE');document.getElementById('m-ay').style.display='flex'}
+function closeAdd(){document.getElementById('m-ay').style.display='none'}
+async function saveAY(){
+  const lbl=v('ay-lbl');if(!lbl){msg('toast','Label is required.','err');return}
+  showLoader('Saving…');
+  try{
+    const r=await gasCall('saveAcademicYear',{label:lbl,start:v('ay-s'),end:v('ay-e'),active:document.getElementById('ay-act').value});
+    hideLoader();if(!r.ok){msg('toast',r.error||'Failed.','err');return}
+    closeAdd();await loadAll();msg('toast','Academic year saved.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function activateAY(id){
+  showLoader('Updating…');
+  try{
+    await gasCall('activateAY',{id});hideLoader();await loadAll();msg('toast','Active year updated.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function deleteAY(id){
+  if(!confirm('Delete this academic year? Student records in this year will NOT be deleted.'))return;
+  showLoader('Deleting…');
+  try{
+    await gasCall('deleteAY',{id});hideLoader();await loadAll();msg('toast','Deleted.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+// PROMOTE
+function openPromote(){
+  const opts='<option value="">— Select —</option>'+ALL_AY.map(a=>`<option>${esc(a.Label)}</option>`).join('');
+  document.getElementById('prom-from').innerHTML=opts;
+  document.getElementById('prom-to').innerHTML=opts;
+  const active=ALL_AY.find(a=>a.Active==='TRUE');
+  if(active) sv('prom-from',active.Label);
+  buildPromoteMap();
+  // Reset to step 1
+  document.getElementById('prom-step1').style.display='block';
+  document.getElementById('prom-step2').style.display='none';
+  document.getElementById('btn-prom-next').style.display='inline-flex';
+  document.getElementById('btn-prom-back').style.display='none';
+  document.getElementById('btn-prom-confirm').style.display='none';
+  document.getElementById('sdot-1').classList.add('active');
+  document.getElementById('sdot-2').classList.remove('active');
+  document.getElementById('m-promote').style.display='flex';
+}
+function closePromote(){document.getElementById('m-promote').style.display='none'}
+
+function buildPromoteMap(){
+  const fromAY=v('prom-from');
+  let classes=fromAY?[...new Set(ALL_STUDENTS.filter(s=>s.AcademicYear===fromAY&&s.Active!=='FALSE').map(s=>s.Class))]:ALL_CLASSES.map(c=>c.Label);
+  if(!classes.length) classes=ALL_CLASSES.map(c=>c.Label);
+  const allTargets=['__GRADUATE__',...ALL_CLASSES.map(c=>c.Label)];
+  const defaultNext={};
+  ALL_CLASSES.forEach((c,i)=>{defaultNext[c.Label]=ALL_CLASSES[i+1]?.Label||'__GRADUATE__'});
+  document.getElementById('promote-map').innerHTML=classes.map(cls=>`
+    <div class="promote-row">
+      <div class="promote-from">${esc(cls)}</div>
+      <div class="promote-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="promote-to">
+        <select data-from="${esc(cls)}">
+          ${allTargets.map(t=>{
+            const val=t==='__GRADUATE__'?'__GRADUATE__':t;
+            const label=t==='__GRADUATE__'?'Graduate (Remove)':t;
+            const sel=(defaultNext[cls]||'__GRADUATE__')===val?'selected':'';
+            return `<option value="${esc(val)}" ${sel}>${esc(label)}</option>`;
+          }).join('')}
+        </select>
+      </div>
+    </div>`).join('');
+}
+
+function promNext(){
+  const fromAY=v('prom-from'),toAY=v('prom-to');
+  if(!fromAY||!toAY){msg('toast','Select both academic years.','err');return}
+  if(fromAY===toAY){msg('toast','From and To year must be different.','err');return}
+  // Build confirmation table
+  const classMap={};
+  document.querySelectorAll('#promote-map select').forEach(sel=>{classMap[sel.dataset.from]=sel.value});
+  const rows=Object.entries(classMap).map(([from,to])=>{
+    const cnt=ALL_STUDENTS.filter(s=>s.AcademicYear===fromAY&&s.Class===from&&s.Active!=='FALSE').length;
+    const toLabel=to==='__GRADUATE__'?'<em style="color:var(--c4)">Graduate (Remove)</em>':esc(to);
+    return `<tr><td>${esc(from)}</td><td>${toLabel}</td><td style="text-align:center;font-weight:700">${cnt}</td></tr>`;
+  });
+  const total=Object.entries(classMap).filter(([,v])=>v!=='__GRADUATE__').reduce((s,[from])=>s+ALL_STUDENTS.filter(st=>st.AcademicYear===fromAY&&st.Class===from&&st.Active!=='FALSE').length,0);
+  document.getElementById('confirm-table').innerHTML=rows.join('');
+  document.getElementById('confirm-summary').textContent=`${total} students will be promoted from ${fromAY} → ${toAY}.`;
+  document.getElementById('confirm-to-ay').textContent=toAY;
+  document.getElementById('prom-step1').style.display='none';
+  document.getElementById('prom-step2').style.display='block';
+  document.getElementById('btn-prom-next').style.display='none';
+  document.getElementById('btn-prom-back').style.display='inline-flex';
+  document.getElementById('btn-prom-confirm').style.display='inline-flex';
+  document.getElementById('sdot-1').classList.remove('active');
+  document.getElementById('sdot-2').classList.add('active');
+}
+function promBack(){
+  document.getElementById('prom-step1').style.display='block';
+  document.getElementById('prom-step2').style.display='none';
+  document.getElementById('btn-prom-next').style.display='inline-flex';
+  document.getElementById('btn-prom-back').style.display='none';
+  document.getElementById('btn-prom-confirm').style.display='none';
+  document.getElementById('sdot-1').classList.add('active');
+  document.getElementById('sdot-2').classList.remove('active');
+}
+async function doPromote(){
+  const fromAY=v('prom-from'),toAY=v('prom-to');
+  const classMap={};
+  document.querySelectorAll('#promote-map select').forEach(sel=>{classMap[sel.dataset.from]=sel.value});
+  showLoader('Promoting students…');
+  try{
+    const r=await gasCall('promoteStudents',{fromAY,toAY,classMap});
+    hideLoader();if(!r.ok){msg('toast',r.error||'Failed.','err');return}
+    const count=(r.data&&r.data.count)||0;
+    closePromote();await loadAll();
+    await gasCall('addLog',{user:'admin',action:'PROMOTE',detail:`${fromAY} → ${toAY}: ${count} students`});
+    msg('toast',`${count} student${count!==1?'s':''} promoted to ${toAY}.`,'ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+document.getElementById('m-ay').addEventListener('click',e=>{if(e.target===document.getElementById('m-ay'))closeAdd()});
+document.getElementById('m-promote').addEventListener('click',e=>{if(e.target===document.getElementById('m-promote'))closePromote()});
+loadAll();
+setInterval(loadAll,60000);
+</script>
+</body>
+</html>
