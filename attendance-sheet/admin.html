@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — AZB Attendance System</title>
+<title>Admin — AZBT Attendance System</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -667,7 +667,7 @@ async function boot(){
     // Active year
     const ayR = await gasCall('getAcademicYears',{});
     if(ayR.ok && ayR.data){
-      const active = ayR.data.find(a=>a.Active==='TRUE');
+      const active = ayR.data.find(a => String(a.Active).toUpperCase() === 'TRUE');
       document.getElementById('ay-chip-text').textContent = active?active.Label:'No Active Year';
     }
   }catch(e){ console.warn('Boot config error:',e); }
