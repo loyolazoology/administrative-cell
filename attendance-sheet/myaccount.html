@@ -1,1 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --gold:#C49A3C;--gold-light:#D4AF5A;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);
+}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}
+.sec-header{margin-bottom:24px}
+.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}
+.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.profile-grid{display:grid;grid-template-columns:320px 1fr;gap:20px;max-width:860px}
+.card{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:9px}
+.card-head h3{font-family:var(--font-serif);font-size:15px;font-weight:600;color:var(--c)}
+.card-head i{color:var(--maroon);font-size:13px}
+.card-body{padding:20px 18px}
+/* PROFILE CARD */
+.profile-avatar{width:72px;height:72px;background:linear-gradient(135deg,var(--maroon-soft),var(--maroon-pale));color:var(--maroon);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;font-family:var(--font-serif);margin:0 auto 14px;border:3px solid rgba(139,38,53,.15)}
+.profile-name{text-align:center;font-family:var(--font-serif);font-size:20px;font-weight:600;margin-bottom:4px}
+.profile-username{text-align:center;font-size:12.5px;color:var(--c3);margin-bottom:12px}
+.profile-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 14px;border-radius:20px;font-size:11.5px;font-weight:600;border:1px solid;margin:0 auto 4px;display:flex;width:fit-content;margin:0 auto}
+.badge-maroon{background:var(--maroon-soft);color:var(--maroon);border-color:rgba(139,38,53,.2)}
+.badge-blue{background:#EDF3FB;color:#1E4A8B;border-color:#B3CCE8}
+.profile-divider{height:1px;background:var(--border2);margin:16px 0}
+.profile-info-row{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--c3);padding:5px 0}
+.profile-info-row i{width:16px;text-align:center;color:var(--c4);font-size:12px}
+.profile-info-row span{color:var(--c2)}
+/* PASSWORD FORM */
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field-inp-wrap{position:relative}
+.field-inp-wrap input{width:100%;padding:9px 38px 9px 11px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;transition:all .15s;font-family:var(--font-sans)}
+.field-inp-wrap input:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+.pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--c4);font-size:13px;padding:3px;transition:color .15s}
+.pw-toggle:hover{color:var(--maroon)}
+.pw-strength{height:4px;border-radius:2px;background:var(--border);margin-top:5px;overflow:hidden}
+.pw-strength-fill{height:100%;border-radius:2px;transition:all .3s;width:0}
+.pw-strength-text{font-size:10.5px;margin-top:3px;color:var(--c4)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.success-msg{display:none;align-items:center;gap:8px;padding:10px 13px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--r);font-size:12.5px;color:var(--green);margin-top:10px}
+.success-msg.show{display:flex}
+.error-msg{display:none;align-items:center;gap:8px;padding:10px 13px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--r);font-size:12.5px;color:var(--red);margin-top:10px}
+.error-msg.show{display:flex}
+/* SECURITY INFO */
+.security-item{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-bottom:1px solid var(--border2)}
+.security-item:last-child{border-bottom:none}
+.security-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.si-maroon{background:var(--maroon-soft);color:var(--maroon)}
+.si-green{background:var(--green-bg);color:var(--green)}
+.si-amber{background:#FDF7E8;color:#8B5E00}
+.security-item-title{font-size:13px;font-weight:600;color:var(--c2);margin-bottom:2px}
+.security-item-sub{font-size:11.5px;color:var(--c3)}
+@media(max-width:760px){.profile-grid{grid-template-columns:1fr}body{padding:14px}}
+</style>
+</head>
+<body>
+<div class="sec-header">
+  <h2>My Account</h2>
+  <p>Manage your profile and update your password.</p>
+</div>
 
+<div class="profile-grid">
+  <!-- Profile card -->
+  <div class="card">
+    <div class="card-head"><i class="fa-solid fa-circle-user"></i><h3>Profile</h3></div>
+    <div class="card-body">
+      <div class="profile-avatar" id="prof-avatar">A</div>
+      <div class="profile-name" id="prof-name">Administrator</div>
+      <div class="profile-username" id="prof-uname">@admin</div>
+      <div class="profile-badge badge-maroon" id="prof-role"><i class="fa-solid fa-user-shield"></i> Administrator</div>
+      <div class="profile-divider"></div>
+      <div class="profile-info-row">
+        <i class="fa-solid fa-id-card"></i>
+        <span>Account ID: <strong id="prof-id">—</strong></span>
+      </div>
+      <div class="profile-info-row">
+        <i class="fa-solid fa-clock"></i>
+        <span>Session active</span>
+      </div>
+      <div class="profile-info-row">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>AZB Attendance System v2.0</span>
+      </div>
+      <div style="margin-top:16px">
+        <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="window.parent.postMessage({type:'logout'},'*')">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <!-- Change password -->
+    <div class="card">
+      <div class="card-head"><i class="fa-solid fa-lock"></i><h3>Change Password</h3></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Current Password</label>
+          <div class="field-inp-wrap">
+            <input id="pw-old" type="password" placeholder="Enter current password" autocomplete="current-password">
+            <button class="pw-toggle" onclick="togglePw('pw-old','eye-old')"><i class="fa-regular fa-eye" id="eye-old"></i></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>New Password</label>
+          <div class="field-inp-wrap">
+            <input id="pw-new" type="password" placeholder="Minimum 6 characters" autocomplete="new-password" oninput="checkStrength()">
+            <button class="pw-toggle" onclick="togglePw('pw-new','eye-new')"><i class="fa-regular fa-eye" id="eye-new"></i></button>
+          </div>
+          <div class="pw-strength"><div class="pw-strength-fill" id="pw-fill"></div></div>
+          <div class="pw-strength-text" id="pw-strength-txt"></div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Confirm New Password</label>
+          <div class="field-inp-wrap">
+            <input id="pw-conf" type="password" placeholder="Repeat new password" autocomplete="new-password">
+            <button class="pw-toggle" onclick="togglePw('pw-conf','eye-conf')"><i class="fa-regular fa-eye" id="eye-conf"></i></button>
+          </div>
+        </div>
+        <div class="success-msg" id="pw-success"><i class="fa-solid fa-circle-check"></i>Password updated! Signing you out…</div>
+        <div class="error-msg" id="pw-error"><i class="fa-solid fa-circle-exclamation"></i><span id="pw-err-txt">Error</span></div>
+        <div style="margin-top:14px">
+          <button class="btn btn-primary" onclick="changePw()"><i class="fa-solid fa-floppy-disk"></i> Update Password</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security info -->
+    <div class="card">
+      <div class="card-head"><i class="fa-solid fa-shield-halved"></i><h3>Security Notes</h3></div>
+      <div class="card-body">
+        <div class="security-item">
+          <div class="security-icon si-maroon"><i class="fa-solid fa-key"></i></div>
+          <div>
+            <div class="security-item-title">Strong Password Recommended</div>
+            <div class="security-item-sub">Use at least 8 characters with a mix of letters, numbers and symbols.</div>
+          </div>
+        </div>
+        <div class="security-item">
+          <div class="security-icon si-green"><i class="fa-solid fa-user-lock"></i></div>
+          <div>
+            <div class="security-item-title">Session Security</div>
+            <div class="security-item-sub">Your session is stored locally in this browser. Always sign out on shared devices.</div>
+          </div>
+        </div>
+        <div class="security-item">
+          <div class="security-icon si-amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div>
+            <div class="security-item-title">Admin Accounts</div>
+            <div class="security-item-sub">Admin accounts cannot be deleted. Contact the system administrator if locked out.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+
+// Load user from parent sessionStorage via postMessage approach — use window.parent directly
+let CU=null;
+try{
+  // Try parent window sessionStorage (same-origin iframe)
+  CU=JSON.parse(window.parent.sessionStorage.getItem('azb_user'));
+}catch(e){
+  try{ CU=JSON.parse(sessionStorage.getItem('azb_user')); }catch(e2){}
+}
+
+function loadProfile(){
+  if(!CU) return;
+  const init=(CU.fullName||CU.username||'A')[0].toUpperCase();
+  document.getElementById('prof-avatar').textContent=init;
+  document.getElementById('prof-name').textContent=CU.fullName||CU.username||'—';
+  document.getElementById('prof-uname').textContent='@'+(CU.username||'—');
+  document.getElementById('prof-id').textContent=CU.id||'—';
+  const roleEl=document.getElementById('prof-role');
+  if(CU.role==='admin'){
+    roleEl.className='profile-badge badge-maroon';
+    roleEl.innerHTML='<i class="fa-solid fa-user-shield"></i> Administrator';
+  } else {
+    roleEl.className='profile-badge badge-blue';
+    roleEl.innerHTML='<i class="fa-solid fa-chalkboard-user"></i> Staff';
+  }
+}
+
+function togglePw(inputId,iconId){
+  const inp=document.getElementById(inputId);
+  const ico=document.getElementById(iconId);
+  inp.type=inp.type==='password'?'text':'password';
+  ico.className=inp.type==='password'?'fa-regular fa-eye':'fa-regular fa-eye-slash';
+}
+
+function checkStrength(){
+  const pw=document.getElementById('pw-new').value;
+  const fill=document.getElementById('pw-fill');
+  const txt=document.getElementById('pw-strength-txt');
+  if(!pw){fill.style.width='0';fill.style.background='';txt.textContent='';return}
+  let score=0;
+  if(pw.length>=6) score++;
+  if(pw.length>=8) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels=[
+    {w:'20%',c:'#E05050',t:'Very weak'},
+    {w:'40%',c:'#E08020',t:'Weak'},
+    {w:'60%',c:'#C49A3C',t:'Fair'},
+    {w:'80%',c:'#4A9A60',t:'Good'},
+    {w:'100%',c:'#1D6842',t:'Strong'},
+  ];
+  const l=levels[Math.min(score-1,4)]||levels[0];
+  fill.style.width=l.w; fill.style.background=l.c;
+  txt.textContent=l.t; txt.style.color=l.c;
+}
+
+async function changePw(){
+  const oldPw=document.getElementById('pw-old').value;
+  const newPw=document.getElementById('pw-new').value;
+  const conf=document.getElementById('pw-conf').value;
+  const errEl=document.getElementById('pw-error');
+  const okEl=document.getElementById('pw-success');
+  errEl.classList.remove('show'); okEl.classList.remove('show');
+  if(!oldPw||!newPw||!conf){
+    document.getElementById('pw-err-txt').textContent='All fields are required.';
+    errEl.classList.add('show'); return;
+  }
+  if(newPw.length<6){
+    document.getElementById('pw-err-txt').textContent='New password must be at least 6 characters.';
+    errEl.classList.add('show'); return;
+  }
+  if(newPw!==conf){
+    document.getElementById('pw-err-txt').textContent='New passwords do not match.';
+    errEl.classList.add('show'); return;
+  }
+  showLoader('Updating password…');
+  try{
+    const r=await gasCall('changePassword',{id:CU?.id,oldPassword:oldPw,newPassword:newPw});
+    hideLoader();
+    if(!r.ok){
+      document.getElementById('pw-err-txt').textContent=r.error||'Failed to update password.';
+      errEl.classList.add('show'); return;
+    }
+    okEl.classList.add('show');
+    ['pw-old','pw-new','pw-conf'].forEach(id=>{document.getElementById(id).value=''});
+    setTimeout(()=>{ window.parent.postMessage({type:'logout'},'*'); }, 2000);
+  }catch(e){
+    hideLoader();
+    document.getElementById('pw-err-txt').textContent='Error: '+e.message;
+    errEl.classList.add('show');
+  }
+}
+
+loadProfile();
+</script>
+</body>
+</html>
