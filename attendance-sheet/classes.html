@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --blue:#1E4A8B;--blue-bg:#EDF3FB;--amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);
+}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.sec-header{margin-bottom:20px}
+.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}
+.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.info-band{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--r);font-size:12.5px;border:1px solid;margin-bottom:16px}
+.info-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-xs{padding:4px 9px;font-size:11px}
+.table-wrap{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:auto;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg2);color:var(--c3);font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:10px 13px;text-align:left;border-bottom:1.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(139,38,53,.012)}
+.tbl-empty{padding:40px;text-align:center;color:var(--c4);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tbl-empty i{font-size:22px;opacity:.4}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-ug{background:var(--maroon-soft);color:var(--maroon);border-color:rgba(139,38,53,.2)}
+.badge-pg{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.badge-phd{background:var(--blue-bg);color:var(--blue);border-color:#B3CCE8}
+.badge-other{background:var(--bg2);color:var(--c3);border-color:var(--border)}
+.order-btn{width:26px;height:26px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--c3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .15s}
+.order-btn:hover{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.36);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal-box{background:var(--white);border-radius:14px;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 70px rgba(0,0,0,.2);animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(-6px)scale(.98)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--white);z-index:2}
+.modal-head h3{font-family:var(--font-serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.modal-cl{width:30px;height:30px;border-radius:50%;background:none;border:none;cursor:pointer;color:var(--c3);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:14px}
+.modal-cl:hover{background:var(--bg2)}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:11px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border2);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field input,.field select{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--font-sans)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+@media(max-width:480px){body{padding:14px}.g2{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<div class="sec-header">
+  <h2>Classes</h2>
+  <p>Define all courses and programmes. Drag rows or use arrows to reorder.</p>
+</div>
+<div class="info-band info-amber">
+  <i class="fa-solid fa-circle-info" style="margin-top:1px"></i>
+  <span>Classes defined here appear in student forms, class selection and promotion mapping. Deleting a class does <strong>not</strong> delete existing students.</span>
+</div>
+<div class="toolbar">
+  <button class="btn btn-primary btn-xs" style="padding:7px 14px;font-size:12.5px" onclick="openAdd()"><i class="fa-solid fa-plus"></i> Add Class</button>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:30px">#</th>
+        <th>Class Label</th>
+        <th>Short Name</th>
+        <th>Level</th>
+        <th>Order</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="cls-tbody"></tbody>
+  </table>
+  <div class="tbl-empty" id="cls-empty" style="display:none">
+    <i class="fa-solid fa-layer-group"></i>No classes defined yet.
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="m-cls" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="m-cls-title"><i class="fa-solid fa-layer-group" style="color:var(--maroon)"></i>Add Class</h3>
+      <button class="modal-cl" onclick="closeM()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>Full Class Label <span style="color:var(--maroon)">*</span></label><input id="cls-lbl" type="text" placeholder="e.g. I B.Sc. Advanced Zoology & Biotechnology"></div>
+      <div class="field"><label>Short Name (used on sheets)</label><input id="cls-short" type="text" placeholder="e.g. I B.Sc. AZB"></div>
+      <div class="g2">
+        <div class="field"><label>Level</label>
+          <select id="cls-lvl">
+            <option value="UG">UG — Undergraduate</option>
+            <option value="PG">PG — Postgraduate</option>
+            <option value="PhD">Ph.D.</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Sort Order</label><input id="cls-ord" type="number" min="1" placeholder="1, 2, 3…"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeM()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCls()"><i class="fa-solid fa-floppy-disk"></i> Save Class</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
+
+let ALL_CLASSES=[], EDIT_ID=null;
+
+async function loadAll(){
+  try{
+    const r=await gasCall('getClasses',{});
+    if(r.ok) ALL_CLASSES=r.data||[];
+    renderTable();
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+
+const LEVEL_BADGE={UG:'badge-ug',PG:'badge-pg',PhD:'badge-phd',Other:'badge-other'};
+
+function renderTable(){
+  const tbody=document.getElementById('cls-tbody');
+  const empty=document.getElementById('cls-empty');
+  if(!ALL_CLASSES.length){tbody.innerHTML='';empty.style.display='flex';return}
+  empty.style.display='none';
+  tbody.innerHTML=ALL_CLASSES.map((c,i)=>`<tr>
+    <td style="color:var(--c4);font-size:12px;text-align:center">${i+1}</td>
+    <td><strong>${esc(c.Label)}</strong></td>
+    <td style="font-size:12px;color:var(--c3)">${esc(c.Short||'—')}</td>
+    <td><span class="badge ${LEVEL_BADGE[c.Level]||'badge-other'}">${esc(c.Level)}</span></td>
+    <td>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:12px;color:var(--c3);width:20px;text-align:center">${c.Order||i+1}</span>
+        <button class="order-btn" onclick="moveUp(${i})" ${i===0?'disabled style="opacity:.3"':''}><i class="fa-solid fa-chevron-up"></i></button>
+        <button class="order-btn" onclick="moveDown(${i})" ${i===ALL_CLASSES.length-1?'disabled style="opacity:.3"':''}><i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+    </td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-ghost btn-xs" onclick="editCls('${c.ID}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+      <button class="btn btn-danger btn-xs" style="margin-left:3px" onclick="deleteCls('${c.ID}')"><i class="fa-solid fa-trash"></i></button>
+    </td></tr>`).join('');
+}
+
+async function moveUp(i){
+  if(i===0)return;
+  const a=ALL_CLASSES[i],b=ALL_CLASSES[i-1];
+  showLoader('Reordering…');
+  try{
+    await Promise.all([
+      gasCall('saveClass',{id:a.ID,label:a.Label,short:a.Short,level:a.Level,order:i}),
+      gasCall('saveClass',{id:b.ID,label:b.Label,short:b.Short,level:b.Level,order:i+1})
+    ]);
+    hideLoader();await loadAll();
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function moveDown(i){
+  if(i===ALL_CLASSES.length-1)return;
+  const a=ALL_CLASSES[i],b=ALL_CLASSES[i+1];
+  showLoader('Reordering…');
+  try{
+    await Promise.all([
+      gasCall('saveClass',{id:a.ID,label:a.Label,short:a.Short,level:a.Level,order:i+2}),
+      gasCall('saveClass',{id:b.ID,label:b.Label,short:b.Short,level:b.Level,order:i+1})
+    ]);
+    hideLoader();await loadAll();
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+function openAdd(){
+  EDIT_ID=null;
+  document.getElementById('m-cls-title').innerHTML='<i class="fa-solid fa-layer-group" style="color:var(--maroon)"></i>Add Class';
+  ['cls-lbl','cls-short','cls-ord'].forEach(id=>sv(id,''));
+  sv('cls-lvl','UG');
+  sv('cls-ord',ALL_CLASSES.length+1);
+  document.getElementById('m-cls').style.display='flex';
+}
+function editCls(id){
+  const c=ALL_CLASSES.find(x=>x.ID===id);if(!c)return;
+  EDIT_ID=id;
+  document.getElementById('m-cls-title').innerHTML='<i class="fa-solid fa-pen-to-square" style="color:var(--maroon)"></i>Edit Class';
+  sv('cls-lbl',c.Label);sv('cls-short',c.Short);sv('cls-lvl',c.Level);sv('cls-ord',c.Order);
+  document.getElementById('m-cls').style.display='flex';
+}
+async function saveCls(){
+  const lbl=v('cls-lbl');if(!lbl){msg('toast','Class label is required.','err');return}
+  showLoader('Saving…');
+  try{
+    const r=await gasCall('saveClass',{id:EDIT_ID,label:lbl,short:v('cls-short')||lbl,level:document.getElementById('cls-lvl').value,order:v('cls-ord')});
+    hideLoader();if(!r.ok){msg('toast',r.error||'Failed.','err');return}
+    closeM();await loadAll();msg('toast','Class saved.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function deleteCls(id){
+  if(!confirm('Delete this class? Existing student records will NOT be deleted.'))return;
+  showLoader('Deleting…');
+  try{
+    await gasCall('deleteClass',{id});hideLoader();await loadAll();msg('toast','Class deleted.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+function closeM(){document.getElementById('m-cls').style.display='none'}
+document.getElementById('m-cls').addEventListener('click',e=>{if(e.target===document.getElementById('m-cls'))closeM()});
+loadAll();
+</script>
+</body>
+</html>
