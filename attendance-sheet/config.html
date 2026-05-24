@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuration</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --gold:#C49A3C;--gold-light:#D4AF5A;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);
+}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.sec-header{margin-bottom:20px}
+.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}
+.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.steps{display:flex;flex-direction:column;gap:16px;max-width:860px}
+.step-card{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:hidden;box-shadow:var(--shadow-sm)}
+.step-hdr{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border2);background:linear-gradient(90deg,rgba(139,38,53,.03),transparent)}
+.step-badge{width:26px;height:26px;background:var(--maroon);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-title{font-size:14px;font-weight:700;color:var(--c)}
+.step-sub{font-size:11.5px;color:var(--c3);margin-top:2px}
+.step-body{padding:16px 18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.span2{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field input,.field select,.field textarea{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--font-sans)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+.field-note{font-size:10.5px;color:var(--c4);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-xs{padding:4px 9px;font-size:11px}
+.btn-sm{padding:6px 11px;font-size:12px}
+.action-bar{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border2)}
+/* LOGO SLOTS */
+.logo-slot{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--r);margin-bottom:10px;transition:border-color .15s}
+.logo-slot:hover{border-color:var(--border)}
+.logo-thumb{width:52px;height:52px;object-fit:contain;border-radius:6px;border:1px solid var(--border2);background:#fff;padding:3px;flex-shrink:0}
+.logo-thumb-placeholder{width:52px;height:52px;border-radius:6px;border:1.5px dashed var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--c4);font-size:18px;flex-shrink:0}
+.logo-info{flex:1;min-width:0}
+.logo-label{font-size:12.5px;font-weight:600;color:var(--c2);margin-bottom:4px}
+.logo-status{font-size:11px;color:var(--c4)}
+.logo-status.ok{color:var(--green)}
+.logo-actions{display:flex;gap:6px;flex-shrink:0}
+.logo-label-inp{font-size:12px;padding:5px 8px;border:1.5px solid var(--border);border-radius:var(--r2);background:var(--white);width:100%;max-width:200px;font-family:var(--font-sans)}
+.logo-label-inp:focus{outline:none;border-color:var(--maroon)}
+/* SECOND LOGO STATUS */
+.logo2-status{padding:12px 14px;border-radius:var(--r);background:var(--bg);border:1.5px solid var(--border2);margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.info-band{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--r);font-size:12.5px;border:1px solid}
+.info-amber{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr!important}body{padding:14px}}
+</style>
+</head>
+<body>
+<div class="sec-header">
+  <h2>Sheet Configuration</h2>
+  <p>Customise college identity, logos and subtitles printed on every attendance sheet.</p>
+</div>
+
+<div class="steps">
+  <!-- STEP A: Identity -->
+  <div class="step-card">
+    <div class="step-hdr"><div class="step-badge">A</div><div><div class="step-title">College &amp; Department Identity</div><div class="step-sub">This text appears on every printed sheet header</div></div></div>
+    <div class="step-body">
+      <div class="g2">
+        <div class="field span2"><label>College Name</label><input id="cfg-college" type="text" placeholder="Loyola College (Autonomous), Chennai – 600 034"></div>
+        <div class="field span2"><label>Established / Affiliation Line</label><input id="cfg-est" type="text" placeholder="Reaccredited with A++ by NAAC | An Autonomous Institution"></div>
+        <div class="field span2"><label>Department Name</label><input id="cfg-dept" type="text" placeholder="PG & Research Department of Advanced Zoology & Biotechnology"></div>
+        <div class="field span2"><label>Subtitle / Collaboration Line 1</label><input id="cfg-sub1" type="text" placeholder="e.g. In collaboration with CSIR – NIIST, Thiruvananthapuram"></div>
+        <div class="field span2"><label>Subtitle Line 2</label><input id="cfg-sub2" type="text" placeholder="Optional second subtitle line"></div>
+        <div class="field span2"><label>Watermark / Footer Text</label><input id="cfg-wm" type="text" placeholder="Department name · College name · Motto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP B: Logos -->
+  <div class="step-card">
+    <div class="step-hdr"><div class="step-badge">B</div><div><div class="step-title">Logos</div><div class="step-sub">Upload logos stored in Google Drive. First slot = Loyola College logo (default). Add more as needed.</div></div></div>
+    <div class="step-body">
+      <div id="logo-list"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="addLogoSlot()"><i class="fa-solid fa-plus"></i> Add Logo Slot</button>
+      <input type="file" id="logo-file-inp" accept="image/*" style="display:none">
+
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border2)">
+        <div style="font-size:12px;font-weight:700;color:var(--c2);margin-bottom:8px">
+          <i class="fa-solid fa-image" style="color:var(--gold);margin-right:6px"></i>Staff-Uploaded Second Logo
+        </div>
+        <div class="logo2-status" id="logo2-status">
+          <div style="flex:1"><strong style="font-size:13px;color:var(--c2)">No second logo uploaded yet.</strong><div style="font-size:11.5px;color:var(--c3);margin-top:2px">Staff can upload from the Staff portal.</div></div>
+        </div>
+        <button class="btn btn-danger btn-xs" id="btn-clear-logo2" onclick="clearLogo2()" style="display:none"><i class="fa-solid fa-trash"></i> Clear Second Logo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Save Configuration</button>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
+
+let CFG={}, LOGOS=[], LOGO_PENDING_IDX=null;
+
+async function loadAll(){
+  try{
+    const r=await gasCall('getConfig',{});
+    if(r.ok&&r.data){
+      CFG=r.data;
+      try{LOGOS=JSON.parse(CFG.logos||'[]')}catch{LOGOS=[]}
+      if(!LOGOS.length) LOGOS=[{key:'logo1',label:'Loyola College',url:CFG.logo1_url||''}];
+      sv('cfg-college',CFG.college_name||'');
+      sv('cfg-est',CFG.college_est||'');
+      sv('cfg-dept',CFG.dept_name||'');
+      sv('cfg-sub1',CFG.subtitle1||'');
+      sv('cfg-sub2',CFG.subtitle2||'');
+      sv('cfg-wm',CFG.watermark||'');
+      renderLogos();
+      renderLogo2Status();
+    }
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+
+function renderLogos(){
+  const container=document.getElementById('logo-list');
+  container.innerHTML=LOGOS.map((logo,idx)=>`
+    <div class="logo-slot">
+      ${logo.url
+        ?`<img class="logo-thumb" src="${esc(logo.url)}" onerror="this.style.display='none'">`
+        :`<div class="logo-thumb-placeholder"><i class="fa-regular fa-image"></i></div>`}
+      <div class="logo-info">
+        <input class="logo-label-inp" type="text" placeholder="Label (e.g. Loyola College)" value="${esc(logo.label||'')}" onchange="updateLogoLabel(${idx},this.value)">
+        <div class="logo-status ${logo.url?'ok':''}">
+          ${logo.url?'<i class="fa-solid fa-check"></i> Logo uploaded':'Not uploaded yet'}
+        </div>
+      </div>
+      <div class="logo-actions">
+        <button class="btn btn-ghost btn-xs" onclick="uploadLogoForSlot(${idx})"><i class="fa-solid fa-upload"></i> Upload</button>
+        <button class="btn btn-danger btn-xs" onclick="removeLogoSlot(${idx})"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function addLogoSlot(){LOGOS.push({key:'logo_'+Date.now(),label:'',url:''});renderLogos()}
+function updateLogoLabel(idx,val){if(LOGOS[idx])LOGOS[idx].label=val}
+function removeLogoSlot(idx){
+  if(!LOGOS[idx])return;
+  if(LOGOS[idx].url) gasCall('deleteLogo',{configKey:LOGOS[idx].key}).catch(()=>{});
+  LOGOS.splice(idx,1);renderLogos();
+}
+function uploadLogoForSlot(idx){
+  LOGO_PENDING_IDX=idx;
+  const inp=document.getElementById('logo-file-inp');
+  inp.onchange=e=>handleLogoFile(e.target.files[0]);
+  inp.value='';inp.click();
+}
+async function handleLogoFile(file){
+  if(!file)return;
+  if(file.size>4*1024*1024){msg('toast','Max file size is 4 MB.','err');return}
+  showLoader('Uploading logo to Drive…');
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const b64=e.target.result.split(',')[1];
+    try{
+      const r=await gasCall('uploadLogo',{data:b64,mimeType:file.type,filename:file.name,configKey:LOGOS[LOGO_PENDING_IDX].key});
+      hideLoader();
+      if(r.ok&&r.data?.url){
+        LOGOS[LOGO_PENDING_IDX].url=r.data.url;
+        msg('toast','Logo uploaded successfully.','ok');
+      } else {
+        LOGOS[LOGO_PENDING_IDX].url=e.target.result;
+        msg('toast','Logo saved locally (deploy GAS for Drive).','info');
+      }
+      renderLogos();
+    }catch(err){hideLoader();msg('toast','Upload error: '+err.message,'err')}
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderLogo2Status(){
+  const box=document.getElementById('logo2-status');
+  const btn=document.getElementById('btn-clear-logo2');
+  if(CFG.logo2_url){
+    box.innerHTML=`
+      <img src="${esc(CFG.logo2_url)}" style="width:44px;height:44px;object-fit:contain;border-radius:6px;border:1px solid var(--border2);background:#fff;padding:3px" onerror="this.style.display='none'">
+      <div style="flex:1"><strong style="font-size:13px;color:var(--c2)">Second logo active</strong>
+      <div style="font-size:11.5px;color:var(--c3);margin-top:2px">Uploaded by: <strong>${esc(CFG.logo2_uploaded_by||'—')}</strong> at ${esc(CFG.logo2_uploaded_at||'—')}</div></div>`;
+    btn.style.display='inline-flex';
+  } else {
+    box.innerHTML=`<div style="flex:1"><strong style="font-size:13px;color:var(--c2)">No second logo uploaded yet.</strong><div style="font-size:11.5px;color:var(--c3);margin-top:2px">Staff can upload from the Staff portal.</div></div>`;
+    btn.style.display='none';
+  }
+}
+
+async function clearLogo2(){
+  if(!confirm('Clear the staff-uploaded second logo?'))return;
+  showLoader('Clearing…');
+  try{
+    await gasCall('saveConfig',{logo2_url:'',logo2_file_id:'',logo2_uploaded_by:'',logo2_uploaded_at:''});
+    const r=await gasCall('getConfig',{});if(r.ok) CFG=r.data||{};
+    hideLoader();renderLogo2Status();
+    await gasCall('addLog',{user:'admin',action:'SECOND LOGO CLEARED',detail:'Admin cleared second logo'});
+    msg('toast','Second logo cleared.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+async function saveConfig(){
+  showLoader('Saving configuration…');
+  try{
+    const logosCopy=LOGOS.filter(l=>l.url||l.label);
+    const r=await gasCall('saveConfig',{
+      college_name:v('cfg-college'),college_est:v('cfg-est'),
+      dept_name:v('cfg-dept'),subtitle1:v('cfg-sub1'),subtitle2:v('cfg-sub2'),
+      watermark:v('cfg-wm'),
+      logo1_url:(logosCopy[0]?.url)||CFG.logo1_url||'',
+      logos:JSON.stringify(logosCopy)
+    });
+    hideLoader();if(!r.ok){msg('toast',r.error||'Failed.','err');return}
+    const cfgR=await gasCall('getConfig',{});if(cfgR.ok) CFG=cfgR.data||{};
+    await gasCall('addLog',{user:'admin',action:'CONFIG SAVED',detail:'College identity and logos updated'});
+    msg('toast','Configuration saved successfully.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+loadAll();
+</script>
+</body>
+</html>
