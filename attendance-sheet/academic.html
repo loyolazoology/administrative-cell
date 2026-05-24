@@ -194,7 +194,7 @@ async function gasCall(action,payload){const p=new URLSearchParams({action,paylo
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function v(id){return document.getElementById(id)?.value?.trim()||''}
 function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
-function fmtDate(d){if(!d||!d.trim()||d==='—')return '—';try{return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch{return d}}
+function fmtDate(d){if(!d||!d.trim()||d==='—')return '—';const dt=new Date(d);return isNaN(dt.getTime())?d:dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
 
 let ALL_AY=[], ALL_CLASSES=[], ALL_STUDENTS=[];
 
