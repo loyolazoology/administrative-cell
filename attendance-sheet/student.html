@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Students</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --gold:#C49A3C;--gold-light:#D4AF5A;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --blue:#1E4A8B;--blue-bg:#EDF3FB;--amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);--shadow:0 4px 14px rgba(0,0,0,.07);
+}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+
+.sec-header{margin-bottom:20px}
+.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}
+.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1}
+.toolbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);padding:7px 11px;min-width:200px;transition:border-color .15s}
+.search-box:focus-within{border-color:var(--maroon)}
+.search-box i{color:var(--c4);font-size:12px}
+.search-box input{flex:1;border:none;background:none;font-size:13px;outline:none}
+.flt{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r2);background:var(--white);font-size:13px;cursor:pointer;transition:border-color .15s}
+.flt:focus{outline:none;border-color:var(--maroon)}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+.table-wrap{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:auto;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg2);color:var(--c3);font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:10px 13px;text-align:left;border-bottom:1.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border2);color:var(--c);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(139,38,53,.012)}
+.tbl-empty{padding:40px;text-align:center;color:var(--c4);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tbl-empty i{font-size:22px;opacity:.4}
+.count-info{font-size:11.5px;color:var(--c3);margin-top:10px;text-align:right}
+
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.badge-gray{background:var(--bg2);color:var(--c3);border-color:var(--border)}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border-color:#B3CCE8}
+.badge-gold{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.36);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal-box{background:var(--white);border-radius:14px;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 70px rgba(0,0,0,.2);animation:mIn .2s ease}
+.modal-box.sm{max-width:440px}
+@keyframes mIn{from{opacity:0;transform:translateY(-6px)scale(.98)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--white);z-index:2}
+.modal-head h3{font-family:var(--font-serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.modal-cl{width:30px;height:30px;border-radius:50%;background:none;border:none;cursor:pointer;color:var(--c3);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:14px}
+.modal-cl:hover{background:var(--bg2);color:var(--c)}
+.modal-body{padding:18px 20px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border2);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white);z-index:2}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.span2{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field input,.field select,.field textarea{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--font-sans)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+.field-note{font-size:10.5px;color:var(--c4);margin-top:2px}
+.field-group-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--c3);padding:10px 0 5px;border-top:1px solid var(--border2);margin-top:4px;grid-column:1/-1}
+
+/* IMPORT */
+.imp-info{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r);padding:12px 14px;font-size:12.5px;margin-bottom:12px;color:var(--amber)}
+.imp-info code{display:block;margin:6px 0 4px;padding:7px 10px;background:rgba(0,0,0,.04);border-radius:4px;font-size:10.5px;color:var(--maroon);word-break:break-all;font-family:monospace}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--r);padding:26px;text-align:center;cursor:pointer;transition:all .2s;color:var(--c3);font-size:13px}
+.drop-zone:hover{border-color:var(--maroon);color:var(--c2);background:var(--maroon-pale)}
+.info-band{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--r);font-size:12.5px;border:1px solid;margin-top:10px}
+.info-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.info-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+
+/* DUPLICATE ALERT */
+.dup-alert{background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:var(--r);padding:11px 14px;font-size:12.5px;color:var(--amber);margin-bottom:12px;display:none;align-items:flex-start;gap:8px}
+.dup-alert.show{display:flex}
+
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr!important}body{padding:14px}}
+</style>
+</head>
+<body>
+
+<div class="sec-header">
+  <h2>Student Database</h2>
+  <p>Manage all students. Batch codes track enrollment details. Department numbers must be unique.</p>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="s-q" type="text" placeholder="Search name, batch, dept no…" oninput="filterTable()">
+    </div>
+    <select class="flt" id="s-cls" onchange="filterTable()"><option value="">All Classes</option></select>
+    <select class="flt" id="s-ay" onchange="filterTable()"><option value="">All Years</option></select>
+    <select class="flt" id="s-gender" onchange="filterTable()">
+      <option value="">All Genders</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Transgender">Transgender</option>
+    </select>
+    <select class="flt" id="s-active" onchange="filterTable()">
+      <option value="">All Status</option>
+      <option value="TRUE">Active</option>
+      <option value="FALSE">Inactive</option>
+    </select>
+  </div>
+  <div class="toolbar-right">
+    <button class="btn btn-ghost btn-sm" onclick="openImport()"><i class="fa-solid fa-file-import"></i> Import CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openAdd()"><i class="fa-solid fa-plus"></i> Add Student</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Dept No.</th>
+        <th>Batch</th>
+        <th>Gender</th>
+        <th>Class</th>
+        <th>Sem</th>
+        <th>Shift</th>
+        <th>Section</th>
+        <th>Year</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="st-tbody"></tbody>
+  </table>
+  <div class="tbl-empty" id="st-empty" style="display:none">
+    <i class="fa-solid fa-users"></i>No students found.
+  </div>
+</div>
+<div class="count-info" id="count-info"></div>
+
+<!-- STUDENT MODAL -->
+<div class="modal-ov" id="m-student" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="m-title"><i class="fa-solid fa-user-graduate" style="color:var(--maroon)"></i>Add Student</h3>
+      <button class="modal-cl" onclick="closeM()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="dup-alert" id="dup-alert">
+        <i class="fa-solid fa-triangle-exclamation" style="margin-top:1px"></i>
+        <div>
+          <strong>Duplicate Department Number Detected</strong>
+          <div id="dup-detail" style="margin-top:3px;font-size:11.5px"></div>
+          <button class="btn btn-ghost" style="margin-top:8px;font-size:11px;padding:4px 10px" onclick="proceedAnyway()">Proceed Anyway</button>
+        </div>
+      </div>
+      <div class="g3">
+        <div class="field span2"><label>Full Name <span style="color:var(--maroon)">*</span></label><input id="ms-name" type="text" placeholder="Student full name"></div>
+        <div class="field"><label>Gender <span style="color:var(--maroon)">*</span></label>
+          <select id="ms-gender">
+            <option value="">— Select —</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Transgender">Transgender</option>
+          </select>
+        </div>
+        <div class="field"><label>Department Number</label><input id="ms-deptno" type="text" placeholder="e.g. 25-001" onblur="checkDuplicate()"></div>
+        <div class="field"><label>Date of Birth</label><input id="ms-dob" type="date"></div>
+        <div class="field"><label>Contact No.</label><input id="ms-con" type="tel" placeholder="10-digit mobile"></div>
+        <div class="field span2"><label>Address</label><input id="ms-addr" type="text" placeholder="Door no., Street, City – PIN"></div>
+        <div class="field"><label>Email</label><input id="ms-email" type="email" placeholder="student@mail.com"></div>
+        <div class="field-group-label">Academic Details</div>
+        <div class="field"><label>Class <span style="color:var(--maroon)">*</span></label><select id="ms-cls"><option value="">— Select class —</option></select></div>
+        <div class="field"><label>Batch Code</label><input id="ms-batch" type="text" placeholder="e.g. 25-UAZ-001"></div>
+        <div class="field"><label>Academic Year <span style="color:var(--maroon)">*</span></label><select id="ms-ay"><option value="">— Select year —</option></select></div>
+        <div class="field"><label>Semester</label>
+          <select id="ms-sem">
+            <option value="">—</option>
+            <option>Semester I</option><option>Semester II</option>
+            <option>Semester III</option><option>Semester IV</option>
+            <option>Semester V</option><option>Semester VI</option>
+          </select>
+        </div>
+        <div class="field"><label>Shift</label>
+          <select id="ms-shift"><option value="">—</option><option>Shift 1</option><option>Shift 2</option></select>
+        </div>
+        <div class="field"><label>Section</label><input id="ms-sec" type="text" placeholder="A / B / C"></div>
+        <div class="field-group-label">Parent / Guardian</div>
+        <div class="field"><label>Father's Name</label><input id="ms-fa" type="text"></div>
+        <div class="field"><label>Mother's Name</label><input id="ms-mo" type="text"></div>
+        <div class="field"><label>Parent Contact</label><input id="ms-pc" type="tel"></div>
+        <div class="field"><label>Status</label>
+          <select id="ms-active"><option value="TRUE">Active</option><option value="FALSE">Inactive</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeM()">Cancel</button>
+      <button class="btn btn-primary" id="btn-save" onclick="saveStudent()"><i class="fa-solid fa-floppy-disk"></i> Save Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-ov" id="m-import" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-file-import" style="color:var(--maroon)"></i>Import Students from CSV</h3>
+      <button class="modal-cl" onclick="closeImport()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="imp-info">
+        <strong>CSV Column Order (first row = headers):</strong>
+        <code>Name, Gender, DeptNo, DOB (YYYY-MM-DD), Address, Class, Batch, Semester, Shift, Section, Contact, Email, FatherName, MotherName, ParentContact</code>
+        <span style="color:var(--maroon);font-size:12px;font-weight:700;cursor:pointer" onclick="dlTemplate()">
+          <i class="fa-solid fa-download"></i> Download template
+        </span>
+      </div>
+      <div class="field" style="margin-bottom:12px">
+        <label>Academic Year <span style="color:var(--maroon)">*</span></label>
+        <select id="imp-ay"><option value="">— Select year —</option></select>
+      </div>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('csv-inp').click()">
+        <i class="fa-solid fa-file-csv" style="font-size:26px;display:block;margin-bottom:8px;color:var(--maroon)"></i>
+        Click or drag &amp; drop your CSV file here
+        <div style="font-size:11px;color:var(--c4);margin-top:4px">.csv files only</div>
+      </div>
+      <input type="file" id="csv-inp" accept=".csv" style="display:none" onchange="handleCSV(this)">
+      <div id="imp-preview"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeImport()">Cancel</button>
+      <button class="btn btn-primary" id="btn-import" disabled onclick="confirmImport()">
+        <i class="fa-solid fa-file-import"></i> Import
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+
+function msg(type,m,v){window.parent.postMessage({type,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+
+async function gasCall(action,payload){
+  const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});
+  const r=await fetch(GAS+'?'+p);
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
+
+let ALL_STUDENTS=[], ALL_CLASSES=[], ALL_AY=[], EDIT_ID=null, IMPORT_DATA=[], BYPASS_DUP=false;
+
+async function loadAll(){
+  try{
+    const[stR,clsR,ayR]=await Promise.all([
+      gasCall('getStudents',{}),gasCall('getClasses',{}),gasCall('getAcademicYears',{})
+    ]);
+    if(stR.ok) ALL_STUDENTS=stR.data||[];
+    if(clsR.ok) ALL_CLASSES=clsR.data||[];
+    if(ayR.ok) ALL_AY=ayR.data||[];
+    populateFilters();
+    renderTable();
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+
+function populateFilters(){
+  const clsEl=document.getElementById('s-cls');
+  const ayEl=document.getElementById('s-ay');
+  const clsOpts='<option value="">All Classes</option>'+ALL_CLASSES.map(c=>`<option>${esc(c.Label)}</option>`).join('');
+  const ayOpts='<option value="">All Years</option>'+ALL_AY.map(a=>`<option>${esc(a.Label)}</option>`).join('');
+  clsEl.innerHTML=clsOpts; ayEl.innerHTML=ayOpts;
+  // Set active year as default
+  const active=ALL_AY.find(a=>a.Active==='TRUE');
+  if(active) ayEl.value=active.Label;
+  // Also fill modal selects
+  const msCls=document.getElementById('ms-cls');
+  msCls.innerHTML='<option value="">— Select class —</option>'+ALL_CLASSES.map(c=>`<option>${esc(c.Label)}</option>`).join('');
+  const msAy=document.getElementById('ms-ay');
+  msAy.innerHTML='<option value="">— Select year —</option>'+ALL_AY.map(a=>`<option>${esc(a.Label)}</option>`).join('');
+  if(active) msAy.value=active.Label;
+  const impAy=document.getElementById('imp-ay');
+  impAy.innerHTML='<option value="">— Select year —</option>'+ALL_AY.map(a=>`<option>${esc(a.Label)}</option>`).join('');
+  if(active) impAy.value=active.Label;
+}
+
+function filterTable(){renderTable()}
+
+function renderTable(){
+  const q=(document.getElementById('s-q').value||'').toLowerCase();
+  const cf=document.getElementById('s-cls').value;
+  const af=document.getElementById('s-ay').value;
+  const gf=document.getElementById('s-gender').value;
+  const sf=document.getElementById('s-active').value;
+  let d=[...ALL_STUDENTS];
+  if(q) d=d.filter(s=>(s.Name||'').toLowerCase().includes(q)||(s.Batch||'').toLowerCase().includes(q)||(s.DeptNo||'').toLowerCase().includes(q));
+  if(cf) d=d.filter(s=>s.Class===cf);
+  if(af) d=d.filter(s=>s.AcademicYear===af);
+  if(gf) d=d.filter(s=>s.Gender===gf);
+  if(sf) d=d.filter(s=>s.Active===sf);
+  const tbody=document.getElementById('st-tbody');
+  const empty=document.getElementById('st-empty');
+  const countEl=document.getElementById('count-info');
+  if(!d.length){tbody.innerHTML='';empty.style.display='flex';countEl.textContent='';return}
+  empty.style.display='none';
+  countEl.textContent=`Showing ${d.length} of ${ALL_STUDENTS.length} student${ALL_STUDENTS.length!==1?'s':''}`;
+  tbody.innerHTML=d.map(s=>`<tr>
+    <td><strong>${esc(s.Name)}</strong></td>
+    <td style="font-size:11.5px;color:var(--c3)">${esc(s.DeptNo||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Batch||'—')}</td>
+    <td><span class="badge ${s.Gender==='Male'?'badge-blue':s.Gender==='Female'?'badge-maroon':s.Gender==='Transgender'?'badge-green':'badge-gray'}" style="--badge-maroon:var(--maroon-pale)">${esc(s.Gender||'—')}</span></td>
+    <td style="font-size:11.5px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.Class)}">${esc(s.Class)}</td>
+    <td style="font-size:11.5px">${esc(s.Semester||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Shift||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Section||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.AcademicYear)}</td>
+    <td style="font-size:11.5px">${esc(s.Contact||'—')}</td>
+    <td><span class="badge ${s.Active==='FALSE'?'badge-gray':'badge-green'}">${s.Active==='FALSE'?'Inactive':'Active'}</span></td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-ghost btn-xs" onclick="editStudent('${s.ID}')"><i class="fa-solid fa-pen-to-square"></i></button>
+      <button class="btn btn-danger btn-xs" style="margin-left:3px" onclick="toggleActive('${s.ID}','${s.Active}')">${s.Active==='FALSE'?'Activate':'Disable'}</button>
+      <button class="btn btn-xs" style="margin-left:3px;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)" onclick="deleteStudent('${s.ID}')"><i class="fa-solid fa-trash"></i></button>
+    </td></tr>`).join('');
+}
+
+// badge-maroon doesn't exist, fix:
+function renderTable(){
+  const q=(document.getElementById('s-q').value||'').toLowerCase();
+  const cf=document.getElementById('s-cls').value;
+  const af=document.getElementById('s-ay').value;
+  const gf=document.getElementById('s-gender').value;
+  const sf=document.getElementById('s-active').value;
+  let d=[...ALL_STUDENTS];
+  if(q) d=d.filter(s=>(s.Name||'').toLowerCase().includes(q)||(s.Batch||'').toLowerCase().includes(q)||(s.DeptNo||'').toLowerCase().includes(q));
+  if(cf) d=d.filter(s=>s.Class===cf);
+  if(af) d=d.filter(s=>s.AcademicYear===af);
+  if(gf) d=d.filter(s=>s.Gender===gf);
+  if(sf) d=d.filter(s=>s.Active===sf);
+  const tbody=document.getElementById('st-tbody');
+  const empty=document.getElementById('st-empty');
+  const countEl=document.getElementById('count-info');
+  if(!d.length){tbody.innerHTML='';empty.style.display='flex';countEl.textContent='';return}
+  empty.style.display='none';
+  countEl.textContent=`Showing ${d.length} of ${ALL_STUDENTS.length} student${ALL_STUDENTS.length!==1?'s':''}`;
+  const genderBadge=(g)=>{
+    if(g==='Male') return '<span class="badge badge-blue">Male</span>';
+    if(g==='Female') return `<span class="badge" style="background:#F9EFF1;color:#8B2635;border-color:rgba(139,38,53,.25)">Female</span>`;
+    if(g==='Transgender') return '<span class="badge badge-green">Transgender</span>';
+    return '<span class="badge badge-gray">—</span>';
+  };
+  tbody.innerHTML=d.map(s=>`<tr>
+    <td><strong>${esc(s.Name)}</strong></td>
+    <td style="font-size:11.5px;color:var(--c3)">${esc(s.DeptNo||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Batch||'—')}</td>
+    <td>${genderBadge(s.Gender)}</td>
+    <td style="font-size:11.5px;max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.Class)}">${esc(s.Class)}</td>
+    <td style="font-size:11.5px">${esc(s.Semester||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Shift||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.Section||'—')}</td>
+    <td style="font-size:11.5px">${esc(s.AcademicYear)}</td>
+    <td style="font-size:11.5px">${esc(s.Contact||'—')}</td>
+    <td><span class="badge ${s.Active==='FALSE'?'badge-gray':'badge-green'}">${s.Active==='FALSE'?'Inactive':'Active'}</span></td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-ghost btn-xs" onclick="editStudent('${s.ID}')"><i class="fa-solid fa-pen-to-square"></i></button>
+      <button class="btn btn-danger btn-xs" style="margin-left:3px" onclick="toggleActive('${s.ID}','${s.Active}')">${s.Active==='FALSE'?'Activate':'Disable'}</button>
+      <button class="btn btn-xs" style="margin-left:3px;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)" onclick="deleteStudent('${s.ID}')"><i class="fa-solid fa-trash"></i></button>
+    </td></tr>`).join('');
+}
+
+function openAdd(){
+  EDIT_ID=null; BYPASS_DUP=false;
+  document.getElementById('m-title').innerHTML='<i class="fa-solid fa-user-graduate" style="color:var(--maroon)"></i>Add Student';
+  ['ms-name','ms-deptno','ms-dob','ms-con','ms-addr','ms-email','ms-fa','ms-mo','ms-pc','ms-batch','ms-sec'].forEach(id=>sv(id,''));
+  sv('ms-gender',''); sv('ms-cls',''); sv('ms-sem',''); sv('ms-shift','');
+  const active=ALL_AY.find(a=>a.Active==='TRUE');
+  if(active) sv('ms-ay',active.Label);
+  sv('ms-active','TRUE');
+  document.getElementById('dup-alert').classList.remove('show');
+  document.getElementById('m-student').style.display='flex';
+}
+
+function editStudent(id){
+  const s=ALL_STUDENTS.find(x=>x.ID===id);if(!s)return;
+  EDIT_ID=id; BYPASS_DUP=true;
+  document.getElementById('m-title').innerHTML='<i class="fa-solid fa-user-pen" style="color:var(--maroon)"></i>Edit Student';
+  sv('ms-name',s.Name); sv('ms-gender',s.Gender); sv('ms-deptno',s.DeptNo);
+  sv('ms-dob',s.DOB); sv('ms-con',s.Contact); sv('ms-addr',s.Address);
+  sv('ms-email',s.Email); sv('ms-fa',s.Father); sv('ms-mo',s.Mother); sv('ms-pc',s.ParentContact);
+  sv('ms-cls',s.Class); sv('ms-batch',s.Batch); sv('ms-ay',s.AcademicYear);
+  sv('ms-sem',s.Semester); sv('ms-shift',s.Shift); sv('ms-sec',s.Section);
+  sv('ms-active',s.Active||'TRUE');
+  document.getElementById('dup-alert').classList.remove('show');
+  document.getElementById('m-student').style.display='flex';
+}
+
+function checkDuplicate(){
+  const deptno=v('ms-deptno'); if(!deptno) return;
+  const ay=v('ms-ay');
+  const dup=ALL_STUDENTS.find(s=>s.DeptNo===deptno&&s.ID!==EDIT_ID);
+  const alertEl=document.getElementById('dup-alert');
+  if(dup){
+    document.getElementById('dup-detail').textContent=`Existing: ${dup.Name} | ${dup.Class} | ${dup.AcademicYear}`;
+    alertEl.classList.add('show');
+    BYPASS_DUP=false;
+  } else {
+    alertEl.classList.remove('show');
+    BYPASS_DUP=true;
+  }
+}
+function proceedAnyway(){
+  BYPASS_DUP=true;
+  document.getElementById('dup-alert').classList.remove('show');
+}
+
+async function saveStudent(){
+  if(!BYPASS_DUP && !EDIT_ID){
+    const deptno=v('ms-deptno');
+    if(deptno){
+      const dup=ALL_STUDENTS.find(s=>s.DeptNo===deptno);
+      if(dup){msg('toast','Resolve duplicate department number first.','err');return;}
+    }
+  }
+  const name=v('ms-name'), cls=v('ms-cls'), ay=v('ms-ay'), gender=v('ms-gender');
+  if(!name){msg('toast','Student name is required.','err');return;}
+  if(!gender){msg('toast','Gender is required.','err');return;}
+  if(!cls){msg('toast','Class is required.','err');return;}
+  if(!ay){msg('toast','Academic year is required.','err');return;}
+  showLoader('Saving student…');
+  try{
+    const r=await gasCall('saveStudent',{
+      id:EDIT_ID,name,gender,deptno:v('ms-deptno'),dob:v('ms-dob'),address:v('ms-addr'),
+      cls,batch:v('ms-batch'),semester:v('ms-sem'),shift:v('ms-shift'),
+      section:v('ms-sec'),ay,contact:v('ms-con'),email:v('ms-email'),
+      father:v('ms-fa'),mother:v('ms-mo'),pcon:v('ms-pc'),
+      active:document.getElementById('ms-active').value
+    });
+    hideLoader();
+    if(!r.ok){msg('toast',r.error||'Save failed.','err');return;}
+    closeM();
+    await loadAll();
+    await gasCall('addLog',{user:'admin',action:EDIT_ID?'EDIT STUDENT':'ADD STUDENT',detail:name});
+    msg('toast','Student saved successfully.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+async function toggleActive(id,cur){
+  showLoader('Updating…');
+  try{
+    await gasCall('toggleStudent',{id});
+    hideLoader(); await loadAll();
+    msg('toast',cur==='FALSE'?'Student activated.':'Student disabled.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+async function deleteStudent(id){
+  if(!confirm('Permanently delete this student? This cannot be undone.'))return;
+  showLoader('Deleting…');
+  try{
+    await gasCall('deleteStudent',{id});
+    hideLoader(); await loadAll();
+    msg('toast','Student deleted.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+function closeM(){document.getElementById('m-student').style.display='none'; BYPASS_DUP=false;}
+
+// IMPORT
+function openImport(){
+  IMPORT_DATA=[];
+  document.getElementById('imp-preview').innerHTML='';
+  document.getElementById('btn-import').disabled=true;
+  document.getElementById('csv-inp').value='';
+  document.getElementById('m-import').style.display='flex';
+}
+function closeImport(){document.getElementById('m-import').style.display='none'}
+
+function dlTemplate(){
+  const h='Name,Gender,DeptNo,DOB,Address,Class,Batch,Semester,Shift,Section,Contact,Email,FatherName,MotherName,ParentContact';
+  const r='Aarthi Murugan,Female,25-001,2005-03-12,"12 Anna Nagar, Chennai",I B.Sc. Advanced Zoology & Biotechnology,25-UAZ-001,Semester I,Shift 1,A,9876543210,student@mail.com,Father Name,Mother Name,9876543200';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([h+'\n'+r],{type:'text/csv'}));
+  a.download='students_template.csv'; a.click();
+}
+
+function handleCSV(inp){
+  const file=inp.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split(/\r?\n/).filter(l=>l.trim());
+    const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+    const parseCSVLine=(line)=>{
+      const vals=[];let cur='',inQ=false;
+      for(const ch of line){
+        if(ch==='"'){inQ=!inQ}else if(ch===','&&!inQ){vals.push(cur.trim());cur=''}else cur+=ch;
+      }
+      vals.push(cur.trim()); return vals;
+    };
+    IMPORT_DATA=lines.slice(1).map(line=>{
+      const vals=parseCSVLine(line);
+      const o={};
+      hdrs.forEach((h,i)=>o[h]=(vals[i]||'').replace(/^"|"$/g,''));
+      return{name:o.Name,gender:o.Gender,deptno:o.DeptNo,dob:o.DOB,address:o.Address,cls:o.Class,batch:o.Batch,semester:o.Semester,shift:o.Shift,section:o.Section,contact:o.Contact,email:o.Email,father:o.FatherName,mother:o.MotherName,pcon:o.ParentContact};
+    }).filter(s=>s.name);
+    // Check duplicates
+    const dups=IMPORT_DATA.filter(s=>s.deptno&&ALL_STUDENTS.some(ex=>ex.DeptNo===s.deptno));
+    let prevHtml='';
+    if(dups.length){
+      prevHtml+=`<div class="info-band info-red" style="margin-top:10px"><i class="fa-solid fa-triangle-exclamation"></i><span><strong>${dups.length} duplicate dept no(s) found:</strong> ${dups.map(d=>d.name+' ('+d.deptno+')').slice(0,5).join(', ')}${dups.length>5?'…':''} — They will be imported anyway.</span></div>`;
+    }
+    prevHtml+=`<div class="info-band info-green" style="margin-top:${dups.length?'6px':'10px'}"><i class="fa-solid fa-circle-check"></i><span><strong>${IMPORT_DATA.length}</strong> valid records found. Select year and click Import.</span></div>`;
+    document.getElementById('imp-preview').innerHTML=prevHtml;
+    document.getElementById('btn-import').disabled=false;
+  };
+  reader.readAsText(file);
+}
+
+const dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='var(--maroon)'});
+dz.addEventListener('dragleave',()=>{dz.style.borderColor=''});
+dz.addEventListener('drop',e=>{
+  e.preventDefault();dz.style.borderColor='';
+  const f=e.dataTransfer.files[0];
+  if(f){const inp=document.getElementById('csv-inp');const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;handleCSV(inp)}
+});
+
+async function confirmImport(){
+  const ay=document.getElementById('imp-ay').value;
+  if(!ay){msg('toast','Select an academic year.','err');return;}
+  if(!IMPORT_DATA.length){msg('toast','No data to import.','err');return;}
+  showLoader('Importing students…');
+  try{
+    const r=await gasCall('importStudents',{rows:IMPORT_DATA,ay});
+    hideLoader();
+    if(!r.ok){msg('toast',r.error||'Import failed.','err');return;}
+    const count=(r.data&&r.data.count)||0;
+    closeImport(); await loadAll();
+    await gasCall('addLog',{user:'admin',action:'IMPORT',detail:`${count} students imported to ${ay}`});
+    msg('toast',`Imported ${count} student${count!==1?'s':''} to ${ay}.`,'ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+
+// Modal overlay click-outside
+document.getElementById('m-student').addEventListener('click',e=>{if(e.target===document.getElementById('m-student'))closeM()});
+document.getElementById('m-import').addEventListener('click',e=>{if(e.target===document.getElementById('m-import'))closeImport()});
+
+loadAll();
+setInterval(loadAll, 45000);
+</script>
+</body>
+</html>
