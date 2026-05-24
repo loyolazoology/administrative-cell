@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Logs</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);--bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;--c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;--border:#E2DAD4;--border2:#EDE8E3;--green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;--r:8px;--r2:6px;--r3:12px;--font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;--shadow-sm:0 1px 3px rgba(0,0,0,.05);}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.sec-header{margin-bottom:20px}.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);padding:7px 11px;min-width:200px;transition:border-color .15s}
+.search-box:focus-within{border-color:var(--maroon)}.search-box i{color:var(--c4);font-size:12px}.search-box input{flex:1;border:none;background:none;font-size:13px;outline:none}
+.flt{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r2);background:var(--white);font-size:13px;cursor:pointer;transition:border-color .15s}.flt:focus{outline:none;border-color:var(--maroon)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;font-family:var(--font-sans)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-sm{padding:6px 11px;font-size:12px}
+.table-wrap{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:auto;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg2);color:var(--c3);font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:10px 13px;text-align:left;border-bottom:1.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover td{background:rgba(139,38,53,.012)}
+.tbl-empty{padding:40px;text-align:center;color:var(--c4);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}.tbl-empty i{font-size:22px;opacity:.4}
+.action-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+.count-info{font-size:11.5px;color:var(--c3);margin-top:10px;text-align:right}
+@media(max-width:480px){body{padding:14px}}
+</style>
+</head>
+<body>
+<div class="sec-header"><h2>Activity Logs</h2><p>Audit trail of all logins, sheet generation, imports and configuration changes.</p></div>
+<div class="toolbar">
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="log-q" type="text" placeholder="Search logs…" oninput="filterLogs()"></div>
+    <select class="flt" id="log-action" onchange="filterLogs()">
+      <option value="">All Actions</option>
+      <option>LOGIN</option><option>SHEET GENERATED</option>
+      <option>ADD STUDENT</option><option>EDIT STUDENT</option><option>DELETE STUDENT</option>
+      <option>IMPORT</option><option>PROMOTE</option>
+      <option>ADD STAFF</option><option>EDIT STAFF</option>
+      <option>CONFIG SAVED</option><option>USER CREATED</option>
+    </select>
+  </div>
+  <button class="btn btn-ghost btn-sm" onclick="loadLogs()"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead>
+    <tbody id="logs-tbody"></tbody>
+  </table>
+  <div class="tbl-empty" id="logs-empty" style="display:none"><i class="fa-solid fa-clock-rotate-left"></i>No logs yet.</div>
+</div>
+<div class="count-info" id="log-count"></div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+const ACTION_COLORS={'LOGIN':'#1E4A8B','SHEET GENERATED':'#1D6842','ADD STUDENT':'#C49A3C','EDIT STUDENT':'#C49A3C','DELETE STUDENT':'#8B2020','IMPORT':'#6B4C8B','PROMOTE':'#8B5E00','CONFIG SAVED':'#8B2635','USER CREATED':'#1D6842','SETUP':'#555'};
+
+let ALL_LOGS=[];
+async function loadLogs(){
+  try{
+    const r=await gasCall('getLogs',{limit:500});
+    ALL_LOGS=r.ok?r.data||[]:[];
+    filterLogs();
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+function filterLogs(){
+  const q=(document.getElementById('log-q').value||'').toLowerCase();
+  const af=document.getElementById('log-action').value;
+  let d=[...ALL_LOGS];
+  if(q) d=d.filter(l=>(l.Action||'').toLowerCase().includes(q)||(l.User||'').toLowerCase().includes(q)||(l.Details||'').toLowerCase().includes(q));
+  if(af) d=d.filter(l=>l.Action===af);
+  const tbody=document.getElementById('logs-tbody'),empty=document.getElementById('logs-empty'),count=document.getElementById('log-count');
+  if(!d.length){tbody.innerHTML='';empty.style.display='flex';count.textContent='';return}
+  empty.style.display='none';
+  count.textContent=`Showing ${d.length} of ${ALL_LOGS.length} log entries`;
+  const color=(a)=>ACTION_COLORS[a]||'var(--c4)';
+  tbody.innerHTML=d.map(l=>`<tr>
+    <td style="font-size:11.5px;white-space:nowrap;color:var(--c3)">${esc(l.Timestamp)}</td>
+    <td><strong style="font-size:12.5px">${esc(l.User||'—')}</strong></td>
+    <td><span style="display:inline-flex;align-items:center;font-size:12px;font-weight:700;color:${color(l.Action)}"><span class="action-dot" style="background:${color(l.Action)}"></span>${esc(l.Action||'—')}</span></td>
+    <td style="font-size:12px;color:var(--c3)">${esc(l.Details||'—')}</td>
+  </tr>`).join('');
+}
+loadLogs();
+setInterval(loadLogs,30000);
+</script>
+</body>
+</html>
