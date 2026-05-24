@@ -661,7 +661,7 @@ async function boot(){
     if(r.ok && r.data){
       CFG = r.data;
       const cn = CFG.college_name||'';
-      if(cn) document.getElementById('sb-college-name').textContent = cn.split(',')[0];
+      if(cn) document.getElementById('sb-college-name').textContent = cn.split(' (')[0];
       if(CFG.logo1_url) document.getElementById('sb-logo-img').src = CFG.logo1_url;
     }
     // Active year
