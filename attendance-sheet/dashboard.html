@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);
+  --gold:#C49A3C;--gold-light:#D4AF5A;--gold-pale:#FBF6EC;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--bg3:#E9E3DC;
+  --white:#FFFFFF;--c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --border:#E2DAD4;--border2:#EDE8E3;
+  --green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;
+  --red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;
+  --blue:#1E4A8B;--blue-bg:#EDF3FB;--blue-border:#B3CCE8;
+  --amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;
+  --r:8px;--r2:6px;--r3:12px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);--shadow:0 4px 14px rgba(0,0,0,.07);
+}
+html,body{height:100%;background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px}
+body{overflow-y:auto;padding:22px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-card{
+  background:var(--white);border:1px solid var(--border2);
+  border-radius:var(--r3);padding:20px 18px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);transition:box-shadow .2s;
+}
+.stat-card:hover{box-shadow:var(--shadow)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r3) var(--r3) 0 0}
+.sc-1::before{background:linear-gradient(90deg,var(--maroon),var(--maroon-light))}
+.sc-2::before{background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.sc-3::before{background:linear-gradient(90deg,var(--green),#2A8055)}
+.sc-4::before{background:linear-gradient(90deg,var(--blue),#2563A8)}
+.stat-icon{position:absolute;top:16px;right:16px;font-size:26px;opacity:.07}
+.stat-value{
+  font-family:var(--font-serif);font-size:36px;font-weight:700;
+  line-height:1;margin-bottom:5px;color:var(--c);
+}
+.stat-label{font-size:11.5px;color:var(--c3);font-weight:500}
+
+/* MAIN GRID */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:hidden;box-shadow:var(--shadow-sm)}
+.card-head{
+  padding:13px 17px;border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-head h3{
+  font-family:var(--font-serif);font-size:15px;font-weight:600;
+  display:flex;align-items:center;gap:8px;color:var(--c);
+}
+.card-body{padding:16px 18px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid;font-family:var(--font-sans)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+/* LOG LIST */
+.log-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 0;border-bottom:1px solid var(--border2);font-size:12.5px;
+}
+.log-item:last-child{border-bottom:none}
+.log-dot{
+  width:7px;height:7px;background:var(--maroon);
+  border-radius:50%;margin-top:4px;flex-shrink:0;
+  opacity:.6;
+}
+.log-action{flex:1;color:var(--c2);line-height:1.4}
+.log-time{font-size:10.5px;color:var(--c4);white-space:nowrap;margin-left:8px;margin-top:1px}
+
+/* CLASS SUMMARY */
+.cls-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 0;border-bottom:1px solid var(--border2);font-size:13px;
+}
+.cls-row:last-child{border-bottom:none}
+.cls-name{color:var(--c2);font-weight:500;flex:1}
+.cls-count{
+  font-weight:700;color:var(--maroon);
+  font-family:var(--font-serif);font-size:17px;
+}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qa-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;background:var(--bg);
+  border:1.5px solid var(--border2);border-radius:var(--r2);
+  cursor:pointer;transition:all .18s;
+  font-family:var(--font-sans);text-align:left;
+}
+.qa-btn:hover{border-color:var(--maroon);background:var(--maroon-pale)}
+.qa-btn:hover .qa-ico{background:var(--maroon);color:#fff}
+.qa-ico{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--bg2);color:var(--c3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;transition:all .18s;
+}
+.qa-label{font-size:12px;font-weight:600;color:var(--c2)}
+.qa-sub{font-size:10.5px;color:var(--c4);margin-top:1px}
+
+/* EMPTY */
+.empty-state{padding:28px;text-align:center;color:var(--c4);font-size:13px}
+.empty-state i{font-size:22px;display:block;margin-bottom:7px;opacity:.5}
+
+/* PROGRESS BAR */
+.progress-row{margin-bottom:8px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.progress-label span:first-child{color:var(--c2);font-weight:500}
+.progress-label span:last-child{color:var(--maroon);font-weight:700}
+.progress-bar-bg{background:var(--bg2);border-radius:20px;height:6px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--maroon),var(--maroon-light));transition:width .5s ease}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.badge-gray{background:var(--bg2);color:var(--c3);border-color:var(--border)}
+
+@media(max-width:800px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  body{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="stat-card sc-1">
+    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+    <div class="stat-value" id="st-students">—</div>
+    <div class="stat-label">Active Students (Current Year)</div>
+  </div>
+  <div class="stat-card sc-2">
+    <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+    <div class="stat-value" id="st-sheets">—</div>
+    <div class="stat-label">Sheets Generated</div>
+  </div>
+  <div class="stat-card sc-3">
+    <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+    <div class="stat-value" id="st-classes">—</div>
+    <div class="stat-label">Classes / Sections</div>
+  </div>
+  <div class="stat-card sc-4">
+    <div class="stat-icon"><i class="fa-solid fa-calendar"></i></div>
+    <div class="stat-value" id="st-ay" style="font-size:20px;padding-top:8px">—</div>
+    <div class="stat-label">Active Academic Year</div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="dash-grid">
+  <!-- Recent Activity -->
+  <div class="card">
+    <div class="card-head">
+      <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--maroon);font-size:13px"></i>Recent Activity</h3>
+      <button class="btn btn-ghost btn-xs" onclick="loadData()"><i class="fa-solid fa-rotate-right"></i></button>
+    </div>
+    <div class="card-body" id="act-list">
+      <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i>Loading…</div>
+    </div>
+  </div>
+
+  <!-- Class Summary -->
+  <div class="card">
+    <div class="card-head">
+      <h3><i class="fa-solid fa-chart-bar" style="color:var(--gold);font-size:13px"></i>Student Distribution</h3>
+    </div>
+    <div class="card-body" id="cls-summary">
+      <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i>Loading…</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card">
+    <div class="card-head">
+      <h3><i class="fa-solid fa-bolt" style="color:var(--gold);font-size:13px"></i>Quick Actions</h3>
+    </div>
+    <div class="card-body">
+      <div class="qa-grid">
+        <button class="qa-btn" onclick="nav('generate')">
+          <div class="qa-ico"><i class="fa-solid fa-file-circle-plus"></i></div>
+          <div><div class="qa-label">Generate Sheet</div><div class="qa-sub">Create attendance sheet</div></div>
+        </button>
+        <button class="qa-btn" onclick="nav('students')">
+          <div class="qa-ico"><i class="fa-solid fa-user-plus"></i></div>
+          <div><div class="qa-label">Add Student</div><div class="qa-sub">Register new student</div></div>
+        </button>
+        <button class="qa-btn" onclick="nav('staff')">
+          <div class="qa-ico"><i class="fa-solid fa-chalkboard-user"></i></div>
+          <div><div class="qa-label">Staff Directory</div><div class="qa-sub">Manage staff records</div></div>
+        </button>
+        <button class="qa-btn" onclick="nav('academic')">
+          <div class="qa-ico"><i class="fa-solid fa-arrow-up"></i></div>
+          <div><div class="qa-label">Promote Students</div><div class="qa-sub">New academic year</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gender Breakdown -->
+  <div class="card">
+    <div class="card-head">
+      <h3><i class="fa-solid fa-venus-mars" style="color:var(--blue);font-size:13px"></i>Gender Breakdown</h3>
+    </div>
+    <div class="card-body" id="gender-summary">
+      <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i>Loading…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+
+function msg(type,m,v){window.parent.postMessage({type,msg:m,variant:v},'*')}
+function nav(p){window.parent.postMessage({type:'navigate',page:p},'*')}
+
+async function gasCall(action, payload){
+  const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});
+  const r=await fetch(GAS+'?'+p);
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+async function loadData(){
+  try{
+    const [stR,ayR,clsR,logsR]=await Promise.all([
+      gasCall('getStudents',{}),
+      gasCall('getAcademicYears',{}),
+      gasCall('getClasses',{}),
+      gasCall('getLogs',{limit:200})
+    ]);
+
+    const allSt = stR.ok?stR.data||[]:[];
+    const allAY = ayR.ok?ayR.data||[]:[];
+    const allCls= clsR.ok?clsR.data||[]:[];
+    const allLogs= logsR.ok?logsR.data||[]:[];
+
+    const activeAY = allAY.find(a=>a.Active==='TRUE');
+    const ayLabel = activeAY?activeAY.Label:'';
+
+    // Update parent AY chip
+    window.parent.postMessage({type:'updateAY',label:ayLabel||'No Active Year'},'*');
+
+    const ayStudents = allSt.filter(s=>s.AcademicYear===ayLabel&&s.Active!=='FALSE');
+    const sections = [...new Set(ayStudents.map(s=>s.Class+(s.Section?' — '+s.Section:'')))];
+
+    document.getElementById('st-students').textContent = ayStudents.length;
+    document.getElementById('st-classes').textContent = sections.length;
+    document.getElementById('st-ay').textContent = ayLabel||'—';
+
+    const sheetCount = allLogs.filter(l=>l.Action==='SHEET GENERATED').length;
+    document.getElementById('st-sheets').textContent = sheetCount;
+
+    // Activity log
+    const actEl = document.getElementById('act-list');
+    if(allLogs.length){
+      actEl.innerHTML = allLogs.slice(0,10).map(l=>`
+        <div class="log-item">
+          <div class="log-dot"></div>
+          <div class="log-action"><strong>${esc(l.Action)}</strong>: ${esc(l.Details)}</div>
+          <div class="log-time">${esc(l.Timestamp)}</div>
+        </div>`).join('');
+    } else {
+      actEl.innerHTML='<div class="empty-state"><i class="fa-solid fa-inbox"></i>No activity yet.</div>';
+    }
+
+    // Class summary with progress bars
+    const total = ayStudents.length;
+    const byClass = {};
+    allCls.forEach(c=>{byClass[c.Label]=0});
+    ayStudents.forEach(s=>{
+      if(byClass[s.Class]!==undefined) byClass[s.Class]++;
+      else byClass[s.Class]=(byClass[s.Class]||0)+1;
+    });
+    const clsEl = document.getElementById('cls-summary');
+    const entries = Object.entries(byClass).filter(([,v])=>v>0);
+    if(entries.length){
+      clsEl.innerHTML = entries.map(([k,v])=>`
+        <div class="progress-row">
+          <div class="progress-label">
+            <span>${esc(k)}</span><span>${v}</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width:${total>0?Math.round(v/total*100):0}%"></div>
+          </div>
+        </div>`).join('')
+        +`<div style="padding-top:8px;border-top:1px solid var(--border2);margin-top:6px;display:flex;justify-content:space-between;font-size:13px">
+          <span style="color:var(--c3);font-weight:500">Total Active</span>
+          <span style="font-weight:700;color:var(--maroon);font-family:'Lora',serif;font-size:17px">${total}</span>
+        </div>`;
+    } else {
+      clsEl.innerHTML='<div class="empty-state"><i class="fa-solid fa-graduation-cap"></i>No students for this year.</div>';
+    }
+
+    // Gender breakdown
+    const genders = {Male:0, Female:0, Transgender:0, 'Not specified':0};
+    ayStudents.forEach(s=>{
+      const g = s.Gender||'';
+      if(genders[g]!==undefined) genders[g]++;
+      else genders['Not specified']++;
+    });
+    const gEl = document.getElementById('gender-summary');
+    const gColors = {Male:'var(--blue)',Female:'var(--maroon)',Transgender:'var(--green)','Not specified':'var(--c4)'};
+    gEl.innerHTML = Object.entries(genders).filter(([,v])=>v>0).map(([k,v])=>`
+      <div class="cls-row">
+        <div class="cls-name" style="display:flex;align-items:center;gap:7px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${gColors[k]||'var(--c3)'};display:inline-block;flex-shrink:0"></span>
+          ${esc(k)}
+        </div>
+        <div class="cls-count" style="font-size:15px">${v}</div>
+      </div>`).join('')
+    || '<div class="empty-state"><i class="fa-solid fa-venus-mars"></i>No gender data yet.</div>';
+
+  }catch(e){
+    console.error(e);
+    msg('toast','Failed to load dashboard data: '+e.message,'err');
+  }
+}
+
+loadData();
+// Auto-refresh every 60 seconds
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>
