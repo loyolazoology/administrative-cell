@@ -756,7 +756,7 @@ function buildLogoHTML(customB64,customMime){
     if(LOGOS.length){
       LOGOS.filter(l=>l.url).forEach(l=>{ imgs.push(`<img src="${esc(l.url)}" class="sh-logo-img" onerror="this.style.display='none'">`); });
     } else {
-      const url=CFG.logo1_url||'https://static.wixstatic.com/media/81ba89_81dcdb9d1e384b618fdc78760c61c426~mv2.png';
+      const url=CFG.logo1_url||'https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png';
       imgs.push(`<img src="${esc(url)}" class="sh-logo-img" onerror="this.style.display='none'">`);
     }
     if(CFG.logo2_url) imgs.push(`<img src="${esc(CFG.logo2_url)}" class="sh-logo-img" onerror="this.style.display='none'">`);
