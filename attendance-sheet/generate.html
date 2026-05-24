@@ -87,12 +87,6 @@ body{padding:22px;overflow-x:hidden}
 .gender-chip input{accent-color:var(--maroon)}
 .gender-chip.on{border-color:var(--maroon);background:var(--mp);color:var(--maroon)}
 
-/* CB GRID */
-.cb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:6px}
-.cb-item{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--r2);cursor:pointer;font-size:12.5px;color:var(--c2);user-select:none;background:var(--white);transition:all .15s}
-.cb-item input{accent-color:var(--maroon);flex-shrink:0}
-.cb-item:has(input:checked){border-color:rgba(139,38,53,.3);background:var(--ms);color:var(--maroon)}
-
 /* SECTION LABEL */
 .sec-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--c3);margin:12px 0 7px;border-top:1px solid var(--border2);padding-top:10px}
 .sec-lbl:first-child{border-top:none;padding-top:0;margin-top:0}
@@ -158,7 +152,7 @@ body{padding:22px;overflow-x:hidden}
 
 <div class="sec-hdr">
   <h2>Generate Attendance Sheet</h2>
-  <p>Fill event details, select classes, configure columns and signatories, then preview and print.</p>
+  <p>Fill event details, select classes, configure columns and signatories, then preview and download as PDF.</p>
 </div>
 
 <div class="steps">
@@ -199,6 +193,12 @@ body{padding:22px;overflow-x:hidden}
         <div class="f"><label>Shift</label>
           <select id="gen-shift"><option value="">All Shifts</option><option>Shift 1</option><option>Shift 2</option></select>
         </div>
+        <div class="f"><label>Sort Students By</label>
+          <select id="gen-sort">
+            <option value="deptno">Department Number</option>
+            <option value="name">Student Name (A-Z)</option>
+          </select>
+        </div>
         <div class="f"><label>Section Filter</label><input id="gen-sec" type="text" placeholder="A, B, C…"></div>
       </div>
       <!-- Gender filter -->
@@ -222,7 +222,7 @@ body{padding:22px;overflow-x:hidden}
     <div class="step-body">
       <div class="info-band info-amber" style="margin-bottom:12px">
         <i class="fa-solid fa-circle-info"></i>
-        <span>S.No. is always the first column. Enable / disable other columns and drag to reorder.</span>
+        <span>S.No. is always the first column. Enable / disable other columns and drag to reorder. Dept. No. column will auto-fit.</span>
       </div>
       <div class="col-order-list" id="col-order-list"></div>
       <div class="sec-lbl" style="margin-top:14px">Custom / Signature Columns</div>
@@ -238,7 +238,7 @@ body{padding:22px;overflow-x:hidden}
 
   <!-- STEP 4: Logo -->
   <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">4</div><div><div class="step-title">Sheet Logo(s)</div><div class="step-sub">Use saved logos or upload a custom one for this sheet only</div></div></div>
+    <div class="step-hdr"><div class="step-badge">4</div><div><div class="step-title">Sheet Logo(s) &amp; Watermark</div><div class="step-sub">Use saved logos or upload a custom one. Configure the background watermark.</div></div></div>
     <div class="step-body">
       <div class="g2">
         <div class="f">
@@ -260,6 +260,11 @@ body{padding:22px;overflow-x:hidden}
         </div>
         <input type="file" id="custom-logo-inp" accept="image/*" style="display:none" onchange="handleCustomLogo(this)">
       </div>
+      
+      <div class="f" style="margin-top:14px; padding-top:12px; border-top: 1px solid var(--border2);">
+        <label class="manual-row"><input type="checkbox" id="chk-watermark" checked> Include Loyola background watermark</label>
+      </div>
+
       <script>document.getElementById('logo-mode').addEventListener('change',function(){document.getElementById('custom-logo-wrap').style.display=this.value==='custom'?'block':'none'});</script>
     </div>
   </div>
@@ -278,13 +283,18 @@ body{padding:22px;overflow-x:hidden}
 
   <!-- STEP 6: Signatories -->
   <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">6</div><div><div class="step-title">Signatories &amp; Footer</div><div class="step-sub">HOD always appears rightmost. Tick to add others and drag to reorder.</div></div></div>
+    <div class="step-hdr"><div class="step-badge">6</div><div><div class="step-title">Signatories &amp; Footer</div><div class="step-sub">Configure staff signatories, stamps, and their exact left-to-right order.</div></div></div>
     <div class="step-body">
+
+      <div class="manual-row" style="margin-bottom:14px; padding: 10px; background:var(--abg); border:1px solid var(--aborder); border-radius:var(--r);">
+        <input type="checkbox" id="chk-stamp">
+        <label for="chk-stamp" style="cursor:pointer; color:var(--amber); font-weight:600;">Include College Stamp / Seal space</label>
+      </div>
 
       <!-- HOD (required) -->
       <div class="sig-blk required" id="sig-hod">
         <div class="sig-blk-head">
-          <div class="sig-blk-title"><i class="fa-solid fa-user-tie" style="color:var(--maroon)"></i> Head of Department <span class="req-tag">Required · Rightmost</span></div>
+          <div class="sig-blk-title"><i class="fa-solid fa-user-tie" style="color:var(--maroon)"></i> Head of Department <span class="req-tag">Required</span></div>
         </div>
         <div class="manual-row">
           <input type="checkbox" id="hod-manual" onchange="toggleManual('hod')">
@@ -303,90 +313,7 @@ body{padding:22px;overflow-x:hidden}
       <!-- SPECIAL SIGNATORIES -->
       <div class="sec-lbl" style="margin-top:4px">Special Signatories (tick to include)</div>
       <div class="special-sig-grid" id="special-sigs-grid">
-
-        <!-- Rector -->
-        <div class="special-sig-item" id="ssi-rector">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-rector" onchange="toggleSpecialSig('rector')"><span class="special-sig-label"><i class="fa-solid fa-cross" style="color:var(--gold);font-size:10px;margin-right:4px"></i>Rector</span></label>
-          <div class="special-sig-fields" id="ssf-rector">
-            <input class="ssf-inp" id="rector-name" type="text" placeholder="Full Name">
-            <input class="ssf-inp" id="rector-role" type="text" placeholder="Role in event" value="">
-          </div>
-        </div>
-
-        <!-- Secretary -->
-        <div class="special-sig-item" id="ssi-secretary">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-secretary" onchange="toggleSpecialSig('secretary')"><span class="special-sig-label">Secretary &amp; Correspondent</span></label>
-          <div class="special-sig-fields" id="ssf-secretary">
-            <input class="ssf-inp" id="secretary-name" type="text" placeholder="Full Name">
-            <input class="ssf-inp" id="secretary-role" type="text" placeholder="Role in event" value="">
-          </div>
-        </div>
-
-        <!-- Principal -->
-        <div class="special-sig-item" id="ssi-principal">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-principal" onchange="toggleSpecialSig('principal')"><span class="special-sig-label"><i class="fa-solid fa-star" style="color:var(--gold);font-size:10px;margin-right:4px"></i>Principal</span></label>
-          <div class="special-sig-fields" id="ssf-principal">
-            <input class="ssf-inp" id="principal-name" type="text" placeholder="Full Name">
-            <input class="ssf-inp" id="principal-role" type="text" placeholder="Role in event" value="">
-          </div>
-        </div>
-
-        <!-- VP Admin -->
-        <div class="special-sig-item" id="ssi-vpadmin">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-vpadmin" onchange="toggleSpecialSig('vpadmin')"><span class="special-sig-label">Vice Principal (Admin)</span></label>
-          <div class="special-sig-fields" id="ssf-vpadmin">
-            <input class="ssf-inp" id="vpadmin-name" type="text" placeholder="Full Name">
-            <div class="ssf-row">
-              <input class="ssf-inp" id="vpadmin-role" type="text" placeholder="Role in event" style="flex:1">
-              <select class="ssf-inp" id="vpadmin-shift" style="flex:0 0 auto;width:auto">
-                <option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- VP Academic -->
-        <div class="special-sig-item" id="ssi-vpacademic">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-vpacademic" onchange="toggleSpecialSig('vpacademic')"><span class="special-sig-label">Vice Principal (Academic)</span></label>
-          <div class="special-sig-fields" id="ssf-vpacademic">
-            <input class="ssf-inp" id="vpacademic-name" type="text" placeholder="Full Name">
-            <div class="ssf-row">
-              <input class="ssf-inp" id="vpacademic-role" type="text" placeholder="Role in event" style="flex:1">
-              <select class="ssf-inp" id="vpacademic-shift" style="flex:0 0 auto;width:auto">
-                <option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- VP Infrastructure -->
-        <div class="special-sig-item" id="ssi-vpinfra">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-vpinfra" onchange="toggleSpecialSig('vpinfra')"><span class="special-sig-label">Vice Principal (Infrastructure)</span></label>
-          <div class="special-sig-fields" id="ssf-vpinfra">
-            <input class="ssf-inp" id="vpinfra-name" type="text" placeholder="Full Name">
-            <div class="ssf-row">
-              <input class="ssf-inp" id="vpinfra-role" type="text" placeholder="Role in event" style="flex:1">
-              <select class="ssf-inp" id="vpinfra-shift" style="flex:0 0 auto;width:auto">
-                <option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- VP Discipline -->
-        <div class="special-sig-item" id="ssi-vpdiscipline">
-          <label class="special-sig-toggle"><input type="checkbox" id="chk-vpdiscipline" onchange="toggleSpecialSig('vpdiscipline')"><span class="special-sig-label">Vice Principal (Discipline)</span></label>
-          <div class="special-sig-fields" id="ssf-vpdiscipline">
-            <input class="ssf-inp" id="vpdiscipline-name" type="text" placeholder="Full Name">
-            <div class="ssf-row">
-              <input class="ssf-inp" id="vpdiscipline-role" type="text" placeholder="Role in event" style="flex:1">
-              <select class="ssf-inp" id="vpdiscipline-shift" style="flex:0 0 auto;width:auto">
-                <option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
+        <!-- JS generates these below -->
       </div>
 
       <!-- Optional staff signatories -->
@@ -394,18 +321,20 @@ body{padding:22px;overflow-x:hidden}
       <div id="opt-sigs-list"></div>
       <button class="btn btn-ghost btn-sm" onclick="addOptSig()"><i class="fa-solid fa-plus"></i> Add Signatory</button>
 
-      <!-- Signatory order preview -->
-      <div id="sig-order-preview" style="margin-top:14px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);font-size:12px;color:var(--c3);display:none">
-        <strong style="color:var(--c2);display:block;margin-bottom:5px">Signature order (left → right):</strong>
-        <div id="sig-order-text" style="font-size:12.5px;color:var(--c2)"></div>
+      <!-- Signatory order preview / config -->
+      <div class="sec-lbl" style="margin-top: 24px;">Signature Ordering (Left to Right)</div>
+      <div id="sig-order-preview" style="margin-top:8px;padding:14px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);">
+        <p style="font-size:12px; color:var(--c3); margin-bottom:10px;"><i class="fa-solid fa-arrows-up-down"></i> Drag to reorder signatories as they will appear left to right on the printed sheet.</p>
+        <div id="sig-order-list" class="col-order-list"></div>
       </div>
+
     </div>
   </div>
 
   <!-- ACTION BAR -->
   <div class="action-bar">
     <button class="btn btn-ghost" onclick="resetForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-    <button class="btn btn-gold" onclick="doPreview()"><i class="fa-solid fa-eye"></i> Preview &amp; Print</button>
+    <button class="btn btn-gold" onclick="doPreview()"><i class="fa-solid fa-file-pdf"></i> Generate &amp; Download PDF</button>
   </div>
 
 </div><!-- /steps -->
@@ -429,6 +358,18 @@ function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
 // ── STATE ──
 let ALL_STUDENTS=[], ALL_STAFF=[], ALL_AY=[], ALL_CLASSES=[], CFG={}, LOGOS=[];
 let ORIENT='portrait', OPT_SIG_CNT=0, CUSTOM_LOGO_B64=null, CUSTOM_LOGO_MIME=null;
+
+const SPECIALS=[
+  {id:'rector',label:'Rector',desig:'Rector<br>Loyola College (Autonomous), Chennai – 600 034'},
+  {id:'secretary',label:'Secretary & Correspondent',desig:'Secretary & Correspondent'},
+  {id:'principal',label:'Principal',desig:'Principal<br>Loyola College (Autonomous), Chennai – 600 034'},
+  {id:'vpadmin',label:'Vice Principal (Admin)',desig:'Vice Principal (Administration)',hasShift:true},
+  {id:'vpacademic',label:'Vice Principal (Academic)',desig:'Vice Principal (Academic)',hasShift:true},
+  {id:'vpinfra',label:'Vice Principal (Infrastructure)',desig:'Vice Principal (Infrastructure)',hasShift:true},
+  {id:'vpdiscipline',label:'Vice Principal (Discipline)',desig:'Vice Principal (Discipline)',hasShift:true},
+];
+
+let SIG_IDS = ['hod']; // Keeps track of ordering
 
 // Default column order
 const DEFAULT_COLS=[
@@ -454,6 +395,7 @@ let COL_ORDER=[...DEFAULT_COLS];
 // ── BOOT ──
 async function boot(){
   showLoader('Loading data…');
+  buildSpecialSigsHTML();
   try{
     const[stR,sfR,ayR,clsR,cfgR]=await Promise.all([
       gas('getStudents',{}),gas('getStaff',{}),gas('getAcademicYears',{}),
@@ -475,10 +417,26 @@ async function boot(){
     populateStaffDropdowns();
     buildClsGrid();
     buildColOrderList();
+    renderSigOrder();
   }catch(e){
     toast('Boot error: '+e.message,'err');
   }
   hideLoader();
+}
+
+function buildSpecialSigsHTML() {
+  document.getElementById('special-sigs-grid').innerHTML = SPECIALS.map(sp => `
+    <div class="special-sig-item" id="ssi-${sp.id}">
+      <label class="special-sig-toggle"><input type="checkbox" id="chk-${sp.id}" onchange="toggleSpecialSig('${sp.id}')"><span class="special-sig-label">${sp.label}</span></label>
+      <div class="special-sig-fields" id="ssf-${sp.id}">
+        <input class="ssf-inp" id="${sp.id}-name" type="text" placeholder="Full Name">
+        <div class="ssf-row">
+          <input class="ssf-inp" id="${sp.id}-role" type="text" placeholder="Role in event" style="flex:1">
+          ${sp.hasShift ? `<select class="ssf-inp" id="${sp.id}-shift" style="flex:0 0 auto;width:auto"><option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option></select>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ── CLASS GRID ──
@@ -511,7 +469,6 @@ function getShortClsName(chipKey){
   const parts=chipKey.split(' — ');
   const clsLabel=parts[0];
   const section=parts[1]||'';
-  // Find class in ALL_CLASSES, use Short name
   const cls=ALL_CLASSES.find(c=>c.Label===clsLabel);
   const shortName=cls&&cls.Short?cls.Short:clsLabel;
   return section?shortName+' — '+section:shortName;
@@ -558,7 +515,6 @@ function getGenderFilter(){
 function buildColOrderList(){
   const el=document.getElementById('col-order-list');
   el.innerHTML=COL_ORDER.filter(c=>!c.always).map((col,idx)=>{
-    const realIdx=COL_ORDER.indexOf(col);
     return `<div class="col-order-row ${col.enabled?'active-col':''}" id="cor-${col.id}" draggable="true" ondragstart="colDragStart(event,'${col.id}')" ondragover="colDragOver(event)" ondrop="colDrop(event,'${col.id}')">
       <i class="col-drag-handle fa-solid fa-grip-vertical"></i>
       <input type="checkbox" class="col-toggle-cb" ${col.enabled?'checked':''} onchange="colToggle('${col.id}',this.checked)">
@@ -578,7 +534,6 @@ function colMove(id,dir){
   const idx=COL_ORDER.findIndex(c=>c.id===id);
   const newIdx=idx+dir;
   if(newIdx<0||newIdx>=COL_ORDER.length) return;
-  // Don't move before always-first cols
   if(newIdx===0&&COL_ORDER[0].always) return;
   [COL_ORDER[idx],COL_ORDER[newIdx]]=[COL_ORDER[newIdx],COL_ORDER[idx]];
   buildColOrderList();
@@ -657,26 +612,17 @@ function fillSig(prefix){
   }
 }
 
-// ── SPECIAL SIGNATORIES ──
+// ── SIGNATORY REORDERING ENGINE ──
 function toggleSpecialSig(id){
   const cb=document.getElementById('chk-'+id);
   const item=document.getElementById('ssi-'+id);
   item.classList.toggle('enabled',cb.checked);
-  updateSigOrderPreview();
-}
-function updateSigOrderPreview(){
-  const order=buildSignatoryList();
-  const prev=document.getElementById('sig-order-preview');
-  const txt=document.getElementById('sig-order-text');
-  if(order.length>1){
-    prev.style.display='block';
-    txt.textContent=order.map((s,i)=>(i+1)+'. '+(s.name||s.role||s.desig||'(unnamed)')).join('  →  ');
-  } else {
-    prev.style.display='none';
-  }
+  
+  if(cb.checked && !SIG_IDS.includes(id)) SIG_IDS.push(id);
+  else if(!cb.checked) SIG_IDS = SIG_IDS.filter(x => x !== id);
+  renderSigOrder();
 }
 
-// ── OPT SIGNATORIES ──
 function addOptSig(){
   OPT_SIG_CNT++;
   const id='os'+OPT_SIG_CNT;
@@ -686,7 +632,7 @@ function addOptSig(){
   div.className='sig-blk';div.id=id;
   div.innerHTML=`<div class="sig-blk-head">
     <div class="sig-blk-title"><i class="fa-solid fa-signature" style="color:var(--gold)"></i> Signatory ${OPT_SIG_CNT}</div>
-    <button class="btn btn-ghost btn-xs" onclick="this.closest('.sig-blk').remove();updateSigOrderPreview()"><i class="fa-solid fa-xmark"></i> Remove</button>
+    <button class="btn btn-ghost btn-xs" onclick="removeOptSig(this, '${id}')"><i class="fa-solid fa-xmark"></i> Remove</button>
   </div>
   <div class="manual-row"><input type="checkbox" id="${id}-manual" onchange="toggleManual('${id}')"><label for="${id}-manual" style="cursor:pointer">Manual edit</label></div>
   <div class="g3">
@@ -698,40 +644,76 @@ function addOptSig(){
     <div class="f"><label>Show College?</label><select id="${id}-col"><option value="yes">Show</option><option value="no">No</option></select></div>
   </div>`;
   document.getElementById('opt-sigs-list').appendChild(div);
+  SIG_IDS.push(id);
+  renderSigOrder();
+}
+function removeOptSig(btn, id){
+  btn.closest('.sig-blk').remove();
+  SIG_IDS = SIG_IDS.filter(x => x !== id);
+  renderSigOrder();
 }
 
-// ── BUILD SIGNATORY LIST (left to right, HOD always last) ──
+function sigMove(id, dir){
+  const idx = SIG_IDS.indexOf(id);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= SIG_IDS.length) return;
+  [SIG_IDS[idx], SIG_IDS[newIdx]] = [SIG_IDS[newIdx], SIG_IDS[idx]];
+  renderSigOrder();
+}
+let sigDragSrc = null;
+function sigDragStart(e,id){ sigDragSrc=id; e.dataTransfer.effectAllowed='move'; }
+function sigDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
+function sigDrop(e, targetId){
+  e.preventDefault();
+  if(!sigDragSrc || sigDragSrc===targetId) return;
+  const si = SIG_IDS.indexOf(sigDragSrc);
+  const ti = SIG_IDS.indexOf(targetId);
+  if(si<0 || ti<0) return;
+  const moved = SIG_IDS.splice(si, 1)[0];
+  SIG_IDS.splice(ti, 0, moved);
+  renderSigOrder();
+}
+
+function renderSigOrder(){
+  const container = document.getElementById('sig-order-list');
+  if(!container) return;
+  container.innerHTML = SIG_IDS.map(id => {
+    let label = '';
+    if(id === 'hod') label = '<i class="fa-solid fa-user-tie" style="color:var(--maroon)"></i> Head of Department';
+    else if(id.startsWith('os')) label = 'Additional Signatory ' + id.replace('os','');
+    else {
+      const sp = SPECIALS.find(s=>s.id===id);
+      if(sp) label = sp.label;
+    }
+    return `<div class="col-order-row active-col" id="so-${id}" draggable="true" ondragstart="sigDragStart(event,'${id}')" ondragover="sigDragOver(event)" ondrop="sigDrop(event,'${id}')">
+      <i class="col-drag-handle fa-solid fa-grip-vertical"></i>
+      <span class="col-label">${label}</span>
+      <div class="col-move-btns">
+        <button class="col-move-btn" onclick="sigMove('${id}',-1)" title="Move left"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="col-move-btn" onclick="sigMove('${id}',1)" title="Move right"><i class="fa-solid fa-arrow-down"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── BUILD SIGNATORY LIST USING SIG_IDS ──
 function buildSignatoryList(){
   const sigs=[];
-  // Optional staff signatories
-  document.querySelectorAll('#opt-sigs-list .sig-blk').forEach(b=>{
-    const id=b.id;
-    const n=(document.getElementById(id+'-n')?.value||'').trim();
-    const d=(document.getElementById(id+'-d')?.value||'').trim();
-    const role=(document.getElementById(id+'-role')?.value||'').trim();
-    if(n||d) sigs.push({name:n,desig:d,role,dept:document.getElementById(id+'-dept')?.value==='yes',col:document.getElementById(id+'-col')?.value==='yes'});
+  SIG_IDS.forEach(id => {
+    if(id === 'hod'){
+      const name = v('hod-n'), desig = v('hod-d')||'Head of the Department', role = v('hod-role');
+      sigs.push({name, desig, role, dept:document.getElementById('hod-dept')?.value==='yes', col:document.getElementById('hod-col')?.value==='yes', isHod:true});
+    } else if(id.startsWith('os')){
+      const n = v(id+'-n'), d = v(id+'-d'), role = v(id+'-role');
+      if(n||d) sigs.push({name:n, desig:d, role, dept:document.getElementById(id+'-dept')?.value==='yes', col:document.getElementById(id+'-col')?.value==='yes'});
+    } else {
+      const sp = SPECIALS.find(s=>s.id===id);
+      if(!sp) return;
+      const name = v(id+'-name'), role = v(id+'-role');
+      const shift = sp.hasShift ? v(id+'-shift') : '';
+      sigs.push({name, desig:sp.desig+(shift?' ('+shift+')':''), role, dept:false, col:false});
+    }
   });
-  // Special signatories (in defined order, except HOD at end)
-  const SPECIALS=[
-    {id:'rector',label:'Rector',desig:'Rector'},
-    {id:'secretary',label:'Secretary & Correspondent',desig:'Secretary & Correspondent'},
-    {id:'principal',label:'Principal',desig:'Principal'},
-    {id:'vpadmin',label:'Vice Principal (Admin)',desig:'Vice Principal (Administration)',hasShift:true},
-    {id:'vpacademic',label:'Vice Principal (Academic)',desig:'Vice Principal (Academic)',hasShift:true},
-    {id:'vpinfra',label:'Vice Principal (Infrastructure)',desig:'Vice Principal (Infrastructure)',hasShift:true},
-    {id:'vpdiscipline',label:'Vice Principal (Discipline)',desig:'Vice Principal (Discipline)',hasShift:true},
-  ];
-  SPECIALS.forEach(sp=>{
-    const cb=document.getElementById('chk-'+sp.id);
-    if(!cb||!cb.checked) return;
-    const name=(document.getElementById(sp.id+'-name')?.value||'').trim();
-    const role=(document.getElementById(sp.id+'-role')?.value||'').trim();
-    const shift=sp.hasShift?(document.getElementById(sp.id+'-shift')?.value||''):'';
-    sigs.push({name,desig:sp.desig+(shift?' ('+shift+')':''),role,dept:false,col:false});
-  });
-  // HOD always rightmost
-  const hodName=v('hod-n'), hodDesig=v('hod-d')||'Head of the Department', hodRole=v('hod-role');
-  sigs.push({name:hodName,desig:hodDesig,role:hodRole,dept:document.getElementById('hod-dept')?.value==='yes',col:document.getElementById('hod-col')?.value==='yes',isHod:true});
   return sigs;
 }
 
@@ -749,23 +731,24 @@ function fmtTime(t){if(!t)return '';const[h,m]=t.split(':').map(Number);return `
 function buildLogoHTML(customB64,customMime){
   const mode=document.getElementById('logo-mode').value;
   let imgs=[];
+  const style = `style="height:90px; object-fit:contain; margin:0 10px;"`; // Logos a little larger
+  
   if(mode==='custom'&&customB64){
-    imgs.push(`<img src="${customB64}" class="sh-logo-img" onerror="this.style.display='none'">`);
+    imgs.push(`<img src="${customB64}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
   } else {
     // Config logos
     if(LOGOS.length){
-      LOGOS.filter(l=>l.url).forEach(l=>{ imgs.push(`<img src="${esc(l.url)}" class="sh-logo-img" onerror="this.style.display='none'">`); });
+      LOGOS.filter(l=>l.url).forEach(l=>{ imgs.push(`<img src="${esc(l.url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`); });
     } else {
       const url=CFG.logo1_url||'https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png';
-      imgs.push(`<img src="${esc(url)}" class="sh-logo-img" onerror="this.style.display='none'">`);
+      imgs.push(`<img src="${esc(url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
     }
-    if(CFG.logo2_url) imgs.push(`<img src="${esc(CFG.logo2_url)}" class="sh-logo-img" onerror="this.style.display='none'">`);
+    if(CFG.logo2_url) imgs.push(`<img src="${esc(CFG.logo2_url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
   }
   return imgs.join('');
 }
 
 // ── SHEET BUILDER ──
-// ~25 students per portrait page, ~20 per landscape (estimate; we do it by content)
 const ROWS_PER_PAGE_PORTRAIT=25;
 const ROWS_PER_PAGE_LANDSCAPE=20;
 
@@ -773,7 +756,7 @@ function buildAllSheets(){
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
   if(!sel.length) return null;
   const ayVal=v('gen-ay');
-  const semester=v('gen-sem'), shift=v('gen-shift'), secFlt=v('gen-sec');
+  const semester=v('gen-sem'), shift=v('gen-shift'), secFlt=v('gen-sec'), sortBy=v('gen-sort');
   const genderFilter=getGenderFilter();
   const evName=v('ev-name'), evVenue=v('ev-venue');
   const evDate=fmtDate(v('ev-date')), evDay=v('ev-day');
@@ -784,9 +767,11 @@ function buildAllSheets(){
   const signatories=buildSignatoryList();
   const logoHTML=buildLogoHTML(CUSTOM_LOGO_B64,CUSTOM_LOGO_MIME);
   const rowsPerPage=ORIENT==='portrait'?ROWS_PER_PAGE_PORTRAIT:ROWS_PER_PAGE_LANDSCAPE;
+  
   let subHTML='';
   if(CFG.subtitle1) subHTML+=`<div class="sh-subtitle">${esc(CFG.subtitle1)}</div>`;
   if(CFG.subtitle2) subHTML+=`<div class="sh-subtitle">${esc(CFG.subtitle2)}</div>`;
+  
   const allPages=[];
 
   sel.forEach(chip=>{
@@ -798,15 +783,23 @@ function buildAllSheets(){
     if(shift)     sts=sts.filter(s=>s.Shift===shift);
     if(secFlt)    sts=sts.filter(s=>(s.Section||'').toUpperCase()===secFlt.toUpperCase());
     if(genderFilter.length) sts=sts.filter(s=>genderFilter.includes(s.Gender));
-    sts=sts.sort((a,b)=>a.Name.localeCompare(b.Name));
+    
+    // Sort implementation (DeptNo vs Name)
+    if(sortBy === 'name'){
+      sts=sts.sort((a,b)=>(a.Name||'').localeCompare(b.Name||''));
+    } else {
+      sts=sts.sort((a,b)=> (a.DeptNo||'').localeCompare(b.DeptNo||'', undefined, {numeric: true, sensitivity: 'base'}));
+    }
+
     const shortCls=getShortClsName(chip);
     const totalPages=Math.max(1,Math.ceil(sts.length/rowsPerPage));
+    
     for(let p=0;p<totalPages;p++){
       const pageStudents=sts.slice(p*rowsPerPage,(p+1)*rowsPerPage);
       const isFirst=p===0;
       const isLast=p===totalPages-1;
       const globalPageIdx=allPages.length;
-      allPages.push({chip,shortCls,cls,secFilter,pageStudents,isFirst,isLast,totalPages,pageNum:p+1,globalPageIdx,sts,semester,shift,ayVal,evName,evVenue,evDate,evDay,timeStr,enabledCols,sigCols,signatories,logoHTML,subHTML,shortName:shortCls});
+      allPages.push({chip,shortCls,cls,secFilter,pageStudents,isFirst,isLast,totalPages,pageNum:p+1,globalPageIdx,sts,semester,shift,ayVal,evName,evVenue,evDate,evDay,timeStr,enabledCols,sigCols,signatories,logoHTML,subHTML,shortName:shortCls.split(' — ')[0]});
     }
   });
   const totalAllPages=allPages.length;
@@ -815,23 +808,29 @@ function buildAllSheets(){
 
 function buildSinglePage(pd, globalPageNum, totalGlobalPages){
   const{chip,shortCls,cls,secFilter,pageStudents,isFirst,isLast,totalPages,pageNum,sts,semester,shift,ayVal,evName,evVenue,evDate,evDay,timeStr,enabledCols,sigCols,signatories,logoHTML,subHTML}=pd;
-  const{shortName}=pd;
-  // Table header
-  const thead=`<tr>${enabledCols.map(c=>`<th${c.id==='sno'?' class="td-sno"':c.id==='name'?' style="min-width:120px"':''}>${esc(c.label)}</th>`).join('')}${sigCols.map(s=>`<th class="td-sig">${esc(s)}</th>`).join('')}</tr>`;
-  // Table body
+  
+  // Center alignment and Dept No autofit for Header
+  const thead=`<tr>${enabledCols.map(c=>{
+    let extraStyles = 'text-align:center;';
+    if(c.id==='deptno') extraStyles += ' width:1%; white-space:nowrap;';
+    if(c.id==='name') extraStyles += ' min-width:120px;';
+    return `<th class="${c.id==='sno'?'td-sno':''}" style="${extraStyles}">${esc(c.label)}</th>`;
+  }).join('')}${sigCols.map(s=>`<th class="td-sig" style="text-align:center;">${esc(s)}</th>`).join('')}</tr>`;
+  
+  // Table body mapping (autofit Dept No inline)
   const tbody=pageStudents.map((st,i)=>{
     const globalI=((pageNum-1)*( ORIENT==='portrait'?ROWS_PER_PAGE_PORTRAIT:ROWS_PER_PAGE_LANDSCAPE))+i;
     const cells=enabledCols.map(c=>{
       switch(c.id){
-        case 'sno':    return `<td class="td-sno">${globalI+1}</td>`;
-        case 'deptno': return `<td>${esc(st.DeptNo||'')}</td>`;
+        case 'sno':    return `<td class="td-sno" style="text-align:center;">${globalI+1}</td>`;
+        case 'deptno': return `<td style="width:1%; white-space:nowrap; text-align:center;">${esc(st.DeptNo||'')}</td>`;
         case 'name':   return `<td>${esc(st.Name)}</td>`;
-        case 'gender': return `<td>${esc(st.Gender||'')}</td>`;
+        case 'gender': return `<td style="text-align:center;">${esc(st.Gender||'')}</td>`;
         case 'class':  return `<td>${esc(st.Class||'')}</td>`;
-        case 'batch':  return `<td>${esc(st.Batch||'')}</td>`;
-        case 'sem':    return `<td>${esc(st.Semester||'')}</td>`;
-        case 'shift':  return `<td>${esc(st.Shift||'')}</td>`;
-        case 'sec':    return `<td>${esc(st.Section||'')}</td>`;
+        case 'batch':  return `<td style="text-align:center;">${esc(st.Batch||'')}</td>`;
+        case 'sem':    return `<td style="text-align:center;">${esc(st.Semester||'')}</td>`;
+        case 'shift':  return `<td style="text-align:center;">${esc(st.Shift||'')}</td>`;
+        case 'sec':    return `<td style="text-align:center;">${esc(st.Section||'')}</td>`;
         case 'dob':    return `<td>${st.DOB?fmtDate(st.DOB):''}</td>`;
         case 'contact':return `<td>${esc(st.Contact||'')}</td>`;
         case 'email':  return `<td>${esc(st.Email||'')}</td>`;
@@ -846,14 +845,13 @@ function buildSinglePage(pd, globalPageNum, totalGlobalPages){
     return `<tr>${cells}${sigCells}</tr>`;
   }).join('');
 
-  // META for first page
+  // DETAILS BOX (Venue, Date, Time, Class, Academic Year, Shift)
   const metaItems=[
-    {l:'Date',v:`${evDate}${evDay?' ('+evDay+')':''}`},
     {l:'Venue',v:evVenue||''},
+    {l:'Date',v:`${evDate}${evDay?' ('+evDay+')':''}`},
     {l:'Time',v:timeStr},
-    {l:'Class / Section',v:shortName+(secFilter?' — '+secFilter:'')},
+    {l:'Class',v:shortCls}, // Shows Short Name (+ section if applied)
     {l:'Academic Year',v:ayVal||''},
-    {l:'Semester',v:semester||''},
     {l:'Shift',v:shift||''},
   ].filter(m=>m.v&&m.v.trim());
   let metaHTML='';
@@ -863,24 +861,31 @@ function buildSinglePage(pd, globalPageNum, totalGlobalPages){
     else  metaHTML+=`<div class="sh-meta-cell full"><span class="sh-meta-label">${esc(a.l)}:</span><span class="sh-meta-val">${esc(a.v)}</span></div>`;
   }
 
+  // Stamp and Seal configuration
+  const incStamp = document.getElementById('chk-stamp')?.checked;
+
   // Signature block (only on last page of each class)
   const sigHTML=signatories.map(sig=>`
-    <div class="sh-sig-block">
-      <div class="sh-sig-space"></div>
-      <div class="sh-sig-name">${esc(sig.name||'')}</div>
-      ${sig.role?`<div class="sh-sig-role">${esc(sig.role)}</div>`:''}
-      <div class="sh-sig-desig">${esc(sig.desig||'')}</div>
-      ${sig.dept&&CFG.dept_name?`<div class="sh-sig-dept">${esc(CFG.dept_name)}</div>`:''}
-      ${sig.col&&CFG.college_name?`<div class="sh-sig-dept">${esc(CFG.college_name)}</div>`:''}
+    <div class="sh-sig-block" style="text-align:center; flex:1; padding:0 10px;">
+      <div class="sh-sig-space" style="height:55px;"></div>
+      <div class="sh-sig-name" style="font-weight:700; font-size:13px; margin-bottom:2px;">${esc(sig.name||'')}</div>
+      ${sig.role?`<div class="sh-sig-role" style="font-size:11px; color:#333; margin-bottom:2px;">${esc(sig.role)}</div>`:''}
+      <div class="sh-sig-desig" style="font-size:11px; font-weight:600;">${sig.desig||''}</div>
+      ${sig.dept&&CFG.dept_name?`<div class="sh-sig-dept" style="font-size:11px;">${esc(CFG.dept_name)}</div>`:''}
+      ${sig.col&&CFG.college_name?`<div class="sh-sig-dept" style="font-size:11px;">${esc(CFG.college_name)}</div>`:''}
+      <div class="sh-sig-seal" style="height:50px; margin-top:8px; color:var(--c4); font-size:10px; display:flex; align-items:center; justify-content:center; border-top:1px dashed transparent;">${incStamp ? '(Seal / Stamp)' : ''}</div>
     </div>`).join('');
 
   // Page number and footer
-  const pageNumHTML=`<div class="sh-page-num">Page ${globalPageNum} of ${totalGlobalPages} | ${esc(shortName)}</div>`;
+  const pageNumHTML=`<div class="sh-page-num">Page ${globalPageNum} of ${totalGlobalPages} | ${esc(shortCls)}</div>`;
   const wmHTML=`<div class="sh-watermark">${esc(CFG.watermark||((CFG.dept_name||'')+'·'+(CFG.college_name||'')))}</div>`;
+  
+  const incBgWatermark = document.getElementById('chk-watermark').checked;
+  const bgWatermarkHTML = incBgWatermark ? `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:60%; height:60%; opacity:0.06; background:url('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/watermark.png') no-repeat center/contain; pointer-events:none; z-index:0;"></div>` : '';
 
   if(isFirst){
-    // Full header page
-    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column">
+    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column; position:relative; z-index:1;">
+      ${bgWatermarkHTML}
       <div class="sh-header">
         <div class="sh-logos">${logoHTML}</div>
         <div class="sh-college">${esc(CFG.college_name||'Loyola College (Autonomous), Chennai – 600 034')}</div>
@@ -888,28 +893,28 @@ function buildSinglePage(pd, globalPageNum, totalGlobalPages){
         <div class="sh-dept">${esc(CFG.dept_name||'PG & Research Department of Advanced Zoology & Biotechnology')}</div>
         ${subHTML}
       </div>
-      <hr class="sh-hr">
-      <div class="sh-ev-title">
-        <span class="sh-ev-title-main">${esc(evName)}</span>
-        <span class="sh-ev-title-sub">${evVenue?esc(evVenue):''}</span>
-        <span class="sh-attendance-label">— Attendance Sheet —</span>
+      
+      <div class="sh-ev-title" style="text-align:center; padding:15px 0;">
+        <div class="sh-ev-title-main" style="font-size:18px; font-weight:700; text-transform:uppercase;">${esc(evName)}</div>
+        <div class="sh-attendance-label" style="font-size:14px; margin-top:4px; font-weight:600; color:#444;">— ATTENDANCE SHEET —</div>
       </div>
+      
       <div class="sh-meta">${metaHTML}</div>
-      <table class="sh-table" style="flex:1"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+      <table class="sh-table" style="flex:1; position:relative; z-index:1;"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
       ${isLast?`<div class="sh-totals"><div class="sh-total-box"><div class="sh-total-label">Total Enrolled</div><div class="sh-total-val">${sts.length}</div></div><div class="sh-total-box"><div class="sh-total-label">Total Present</div><div class="sh-total-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div></div>`:''}
-      ${isLast?`<div class="sh-sig-footer"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
+      ${isLast?`<div class="sh-sig-footer" style="position:relative; z-index:1;"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
       ${pageNumHTML}${wmHTML}
     </div>`;
   } else {
-    // Continuation page — only event name + date at top
-    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column">
+    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column; position:relative; z-index:1;">
+      ${bgWatermarkHTML}
       <div class="sh-cont-header">
         <div class="sh-cont-ev">${esc(evName)}</div>
-        <div class="sh-cont-date">${esc(evDate)}${evDay?' ('+esc(evDay)+')':''} | ${esc(shortName)}</div>
+        <div class="sh-cont-date">${esc(evDate)}${evDay?' ('+esc(evDay)+')':''} | ${esc(shortCls)}</div>
       </div>
-      <table class="sh-table" style="flex:1"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+      <table class="sh-table" style="flex:1; position:relative; z-index:1;"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
       ${isLast?`<div class="sh-totals"><div class="sh-total-box"><div class="sh-total-label">Total Enrolled</div><div class="sh-total-val">${sts.length}</div></div><div class="sh-total-box"><div class="sh-total-label">Total Present</div><div class="sh-total-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div></div>`:''}
-      ${isLast?`<div class="sh-sig-footer" style="margin-top:auto"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
+      ${isLast?`<div class="sh-sig-footer" style="margin-top:auto; position:relative; z-index:1;"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
       ${pageNumHTML}${wmHTML}
     </div>`;
   }
@@ -921,18 +926,16 @@ async function doPreview(){
   if(!evName){toast('Please enter the event name.','err');return}
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
   if(!sel.length){toast('Please select at least one class.','err');return}
-  // Check HOD
-  if(!v('hod-n') && !document.getElementById('hod-sel').value){
+  // Check HOD (HOD will be in SIG_IDS but needs name if not selected)
+  if(!v('hod-n') && !document.getElementById('hod-sel').value && SIG_IDS.includes('hod')){
     toast('Please select or enter the HOD details.','err');return;
   }
   showLoader('Building attendance sheets…');
-  // Small delay to allow loader to show
   await new Promise(r=>setTimeout(r,50));
   try{
     const html=buildAllSheets();
     if(!html){hideLoader();toast('No students found for selected filters.','err');return}
     const count=sel.length;
-    // Build PDF filename: "ShortClass - EventFirst10 - Date"
     const firstChip=sel[0];
     const shortCls=getShortClsName(firstChip).replace(/[^a-zA-Z0-9 ]/g,'').trim().slice(0,20);
     const evShort=(evName||'Event').replace(/[^a-zA-Z0-9 ]/g,'').trim().slice(0,10);
@@ -940,7 +943,6 @@ async function doPreview(){
     const filename=`${shortCls} - ${evShort} - ${dateStr}.pdf`;
     hideLoader();
     pmsg('printOverlay',{html,count,filename});
-    // Log
     gas('addLog',{user:'admin',action:'SHEET GENERATED',detail:`"${evName}" — ${sel.map(s=>getShortClsName(s)).join(', ')}`}).catch(()=>{});
   }catch(e){
     hideLoader();toast('Error building sheets: '+e.message,'err');
@@ -953,26 +955,32 @@ function resetForm(){
   if(!confirm('Reset all generate fields?')) return;
   ['ev-name','ev-venue','ev-date','ev-day','ev-tf','ev-tt','hod-n','hod-role','gen-sec'].forEach(id=>sv(id,''));
   sv('hod-d','Head of the Department');
+  sv('gen-sort', 'deptno');
   sv('logo-mode','config');
   document.getElementById('custom-logo-wrap').style.display='none';
   document.getElementById('opt-sigs-list').innerHTML='';
   document.querySelectorAll('#cls-grid input').forEach(c=>{c.checked=false;c.closest('.cls-chip')?.classList.remove('on')});
   document.getElementById('cls-pills').innerHTML='';
-  // Reset special sigs
-  ['rector','secretary','principal','vpadmin','vpacademic','vpinfra','vpdiscipline'].forEach(id=>{
+  document.getElementById('chk-stamp').checked = false;
+  document.getElementById('chk-watermark').checked = true;
+  
+  SPECIALS.forEach(sp=>{
+    const id = sp.id;
     const cb=document.getElementById('chk-'+id);if(cb) cb.checked=false;
     const item=document.getElementById('ssi-'+id);if(item) item.classList.remove('enabled');
     const inp=document.getElementById(id+'-name');if(inp) inp.value='';
     const role=document.getElementById(id+'-role');if(role) role.value='';
   });
+  
   ORIENT='portrait';
   document.getElementById('tog-port').classList.add('on');
   document.getElementById('tog-land').classList.remove('on');
   COL_ORDER=[...DEFAULT_COLS.map(c=>({...c}))];
   buildColOrderList();
   CUSTOM_LOGO_B64=null; CUSTOM_LOGO_MIME=null; OPT_SIG_CNT=0;
-  document.getElementById('sig-order-preview').style.display='none';
-  // Reset sig cols
+  SIG_IDS=['hod'];
+  renderSigOrder();
+  
   document.getElementById('sig-cols-list').innerHTML='<div class="sig-input-row"><input type="text" value="Signature" placeholder="Column name"><button class="sig-rm-btn" onclick="rmSigCol(this)"><i class="fa-solid fa-xmark"></i></button></div>';
   document.getElementById('hod-manual').checked=false;
   toggleManual('hod');
