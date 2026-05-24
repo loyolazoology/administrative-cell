@@ -251,7 +251,7 @@ async function loadData(){
     const allCls= clsR.ok?clsR.data||[]:[];
     const allLogs= logsR.ok?logsR.data||[]:[];
 
-    const activeAY = allAY.find(a=>a.Active==='TRUE');
+    const activeAY = allAY.find(a => String(a.Active).toUpperCase() === 'TRUE');
     const ayLabel = activeAY?activeAY.Label:'';
 
     // Update parent AY chip
