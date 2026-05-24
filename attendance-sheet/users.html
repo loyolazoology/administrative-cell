@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Accounts</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--maroon:#8B2635;--maroon-light:#A63347;--maroon-pale:#F9EFF1;--maroon-soft:rgba(139,38,53,.08);--bg:#F8F6F3;--bg2:#F1EDE8;--white:#FFFFFF;--c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;--border:#E2DAD4;--border2:#EDE8E3;--green:#1D6842;--green-bg:#EAF5EF;--green-border:#B8DECA;--red:#8B2020;--red-bg:#FDF0F0;--red-border:#F0BFBF;--amber:#8B5E00;--amber-bg:#FDF7E8;--amber-border:#E8D090;--r:8px;--r2:6px;--r3:12px;--font-serif:'Lora',Georgia,serif;--font-sans:'Plus Jakarta Sans',system-ui,sans-serif;--shadow-sm:0 1px 3px rgba(0,0,0,.05);}
+html,body{background:var(--bg);font-family:var(--font-sans);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
+body{padding:22px}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+.sec-header{margin-bottom:20px}.sec-header h2{font-family:var(--font-serif);font-size:24px;font-weight:600}.sec-header p{font-size:12.5px;color:var(--c3);margin-top:3px}
+.toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--font-sans)}
+.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}.btn-primary:hover{background:var(--maroon-light)}
+.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-pale)}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:var(--red-border)}.btn-danger:hover{background:var(--red);color:#fff}
+.btn-xs{padding:4px 9px;font-size:11px}.btn-sm{padding:6px 11px;font-size:12px}
+.table-wrap{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:auto;box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg2);color:var(--c3);font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:10px 13px;text-align:left;border-bottom:1.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover td{background:rgba(139,38,53,.012)}
+.tbl-empty{padding:40px;text-align:center;color:var(--c4);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tbl-empty i{font-size:22px;opacity:.4}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-green{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.badge-gray{background:var(--bg2);color:var(--c3);border-color:var(--border)}
+.badge-maroon{background:var(--maroon-soft);color:var(--maroon);border-color:rgba(139,38,53,.2)}
+.badge-blue{background:#EDF3FB;color:#1E4A8B;border-color:#B3CCE8}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.36);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal-box{background:var(--white);border-radius:14px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 70px rgba(0,0,0,.2);animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(-6px)scale(.98)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border2);position:sticky;top:0;background:var(--white);z-index:2}
+.modal-head h3{font-family:var(--font-serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.modal-cl{width:30px;height:30px;border-radius:50%;background:none;border:none;cursor:pointer;color:var(--c3);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:14px}.modal-cl:hover{background:var(--bg2)}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:11px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border2);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--white)}
+.field{display:flex;flex-direction:column;gap:4px}.field label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
+.field input,.field select{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--font-sans)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+@media(max-width:480px){body{padding:14px}}
+</style>
+</head>
+<body>
+<div class="sec-header"><h2>User Accounts</h2><p>Admins have full access. Staff can view students and generate sheets.</p></div>
+<div class="toolbar"><button class="btn btn-primary btn-sm" onclick="openAdd()"><i class="fa-solid fa-plus"></i> Add Account</button></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Username</th><th>Full Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="u-tbody"></tbody>
+  </table>
+  <div class="tbl-empty" id="u-empty" style="display:none"><i class="fa-solid fa-key"></i>No accounts yet.</div>
+</div>
+
+<div class="modal-ov" id="m-user" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head"><h3><i class="fa-solid fa-user-plus" style="color:var(--maroon)"></i>Add User Account</h3><button class="modal-cl" onclick="closeM()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label>Full Name <span style="color:var(--maroon)">*</span></label><input id="un-name" type="text" placeholder="Full display name"></div>
+      <div class="field"><label>Username <span style="color:var(--maroon)">*</span></label><input id="un-user" type="text" autocomplete="off" placeholder="Login username / ID"></div>
+      <div class="field"><label>Password <span style="color:var(--maroon)">*</span></label><input id="un-pw" type="password" placeholder="Minimum 6 characters"></div>
+      <div class="field"><label>Role</label><select id="un-role"><option value="staff">Staff</option><option value="admin">Admin / HOD</option></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeM()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUser()"><i class="fa-solid fa-check"></i> Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
+function msg(t,m,v){window.parent.postMessage({type:t,msg:m,variant:v},'*')}
+function showLoader(m){window.parent.postMessage({type:'showLoader',msg:m},'*')}
+function hideLoader(){window.parent.postMessage({type:'hideLoader'},'*')}
+async function gasCall(action,payload){const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});const r=await fetch(GAS+'?'+p);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
+
+async function loadUsers(){
+  try{
+    const r=await gasCall('getUsers',{});
+    const tbody=document.getElementById('u-tbody'),empty=document.getElementById('u-empty');
+    if(!r.ok||!r.data||!r.data.length){tbody.innerHTML='';empty.style.display='flex';return}
+    empty.style.display='none';
+    tbody.innerHTML=r.data.map(u=>`<tr>
+      <td><strong>${esc(u.Username)}</strong></td>
+      <td>${esc(u.FullName||'—')}</td>
+      <td><span class="badge ${u.Role==='admin'?'badge-maroon':'badge-blue'}">${u.Role==='admin'?'Admin / HOD':'Staff'}</span></td>
+      <td><span class="badge ${u.Active==='TRUE'?'badge-green':'badge-gray'}">${u.Active==='TRUE'?'Active':'Inactive'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-xs" onclick="toggleUser('${u.ID}')">${u.Active==='TRUE'?'Deactivate':'Activate'}</button>
+        ${u.Role!=='admin'?`<button class="btn btn-danger btn-xs" style="margin-left:3px" onclick="deleteUser('${u.ID}')"><i class="fa-solid fa-trash"></i></button>`:''}
+      </td></tr>`).join('');
+  }catch(e){msg('toast','Load error: '+e.message,'err')}
+}
+
+function openAdd(){['un-name','un-user','un-pw'].forEach(id=>sv(id,''));sv('un-role','staff');document.getElementById('m-user').style.display='flex'}
+function closeM(){document.getElementById('m-user').style.display='none'}
+
+async function saveUser(){
+  const n=v('un-name'),u=v('un-user'),p=document.getElementById('un-pw').value;
+  if(!n||!u||!p){msg('toast','All fields are required.','err');return}
+  if(p.length<6){msg('toast','Password must be at least 6 characters.','err');return}
+  showLoader('Creating account…');
+  try{
+    const r=await gasCall('saveUser',{fullName:n,username:u,password:p,role:document.getElementById('un-role').value});
+    hideLoader();if(!r.ok){msg('toast',r.error||'Failed.','err');return}
+    closeM();await loadUsers();
+    await gasCall('addLog',{user:'admin',action:'USER CREATED',detail:`${u} (${document.getElementById('un-role').value})`});
+    msg('toast','Account created.','ok');
+  }catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function toggleUser(id){
+  showLoader('Updating…');
+  try{await gasCall('toggleUser',{id});hideLoader();await loadUsers();}
+  catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+async function deleteUser(id){
+  if(!confirm('Delete this user account?'))return;
+  showLoader('Deleting…');
+  try{await gasCall('deleteUser',{id});hideLoader();await loadUsers();msg('toast','Account deleted.','ok');}
+  catch(e){hideLoader();msg('toast','Error: '+e.message,'err')}
+}
+document.getElementById('m-user').addEventListener('click',e=>{if(e.target===document.getElementById('m-user'))closeM()});
+loadUsers();
+</script>
+</body>
+</html>
