@@ -3,351 +3,691 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generate Sheet</title>
+<title>Generate Attendance Sheet</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --maroon:#8B2635;--ml:#A63347;--mp:#F9EFF1;--ms:rgba(139,38,53,.08);
-  --gold:#C49A3C;--gl:#D4AF5A;--gp:#FBF6EC;
-  --bg:#F8F6F3;--bg2:#F1EDE8;--bg3:#E9E3DC;
-  --white:#FFFFFF;--c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
-  --border:#E2DAD4;--border2:#EDE8E3;
-  --green:#1D6842;--gbg:#EAF5EF;--gborder:#B8DECA;
-  --red:#8B2020;--rbg:#FDF0F0;--rborder:#F0BFBF;
+  --m:#8B2635;--ml:#A63347;--mp:#F9EFF1;--ms:rgba(139,38,53,.08);
+  --g:#C49A3C;--gl:#D4AF5A;--gp:#FBF6EC;
+  --bg:#F8F6F3;--bg2:#F1EDE8;--w:#FFFFFF;
+  --c:#1C1917;--c2:#3D3530;--c3:#78706A;--c4:#B0A89F;
+  --bd:#E2DAD4;--bd2:#EDE8E3;
+  --grn:#1D6842;--gbg:#EAF5EF;--gbdr:#B8DECA;
+  --red:#8B2020;--rbg:#FDF0F0;--rbd:#F0BFBF;
   --blue:#1E4A8B;--bbg:#EDF3FB;
-  --amber:#8B5E00;--abg:#FDF7E8;--aborder:#E8D090;
-  --r:8px;--r2:6px;--r3:12px;
-  --fs:'Lora',Georgia,serif;--fn:'Plus Jakarta Sans',system-ui,sans-serif;
-  --sh:0 1px 3px rgba(0,0,0,.05);
+  --amb:#8B5E00;--abg:#FDF7E8;--abd:#E8D090;
+  --fn:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fs:'Lora',Georgia,serif;
 }
 html,body{background:var(--bg);font-family:var(--fn);color:var(--c);-webkit-font-smoothing:antialiased;font-size:14px;min-height:100vh}
-body{padding:22px;overflow-x:hidden}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+body{padding:0;margin:0;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:10px}
 
-.sec-hdr{margin-bottom:20px}
-.sec-hdr h2{font-family:var(--fs);font-size:24px;font-weight:600}
-.sec-hdr p{font-size:12.5px;color:var(--c3);margin-top:3px}
+/* LAYOUT: 2-col on desktop, stack on mobile */
+.gen-layout{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
+.gen-sidebar{height:100vh;overflow-y:auto;background:var(--w);border-right:1px solid var(--bd2);display:flex;flex-direction:column}
+.gen-preview-area{height:100vh;overflow-y:auto;background:#888;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px}
 
-/* STEPS */
-.steps{display:flex;flex-direction:column;gap:14px;max-width:960px}
-.step-card{background:var(--white);border:1px solid var(--border2);border-radius:var(--r3);overflow:hidden;box-shadow:var(--sh)}
-.step-hdr{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border2);background:linear-gradient(90deg,rgba(139,38,53,.03),transparent)}
-.step-badge{width:26px;height:26px;background:var(--maroon);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
-.step-title{font-size:13.5px;font-weight:700;color:var(--c)}
-.step-sub{font-size:11.5px;color:var(--c3);margin-top:2px}
-.step-body{padding:16px 18px}
+/* SIDEBAR HEADER */
+.sb-top{padding:14px 16px;border-bottom:1px solid var(--bd2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(90deg,rgba(139,38,53,.04),transparent)}
+.sb-top h2{font-family:var(--fs);font-size:16px;font-weight:600;color:var(--c)}
+.sb-actions{display:flex;gap:6px}
 
-/* GRID */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
-.span2{grid-column:1/-1}
-.span3{grid-column:1/-1}
+/* ACCORDION SECTIONS */
+.acc-section{border-bottom:1px solid var(--bd2)}
+.acc-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.acc-header:hover{background:rgba(139,38,53,.03)}
+.acc-header.open{background:rgba(139,38,53,.04)}
+.acc-title{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--c2)}
+.acc-title i{font-size:12px;color:var(--m);width:16px;text-align:center}
+.acc-arrow{font-size:10px;color:var(--c4);transition:transform .2s}
+.acc-header.open .acc-arrow{transform:rotate(180deg)}
+.acc-body{display:none;padding:12px 16px 14px;background:var(--bg)}
+.acc-body.open{display:block}
 
 /* FIELDS */
-.f{display:flex;flex-direction:column;gap:4px}
-.f label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3)}
-.f input,.f select,.f textarea{padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r2);color:var(--c);background:var(--white);font-size:13px;width:100%;transition:all .15s;font-family:var(--fn)}
-.f input:focus,.f select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(139,38,53,.06)}
+.f{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.f:last-child{margin-bottom:0}
+.f label{font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--c3)}
+.f input,.f select,.f textarea{padding:7px 9px;border:1.5px solid var(--bd);border-radius:5px;color:var(--c);background:var(--w);font-size:12.5px;width:100%;transition:all .15s;font-family:var(--fn)}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--m);box-shadow:0 0 0 2px rgba(139,38,53,.06)}
 .f input[readonly]{background:var(--bg2);color:var(--c3)}
-.f-note{font-size:10.5px;color:var(--c4);margin-top:2px}
+.f textarea{resize:vertical;min-height:56px}
+.f-note{font-size:10px;color:var(--c4);margin-top:2px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.f-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--fn)}
-.btn-primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
-.btn-primary:hover{background:var(--ml)}
-.btn-ghost{background:var(--white);color:var(--c2);border-color:var(--border)}
-.btn-ghost:hover{border-color:var(--maroon);color:var(--maroon);background:var(--mp)}
-.btn-gold{background:var(--gold);color:#fff;border-color:var(--gold)}
-.btn-gold:hover{background:var(--gl)}
-.btn-danger{background:var(--rbg);color:var(--red);border-color:var(--rborder)}
-.btn-danger:hover{background:var(--red);color:#fff}
-.btn-sm{padding:6px 11px;font-size:12px}
-.btn-xs{padding:4px 9px;font-size:11px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--fn)}
+.btn-p{background:var(--m);color:#fff;border-color:var(--m)}.btn-p:hover{background:var(--ml)}
+.btn-g{background:var(--w);color:var(--c2);border-color:var(--bd)}.btn-g:hover{border-color:var(--m);color:var(--m);background:var(--mp)}
+.btn-gold{background:var(--g);color:#fff;border-color:var(--g)}.btn-gold:hover{background:var(--gl)}
+.btn-red{background:var(--rbg);color:var(--red);border-color:var(--rbd)}.btn-red:hover{background:var(--red);color:#fff}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-full{width:100%;justify-content:center}
 
-/* ACTION BAR */
-.action-bar{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border2)}
+/* CHECKBOX ROW */
+.cb-row{display:flex;align-items:center;gap:7px;padding:6px 8px;border:1.5px solid var(--bd);border-radius:5px;cursor:pointer;user-select:none;font-size:12.5px;color:var(--c2);background:var(--w);transition:all .15s;margin-bottom:5px}
+.cb-row input{accent-color:var(--m);flex-shrink:0}
+.cb-row:has(input:checked){border-color:rgba(139,38,53,.3);background:var(--mp);color:var(--m)}
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cb-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
 
-/* CLASS CHIPS */
-.cls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:7px;margin-bottom:10px}
-.cls-chip{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all .15s;user-select:none;background:var(--bg2)}
-.cls-chip:hover{border-color:var(--maroon);background:var(--mp)}
-.cls-chip.on{border-color:var(--maroon);background:var(--mp)}
-.cls-chip input{accent-color:var(--maroon);cursor:pointer;flex-shrink:0}
-.cls-chip-name{font-size:12.5px;font-weight:500;flex:1;line-height:1.3}
-.cls-chip-count{font-size:11px;color:var(--c3);background:var(--white);padding:1px 8px;border-radius:10px;border:1px solid var(--border2);flex-shrink:0}
-.cls-chips-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.cls-pill{background:var(--ms);border:1px solid rgba(139,38,53,.18);color:var(--maroon);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+/* DRAG ROWS (columns & sigs) */
+.drag-list{display:flex;flex-direction:column;gap:4px}
+.drag-item{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--w);border:1.5px solid var(--bd2);border-radius:5px;transition:all .15s;cursor:default}
+.drag-item.on{background:rgba(139,38,53,.04);border-color:rgba(139,38,53,.2)}
+.drag-item.dragging{opacity:.4}
+.drag-item.drag-over{border-color:var(--m);background:var(--mp)}
+.drag-handle{color:var(--c4);cursor:grab;font-size:11px;flex-shrink:0}
+.drag-handle:active{cursor:grabbing}
+.drag-label{flex:1;font-size:12px;font-weight:500;color:var(--c2)}
+.drag-item.on .drag-label{color:var(--m);font-weight:600}
+.drag-btns{display:flex;gap:2px;flex-shrink:0}
+.drag-btn{width:20px;height:20px;border:1px solid var(--bd);border-radius:3px;background:var(--bg2);color:var(--c4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s;flex-shrink:0}
+.drag-btn:hover{background:var(--m);color:#fff;border-color:var(--m)}
 
-/* GENDER FILTER CHIPS */
-.gender-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.gender-chip{display:flex;align-items:center;gap:7px;padding:6px 12px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:12.5px;font-weight:500;transition:all .15s;user-select:none;background:var(--white)}
-.gender-chip input{accent-color:var(--maroon)}
-.gender-chip.on{border-color:var(--maroon);background:var(--mp);color:var(--maroon)}
+/* TOGGLE */
+.tog-g{display:flex;border:1.5px solid var(--bd);border-radius:5px;overflow:hidden;width:fit-content}
+.tog-b{padding:6px 14px;background:transparent;border:none;color:var(--c3);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.tog-b.on{background:var(--m);color:#fff}
+.tog-b:not(.on):hover{background:var(--ms);color:var(--m)}
 
-/* SECTION LABEL */
-.sec-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--c3);margin:12px 0 7px;border-top:1px solid var(--border2);padding-top:10px}
+/* SIG BLOCK */
+.sig-blk{background:var(--w);border:1.5px solid var(--bd2);border-radius:6px;padding:11px;margin-bottom:8px}
+.sig-blk.req{border-color:rgba(139,38,53,.2);background:var(--mp)}
+.sig-blk-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sig-blk-title{font-size:12px;font-weight:700;color:var(--c2);display:flex;align-items:center;gap:6px}
+.req-tag{font-size:9.5px;background:var(--ms);color:var(--m);border:1px solid rgba(139,38,53,.2);padding:1px 7px;border-radius:20px}
+.manual-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11.5px;color:var(--c3)}
+.manual-row input[type=checkbox]{accent-color:var(--m)}
+
+/* SPECIAL SIG */
+.sp-sig-item{border:1.5px solid var(--bd);border-radius:5px;overflow:hidden;background:var(--w);margin-bottom:5px;transition:border-color .15s}
+.sp-sig-item.on{border-color:rgba(139,38,53,.3);background:rgba(139,38,53,.02)}
+.sp-sig-toggle{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer;user-select:none}
+.sp-sig-toggle input{accent-color:var(--m)}
+.sp-sig-label{font-size:12px;font-weight:600;flex:1}
+.sp-sig-fields{padding:0 10px 10px;display:none;flex-direction:column;gap:6px}
+.sp-sig-item.on .sp-sig-fields{display:flex}
+
+/* INFO */
+.info{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:5px;font-size:12px;border:1px solid;margin-bottom:10px}
+.info-amb{background:var(--abg);border-color:var(--abd);color:var(--amb)}
+.info-grn{background:var(--gbg);border-color:var(--gbdr);color:var(--grn)}
+.info-red{background:var(--rbg);border-color:var(--rbd);color:var(--red)}
+.info-blue{background:var(--bbg);border-color:#B3CCE8;color:var(--blue)}
+
+/* SEC LABEL */
+.sec-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--c3);margin:10px 0 6px;padding-top:8px;border-top:1px solid var(--bd2)}
 .sec-lbl:first-child{border-top:none;padding-top:0;margin-top:0}
 
-/* COLUMN ORDER ROWS */
-.col-order-list{display:flex;flex-direction:column;gap:5px}
-.col-order-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r2);transition:all .15s}
-.col-order-row.active-col{background:var(--white);border-color:rgba(139,38,53,.25)}
-.col-drag-handle{color:var(--c4);cursor:grab;font-size:12px;flex-shrink:0}
-.col-drag-handle:active{cursor:grabbing}
-.col-label{flex:1;font-size:12.5px;color:var(--c2);font-weight:500}
-.col-move-btns{display:flex;gap:3px;flex-shrink:0}
-.col-move-btn{width:22px;height:22px;border:1px solid var(--border);border-radius:4px;background:var(--white);color:var(--c3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s}
-.col-move-btn:hover{background:var(--maroon);color:#fff;border-color:var(--maroon)}
-.col-move-btn:disabled{opacity:.3;cursor:not-allowed}
-.col-toggle-cb{accent-color:var(--maroon);cursor:pointer}
+/* CUSTOM COL ROW */
+.cust-col-row{display:flex;gap:6px;margin-bottom:5px;align-items:center}
+.cust-col-row input{flex:1;padding:6px 9px;border:1.5px solid var(--bd);border-radius:5px;background:var(--bg2);font-size:12.5px;font-family:var(--fn);transition:border-color .15s}
+.cust-col-row input:focus{outline:none;border-color:var(--m);background:var(--w)}
+.rm-btn{width:28px;height:28px;background:var(--rbg);border:1px solid var(--rbd);border-radius:5px;color:var(--red);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.rm-btn:hover{background:var(--red);color:#fff}
 
-/* SIG INPUT */
-.sig-input-row{display:flex;gap:7px;margin-bottom:7px;align-items:center}
-.sig-input-row input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r2);background:var(--bg2);font-size:13px;transition:border-color .15s;font-family:var(--fn)}
-.sig-input-row input:focus{outline:none;border-color:var(--maroon);background:var(--white)}
-.sig-rm-btn{width:30px;height:30px;background:var(--rbg);border:1px solid var(--rborder);border-radius:var(--r2);color:var(--red);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.sig-rm-btn:hover{background:var(--red);color:#fff}
+/* PREVIEW AREA */
+.preview-toolbar{width:100%;max-width:794px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;flex-shrink:0}
+.preview-toolbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.preview-toolbar-right{display:flex;align-items:center;gap:8px}
+.preview-count{font-size:12px;color:rgba(255,255,255,.75);font-weight:500}
+.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:13px;gap:12px;flex:1;min-height:300px}
+.preview-empty i{font-size:40px;opacity:.4}
 
-/* SIGNATORY BLOCKS */
-.sig-blk{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:10px}
-.sig-blk.required{border-color:rgba(139,38,53,.2);background:var(--mp)}
-.sig-blk-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.sig-blk-title{font-size:12.5px;font-weight:700;color:var(--c2);display:flex;align-items:center;gap:7px}
-.req-tag{font-size:10px;background:var(--ms);color:var(--maroon);border:1px solid rgba(139,38,53,.2);padding:2px 8px;border-radius:20px}
-.manual-row{display:flex;align-items:center;gap:7px;margin-bottom:10px;font-size:12px;color:var(--c3)}
-.manual-row input[type=checkbox]{accent-color:var(--maroon);width:14px;height:14px}
+/* A4 WRAPPER */
+.a4-wrapper{width:100%;max-width:794px;display:flex;flex-direction:column;gap:20px}
 
-/* CHECKBOXES - Special signatories */
-.special-sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:14px}
-.special-sig-item{border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;background:var(--white);transition:border-color .15s}
-.special-sig-item.enabled{border-color:rgba(139,38,53,.3);background:var(--mp)}
-.special-sig-toggle{display:flex;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;user-select:none}
-.special-sig-toggle input{accent-color:var(--maroon)}
-.special-sig-label{font-size:12.5px;font-weight:600;flex:1}
-.special-sig-fields{padding:0 12px 12px;display:none;flex-direction:column;gap:7px}
-.special-sig-item.enabled .special-sig-fields{display:flex}
-.ssf-inp{padding:6px 9px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:12.5px;width:100%;background:var(--white);font-family:var(--fn);transition:border-color .15s}
-.ssf-inp:focus{outline:none;border-color:var(--maroon)}
-.ssf-row{display:flex;gap:7px}
+/* A4 SHEET */
+.a4{background:#fff;font-family:'Times New Roman',Times,serif;color:#111;box-shadow:0 4px 24px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.a4.portrait{width:210mm;min-height:297mm;padding:13mm 14mm 14mm;display:flex;flex-direction:column}
+.a4.landscape{width:297mm;min-height:210mm;padding:10mm 12mm 12mm;display:flex;flex-direction:column}
 
-/* TOGGLE GROUP */
-.tog-g{display:flex;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;width:fit-content}
-.tog-b{padding:7px 18px;background:transparent;border:none;color:var(--c3);font-family:var(--fn);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s}
-.tog-b.on{background:var(--maroon);color:#fff}
-.tog-b:not(.on):hover{background:var(--ms);color:var(--maroon)}
+/* --- SHEET INTERNALS --- */
+.sh-border-none{}
+.sh-border-thin{border:1px solid #555}
+.sh-border-double{border:3px double #333}
+.sh-border-box{outline:1.5px solid #333;outline-offset:-5px}
 
-/* INFO BANDS */
-.info-band{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-radius:var(--r);font-size:12.5px;border:1px solid;margin-bottom:10px}
-.info-amber{background:var(--abg);border-color:var(--aborder);color:var(--amber)}
-.info-red{background:var(--rbg);border-color:var(--rborder);color:var(--red)}
+.sh-hdr{text-align:center;margin-bottom:6px}
+.sh-logos{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.sh-logo{object-fit:contain}
+.sh-logo.sm{width:50px;height:50px}
+.sh-logo.md{width:68px;height:68px}
+.sh-logo.lg{width:86px;height:86px}
+.sh-logo-sep{width:1px;background:#CCC;align-self:stretch;margin:0 4px}
+.sh-college{font-weight:700;color:#111;line-height:1.25}
+.sh-college.f-times{font-family:'Times New Roman',serif}
+.sh-college.f-arial{font-family:Arial,sans-serif}
+.sh-college.f-calibri{font-family:'Calibri',Calibri,sans-serif}
+.sh-college.f-georgia{font-family:Georgia,serif}
+.sh-college.sz-sm{font-size:13pt}
+.sh-college.sz-md{font-size:15pt}
+.sh-college.sz-lg{font-size:17pt}
+.sh-est{font-size:7.5pt;color:#555;margin-top:2px}
+.sh-dept{font-weight:700;color:#111;margin-top:3px}
+.sh-dept.sz-sm{font-size:9pt}
+.sh-dept.sz-md{font-size:10.5pt}
+.sh-dept.sz-lg{font-size:12pt}
+.sh-subtitle{font-size:8pt;color:#444;margin-top:2px;font-style:italic}
+.sh-hdr-rule-single{border:none;border-top:1px solid #333;margin:5px 0}
+.sh-hdr-rule-double{border:none;border-top:3px double #333;margin:5px 0}
+.sh-hdr-rule-bold{border:none;border-top:2.5px solid #111;margin:5px 0}
+.sh-hdr-rule-none{display:none}
 
-@media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr!important}body{padding:14px}.cls-grid{grid-template-columns:1fr}}
-@media(max-width:480px){.g2{grid-template-columns:1fr!important}}
+.sh-ev{text-align:center;margin-bottom:6px}
+.sh-ev-name{font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:inline-block;padding-bottom:2px;border-bottom:1.5px solid #111}
+.sh-ev-name.sz-sm{font-size:10pt}
+.sh-ev-name.sz-md{font-size:12pt}
+.sh-ev-name.sz-lg{font-size:14pt}
+.sh-ev-sub{font-size:8pt;color:#444;display:block;margin-top:3px;font-style:italic}
+.sh-ev-attn{font-size:8pt;color:#333;display:block;margin-top:2px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+.sh-meta{border:1px solid #AAA;display:grid;grid-template-columns:1fr 1fr;margin-bottom:7px;font-size:8pt}
+.sh-mc{padding:4px 8px;border-right:1px solid #CCC;border-bottom:1px solid #CCC;display:flex;gap:5px;line-height:1.5}
+.sh-mc:nth-child(2n){border-right:none}
+.sh-mc:nth-last-child(-n+2){border-bottom:none}
+.sh-mc.full{grid-column:1/-1;border-right:none}
+.sh-ml{font-weight:700;min-width:80px;white-space:nowrap;color:#222}
+.sh-mv{color:#111}
+
+.sh-table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:6px}
+.sh-table th{background:#1C1917;color:#fff;padding:5px 6px;font-weight:700;font-size:7.5pt;letter-spacing:.3px;text-align:left;white-space:nowrap}
+.sh-table th.center{text-align:center}
+.sh-table td{border:1px solid #AAA;padding:4px 5px;vertical-align:middle}
+.sh-table th{border:1px solid #1C1917}
+.sh-table tr.data-row td{background:#fff}
+.sno{text-align:center;width:22px;font-weight:700}
+.sig-td{min-width:52px;height:26px}
+
+.sh-totals{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
+.sh-tot{border:1px solid #666;text-align:center;min-width:108px}
+.sh-tot-lbl{background:#333;color:#fff;font-size:6.5pt;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 7px}
+.sh-tot-val{font-size:18pt;font-weight:700;color:#111;padding:4px 8px;line-height:1}
+
+.sh-sig-footer{border-top:1.5px solid #111;padding-top:10px;flex-shrink:0}
+.sh-sig-row{display:flex;gap:6px}
+.sh-sig-blk{text-align:center;flex:1}
+.sh-sig-blk.align-left{text-align:left}
+.sh-sig-blk.align-right{text-align:right}
+.sh-sig-space{margin-bottom:4px}
+.sh-sig-line-solid{border-bottom:1px solid #444}
+.sh-sig-line-dashed{border-bottom:1px dashed #666}
+.sh-sig-line-dotted{border-bottom:1px dotted #666}
+.sh-sig-name{font-size:8.5pt;font-weight:700;color:#111}
+.sh-sig-role{font-size:7.5pt;color:#555;margin-top:1px;font-style:italic}
+.sh-sig-desig{font-size:8pt;color:#333;margin-top:1px;font-weight:600}
+.sh-sig-dept{font-size:7.5pt;color:#555;margin-top:1px}
+.sh-sig-col{font-size:7.5pt;color:#555;margin-top:1px}
+.sh-sig-stamp{font-size:7pt;color:#888;font-style:italic;margin-top:3px;height:20px;display:flex;align-items:center;justify-content:center}
+.sh-sig-date{font-size:7pt;color:#777;margin-top:2px;border-top:1px dotted #CCC;padding-top:2px}
+
+.sh-page-num{text-align:center;font-size:7pt;color:#777;margin-top:6px;padding-top:5px;border-top:1px dashed #CCC;flex-shrink:0}
+.sh-footer-txt{text-align:center;font-size:6.5pt;color:#999;font-style:italic;margin-top:3px;flex-shrink:0}
+.sh-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.05;display:flex;align-items:center;justify-content:center}
+.sh-watermark img{width:180px;height:180px;object-fit:contain}
+.sh-content{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
+
+/* CONT HEADER (page 2+) */
+.sh-cont-hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:5px;margin-bottom:7px;border-bottom:1.5px solid #555;font-size:8pt}
+.sh-cont-ev{font-weight:700;color:#111}
+.sh-cont-info{color:#555}
+
+/* COVER PAGE */
+.cover-page{background:#fff;font-family:'Times New Roman',Times,serif;color:#111;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.cover-page.portrait{width:210mm;min-height:297mm;padding:18mm 16mm;display:flex;flex-direction:column}
+.cover-title{text-align:center;margin:20px 0 18px;padding:18px 20px;border:2px solid #111}
+.cover-title h1{font-size:18pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.cover-title p{font-size:10pt;color:#444;margin:3px 0}
+.cover-event-box{border:1.5px solid #555;padding:14px 16px;margin-bottom:18px}
+.cover-event-box h3{font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #CCC;padding-bottom:5px;margin-bottom:8px}
+.cover-event-grid{display:grid;grid-template-columns:130px 1fr;gap:3px 10px;font-size:9pt}
+.cover-event-lbl{font-weight:700;color:#333}
+.cover-event-val{color:#111}
+.cover-members-table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:8px}
+.cover-members-table th{background:#1C1917;color:#fff;padding:5px 8px;text-align:left;font-size:8.5pt;border:1px solid #1C1917}
+.cover-members-table td{border:1px solid #AAA;padding:5px 8px;height:28px}
+.cover-members-table .present-td{width:80px;text-align:center}
+.cover-footer{margin-top:auto;padding-top:16px;border-top:1px solid #CCC;font-size:8pt;color:#666;text-align:center}
+
+/* SIDEBAR BOTTOM GENERATE BUTTON */
+.sb-gen-btn{padding:14px 16px;border-top:1px solid var(--bd2);background:var(--w);flex-shrink:0}
+
+/* MOBILE TOGGLE */
+.mob-preview-btn{display:none}
+
+@media(max-width:900px){
+  .gen-layout{grid-template-columns:1fr;height:auto;overflow:visible}
+  .gen-sidebar{height:auto;max-height:none;overflow-y:visible}
+  .gen-preview-area{height:auto;min-height:400px;padding:14px 8px 30px}
+  .mob-preview-btn{display:flex}
+  .a4.portrait{transform:scale(0.48);transform-origin:top center;margin-bottom:calc(-297mm * 0.52)}
+  .a4.landscape{transform:scale(0.40);transform-origin:top center;margin-bottom:calc(-210mm * 0.60)}
+  .a4-wrapper{max-width:100%}
+}
+@media(max-width:480px){
+  .f-row,.f-row3{grid-template-columns:1fr!important}
+  .cb-grid,.cb-grid3{grid-template-columns:1fr!important}
+  .a4.portrait{transform:scale(0.38);margin-bottom:calc(-297mm * 0.62)}
+  .a4.landscape{transform:scale(0.30);margin-bottom:calc(-210mm * 0.70)}
+}
+
+/* PRINT */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body,html{margin:0!important;padding:0!important;background:#fff!important}
+  .gen-layout{display:block!important}
+  .gen-sidebar,.preview-toolbar{display:none!important}
+  .gen-preview-area{background:#fff!important;padding:0!important;height:auto!important;overflow:visible!important}
+  .a4-wrapper{max-width:none!important}
+  .a4,.cover-page{box-shadow:none!important;page-break-after:always;break-after:page;transform:none!important;margin:0!important}
+  .a4:last-child,.cover-page:last-child{page-break-after:avoid;break-after:avoid}
+  .a4.portrait,.cover-page.portrait{width:210mm!important;padding:10mm 12mm 12mm!important;min-height:0!important}
+  .a4.landscape{width:297mm!important;padding:9mm 11mm 11mm!important;min-height:0!important}
+  @page{margin:0;size:A4}
+}
 </style>
 </head>
 <body>
 
-<div class="sec-hdr">
-  <h2>Generate Attendance Sheet</h2>
-  <p>Fill event details, select classes, configure columns and signatories, then preview and download as PDF.</p>
-</div>
+<div class="gen-layout">
 
-<div class="steps">
-
-  <!-- STEP 1: Event Details -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">1</div><div><div class="step-title">Event / Programme Details</div><div class="step-sub">Name, venue, date and time of the event</div></div></div>
-    <div class="step-body">
-      <div class="g2">
-        <div class="f span2"><label>Event / Programme Name <span style="color:var(--maroon)">*</span></label>
-          <input id="ev-name" type="text" placeholder="e.g. Workshop on Molecular Biology Techniques">
-        </div>
-        <div class="f span2"><label>Venue</label>
-          <input id="ev-venue" type="text" placeholder="e.g. LS Hall, Loyola College, Chennai">
-        </div>
-        <div class="f"><label>Date</label><input id="ev-date" type="date" onchange="autoDay()"></div>
-        <div class="f"><label>Day</label><input id="ev-day" type="text" readonly placeholder="Auto-filled from date"></div>
-        <div class="f"><label>Time From</label><input id="ev-tf" type="time"></div>
-        <div class="f"><label>Time To</label><input id="ev-tt" type="time"></div>
-      </div>
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<div class="gen-sidebar" id="gen-sidebar">
+  <div class="sb-top">
+    <h2><i class="fa-solid fa-file-circle-plus" style="color:var(--m);margin-right:7px;font-size:14px"></i>Generate Sheet</h2>
+    <div class="sb-actions">
+      <button class="btn btn-g btn-xs" onclick="resetAll()" title="Reset all"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="btn btn-g btn-xs mob-preview-btn" onclick="scrollToPreview()"><i class="fa-solid fa-eye"></i> Preview</button>
     </div>
   </div>
 
-  <!-- STEP 2: Class Selection -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">2</div><div><div class="step-title">Class Selection</div><div class="step-sub">Each selected class prints as a separate A4 sheet. Use filters to narrow down.</div></div></div>
-    <div class="step-body">
-      <div class="g4" style="margin-bottom:14px">
-        <div class="f"><label>Academic Year</label><select id="gen-ay" onchange="buildClsGrid()"></select></div>
+  <!-- ── 1. EVENT DETAILS ── -->
+  <div class="acc-section">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-calendar-days"></i>Event Details</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body open">
+      <div class="f"><label>Event / Programme Name *</label><input id="ev-name" type="text" placeholder="e.g. Workshop on Molecular Biology" oninput="debounceRender()"></div>
+      <div class="f-row">
+        <div class="f"><label>Event Type</label>
+          <select id="ev-type" onchange="debounceRender()">
+            <option value="">— Select —</option>
+            <option>Workshop</option><option>Seminar</option><option>Guest Lecture</option>
+            <option>Conference</option><option>Field Trip</option><option>Exam</option>
+            <option>Internal Assessment</option><option>Cultural Event</option><option>Sports Event</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="f"><label>Ref. No.</label><input id="ev-ref" type="text" placeholder="Ref / File No." oninput="debounceRender()"></div>
+      </div>
+      <div class="f"><label>Venue</label><input id="ev-venue" type="text" placeholder="e.g. LS Hall, Loyola College" oninput="debounceRender()"></div>
+      <div class="f-row">
+        <div class="f"><label>Date</label><input id="ev-date" type="date" onchange="autoDay();debounceRender()"></div>
+        <div class="f"><label>Day</label><input id="ev-day" type="text" readonly placeholder="Auto"></div>
+      </div>
+      <div class="f-row">
+        <div class="f"><label>Time From</label><input id="ev-tf" type="time" onchange="debounceRender()"></div>
+        <div class="f"><label>Time To</label><input id="ev-tt" type="time" onchange="debounceRender()"></div>
+      </div>
+      <div class="f"><label>Resource Person / Chief Guest</label><input id="ev-rp" type="text" placeholder="Name, Institution" oninput="debounceRender()"></div>
+      <div class="f"><label>Organising Committee</label><input id="ev-org" type="text" placeholder="Names of organisers" oninput="debounceRender()"></div>
+    </div>
+  </div>
+
+  <!-- ── 2. CLASS SELECTION ── -->
+  <div class="acc-section">
+    <div class="acc-header open" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-users"></i>Class Selection</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body open">
+      <div class="f"><label>Academic Year</label><select id="gen-ay" onchange="buildClsGrid();debounceRender()"></select></div>
+      <div class="f-row">
         <div class="f"><label>Semester</label>
-          <select id="gen-sem">
-            <option value="">All Semesters</option>
-            <option>Semester I</option><option>Semester II</option>
-            <option>Semester III</option><option>Semester IV</option>
-            <option>Semester V</option><option>Semester VI</option>
+          <select id="gen-sem" onchange="debounceRender()">
+            <option value="">All</option>
+            <option>Semester I</option><option>Semester II</option><option>Semester III</option>
+            <option>Semester IV</option><option>Semester V</option><option>Semester VI</option>
           </select>
         </div>
         <div class="f"><label>Shift</label>
-          <select id="gen-shift"><option value="">All Shifts</option><option>Shift 1</option><option>Shift 2</option></select>
+          <select id="gen-shift" onchange="debounceRender()"><option value="">All</option><option>Shift 1</option><option>Shift 2</option></select>
         </div>
-        <div class="f"><label>Sort Students By</label>
-          <select id="gen-sort">
-            <option value="deptno">Department Number</option>
-            <option value="name">Student Name (A-Z)</option>
+      </div>
+      <div class="f-row">
+        <div class="f"><label>Section</label><input id="gen-sec" type="text" placeholder="A, B…" oninput="debounceRender()"></div>
+        <div class="f"><label>Sort By</label>
+          <select id="gen-sort" onchange="debounceRender()">
+            <option value="deptno">Dept. Number</option>
+            <option value="name">Name A–Z</option>
+            <option value="batch">Batch Code</option>
           </select>
         </div>
-        <div class="f"><label>Section Filter</label><input id="gen-sec" type="text" placeholder="A, B, C…"></div>
       </div>
-      <!-- Gender filter -->
-      <div style="margin-bottom:12px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--c3);margin-bottom:7px">Print by Gender</div>
-        <div class="gender-chips">
-          <label class="gender-chip on"><input type="checkbox" id="gf-all" checked onchange="genderFilterAll(this)"> All</label>
-          <label class="gender-chip"><input type="checkbox" id="gf-male" onchange="genderFilterUpdate()"> <i class="fa-solid fa-mars" style="color:var(--blue)"></i> Male</label>
-          <label class="gender-chip"><input type="checkbox" id="gf-female" onchange="genderFilterUpdate()"> <i class="fa-solid fa-venus" style="color:var(--maroon)"></i> Female</label>
-          <label class="gender-chip"><input type="checkbox" id="gf-trans" onchange="genderFilterUpdate()"> <i class="fa-solid fa-transgender" style="color:var(--green)"></i> Transgender</label>
-        </div>
+      <div class="f"><label>Gender Filter</label></div>
+      <div class="cb-grid" style="margin-bottom:8px">
+        <label class="cb-row"><input type="checkbox" id="gf-all" checked onchange="gAll(this)"> All</label>
+        <label class="cb-row"><input type="checkbox" id="gf-m" onchange="gUpd()"> <i class="fa-solid fa-mars" style="color:var(--blue);font-size:10px"></i> Male</label>
+        <label class="cb-row"><input type="checkbox" id="gf-f" onchange="gUpd()"> <i class="fa-solid fa-venus" style="color:var(--m);font-size:10px"></i> Female</label>
+        <label class="cb-row"><input type="checkbox" id="gf-t" onchange="gUpd()"> <i class="fa-solid fa-transgender" style="color:var(--grn);font-size:10px"></i> Trans</label>
       </div>
-      <div class="cls-grid" id="cls-grid"><span style="color:var(--c3);font-size:13px">Loading classes…</span></div>
-      <div class="cls-chips-pills" id="cls-pills"></div>
+      <div style="font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--c3);margin-bottom:5px">Select Classes</div>
+      <div id="cls-grid" style="display:flex;flex-direction:column;gap:4px"><span style="color:var(--c3);font-size:12px">Loading…</span></div>
     </div>
   </div>
 
-  <!-- STEP 3: Column Order -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">3</div><div><div class="step-title">Column Configuration &amp; Order</div><div class="step-sub">Toggle columns on/off and drag or use arrows to reorder them. S.No. is always first.</div></div></div>
-    <div class="step-body">
-      <div class="info-band info-amber" style="margin-bottom:12px">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>S.No. is always the first column. Enable / disable other columns and drag to reorder. Dept. No. column will auto-fit.</span>
+  <!-- ── 3. HEADER & BRANDING ── -->
+  <div class="acc-section">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-heading"></i>Header &amp; Branding</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body">
+      <div class="sec-lbl">Logos</div>
+      <label class="cb-row"><input type="checkbox" id="logo-loyola" checked onchange="debounceRender()"> <img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png" style="height:18px;object-fit:contain"> Loyola College</label>
+      <label class="cb-row"><input type="checkbox" id="logo-cent" onchange="debounceRender()"> <img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/100.png" style="height:18px;object-fit:contain"> Centenary Logo</label>
+      <label class="cb-row"><input type="checkbox" id="logo-dept" onchange="debounceRender()"> <img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png" style="height:18px;object-fit:contain"> Department Logo</label>
+      <div class="f" style="margin-top:6px"><label>Logo Size</label>
+        <select id="logo-size" onchange="debounceRender()"><option value="sm">Small (50px)</option><option value="md" selected>Medium (68px)</option><option value="lg">Large (86px)</option></select>
       </div>
-      <div class="col-order-list" id="col-order-list"></div>
-      <div class="sec-lbl" style="margin-top:14px">Custom / Signature Columns</div>
+      <div class="f"><label>Logo Position</label>
+        <select id="logo-pos" onchange="debounceRender()">
+          <option value="center">Centered</option>
+          <option value="left">Left Aligned</option>
+          <option value="flanked">Flanked (logos outside, text center)</option>
+        </select>
+      </div>
+      <div class="f"><label>Custom Logo URL (optional)</label><input id="logo-custom-url" type="text" placeholder="https://… or leave blank" oninput="debounceRender()"></div>
+
+      <div class="sec-lbl">College Identity</div>
+      <div class="f"><label>College Name</label><input id="hdr-college" type="text" oninput="debounceRender()"></div>
+      <div class="f"><label>Affiliation / Accreditation Line</label><input id="hdr-est" type="text" oninput="debounceRender()"></div>
+      <div class="f"><label>Department Name</label><input id="hdr-dept" type="text" oninput="debounceRender()"></div>
+      <div class="f"><label>Subtitle Line 1</label><input id="hdr-sub1" type="text" placeholder="e.g. In collaboration with…" oninput="debounceRender()"></div>
+      <div class="f"><label>Subtitle Line 2</label><input id="hdr-sub2" type="text" oninput="debounceRender()"></div>
+      <div class="f"><label>College Motto</label><input id="hdr-motto" type="text" placeholder="e.g. Let Your Light Shine" oninput="debounceRender()"></div>
+
+      <div class="sec-lbl">Typography</div>
+      <div class="f-row">
+        <div class="f"><label>Header Font</label>
+          <select id="hdr-font" onchange="debounceRender()">
+            <option value="f-times">Times New Roman</option>
+            <option value="f-georgia">Georgia</option>
+            <option value="f-arial">Arial</option>
+            <option value="f-calibri">Calibri</option>
+          </select>
+        </div>
+        <div class="f"><label>College Name Size</label>
+          <select id="hdr-font-sz" onchange="debounceRender()">
+            <option value="sz-sm">Small</option>
+            <option value="sz-md" selected>Medium</option>
+            <option value="sz-lg">Large</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f"><label>Dept Name Size</label>
+          <select id="dept-font-sz" onchange="debounceRender()">
+            <option value="sz-sm">Small</option>
+            <option value="sz-md" selected>Medium</option>
+            <option value="sz-lg">Large</option>
+          </select>
+        </div>
+        <div class="f"><label>Event Title Size</label>
+          <select id="ev-title-sz" onchange="debounceRender()">
+            <option value="sz-sm">Small</option>
+            <option value="sz-md" selected>Medium</option>
+            <option value="sz-lg">Large</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sec-lbl">Divider &amp; Border</div>
+      <div class="f-row">
+        <div class="f"><label>Header Rule</label>
+          <select id="hdr-rule" onchange="debounceRender()">
+            <option value="bold">Bold Line</option>
+            <option value="double">Double Line</option>
+            <option value="single">Single Line</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div class="f"><label>Page Border</label>
+          <select id="page-border" onchange="debounceRender()">
+            <option value="none">None</option>
+            <option value="thin">Thin</option>
+            <option value="double">Double</option>
+            <option value="box">Box Rule</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. COLUMNS ── -->
+  <div class="acc-section">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-table-columns"></i>Column Configuration</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body">
+      <div class="info info-amb"><i class="fa-solid fa-circle-info"></i><span>Drag or use ▲▼ to reorder. S.No. is always first.</span></div>
+      <div class="drag-list" id="col-drag-list"></div>
+      <div class="sec-lbl">Row Appearance</div>
+      <div class="f-row">
+        <div class="f"><label>Row Height</label>
+          <select id="row-height" onchange="debounceRender()">
+            <option value="compact">Compact (4px pad)</option>
+            <option value="normal" selected>Normal (6px pad)</option>
+            <option value="spacious">Spacious (9px pad)</option>
+            <option value="signature">Sig. Space (18px)</option>
+          </select>
+        </div>
+        <div class="f"><label>Table Font Size</label>
+          <select id="tbl-font-sz" onchange="debounceRender()">
+            <option value="7pt">7pt (Very Small)</option>
+            <option value="8pt" selected>8pt (Default)</option>
+            <option value="9pt">9pt (Larger)</option>
+            <option value="10pt">10pt (Large)</option>
+          </select>
+        </div>
+      </div>
+      <div class="sec-lbl">Custom / Signature Columns</div>
       <div id="sig-cols-list">
-        <div class="sig-input-row">
-          <input type="text" value="Signature" placeholder="Column name">
-          <button class="sig-rm-btn" onclick="rmSigCol(this)"><i class="fa-solid fa-xmark"></i></button>
-        </div>
+        <div class="cust-col-row"><input type="text" value="Signature" placeholder="Column name"><button class="rm-btn" onclick="rmCC(this)"><i class="fa-solid fa-xmark"></i></button></div>
       </div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:7px" onclick="addSigCol()"><i class="fa-solid fa-plus"></i> Add Custom Column</button>
+      <button class="btn btn-g btn-sm" style="margin-top:5px;width:100%" onclick="addCC()"><i class="fa-solid fa-plus"></i> Add Column</button>
     </div>
   </div>
 
-  <!-- STEP 4: Logo -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">4</div><div><div class="step-title">Sheet Logo(s) &amp; Watermark</div><div class="step-sub">Use saved logos or upload a custom one. Configure the background watermark.</div></div></div>
-    <div class="step-body">
-      <div class="g2">
-        <div class="f">
-          <label>Use Configured Logos</label>
-          <select id="logo-mode">
-            <option value="config">Use logos from Configuration</option>
-            <option value="custom">Upload custom logo for this sheet</option>
+  <!-- ── 5. PAGE LAYOUT ── -->
+  <div class="acc-section">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-file-lines"></i>Page Layout</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body">
+      <div class="f"><label>Orientation</label>
+        <div class="tog-g">
+          <button class="tog-b on" id="tog-port" onclick="setOrient('portrait',this)"><i class="fa-regular fa-file"></i> Portrait</button>
+          <button class="tog-b" id="tog-land" onclick="setOrient('landscape',this)"><i class="fa-regular fa-file" style="transform:rotate(-90deg);display:inline-block"></i> Landscape</button>
+        </div>
+      </div>
+      <div class="f-row" style="margin-top:8px">
+        <div class="f"><label>Margins</label>
+          <select id="page-margin" onchange="debounceRender()">
+            <option value="narrow">Narrow (8mm)</option>
+            <option value="normal" selected>Normal (13mm)</option>
+            <option value="wide">Wide (18mm)</option>
+          </select>
+        </div>
+        <div class="f"><label>Rows / Page</label>
+          <select id="rows-per-page" onchange="debounceRender()">
+            <option value="auto" selected>Auto</option>
+            <option value="10">10</option><option value="15">15</option>
+            <option value="20">20</option><option value="25">25</option>
+            <option value="30">30</option>
           </select>
         </div>
       </div>
-      <div id="custom-logo-wrap" style="display:none;margin-top:12px">
-        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r)">
-          <div id="custom-logo-preview" style="width:54px;height:54px;border-radius:6px;border:1.5px dashed var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--c4);font-size:20px;flex-shrink:0"><i class="fa-regular fa-image"></i></div>
-          <div style="flex:1">
-            <div style="font-size:12.5px;font-weight:600;color:var(--c2);margin-bottom:4px">Custom Logo</div>
-            <div style="font-size:11px;color:var(--c4)" id="custom-logo-name">No file selected</div>
-          </div>
-          <button class="btn btn-ghost btn-xs" onclick="document.getElementById('custom-logo-inp').click()"><i class="fa-solid fa-upload"></i> Upload</button>
-        </div>
-        <input type="file" id="custom-logo-inp" accept="image/*" style="display:none" onchange="handleCustomLogo(this)">
-      </div>
-      
-      <div class="f" style="margin-top:14px; padding-top:12px; border-top: 1px solid var(--border2);">
-        <label class="manual-row"><input type="checkbox" id="chk-watermark" checked> Include Loyola background watermark</label>
-      </div>
-
-      <script>document.getElementById('logo-mode').addEventListener('change',function(){document.getElementById('custom-logo-wrap').style.display=this.value==='custom'?'block':'none'});</script>
+      <div class="sec-lbl">Watermark</div>
+      <label class="cb-row"><input type="checkbox" id="wm-loyola" onchange="debounceRender()"> Loyola College watermark (faint)</label>
+      <label class="cb-row"><input type="checkbox" id="wm-dept" onchange="debounceRender()"> Department logo watermark (faint)</label>
+      <div class="f"><label>Custom Watermark Text (optional)</label><input id="wm-text" type="text" placeholder="e.g. CONFIDENTIAL" oninput="debounceRender()"></div>
+      <div class="sec-lbl">Footer</div>
+      <div class="f"><label>Footer / Watermark Line</label><input id="footer-txt" type="text" placeholder="Dept · College · Motto" oninput="debounceRender()"></div>
+      <label class="cb-row"><input type="checkbox" id="show-page-num" checked onchange="debounceRender()"> Show page number</label>
     </div>
   </div>
 
-  <!-- STEP 5: Orientation -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">5</div><div><div class="step-title">Page Orientation</div></div></div>
-    <div class="step-body">
-      <div class="tog-g">
-        <button class="tog-b on" id="tog-port" onclick="setOrient('portrait',this)"><i class="fa-regular fa-file"></i> Portrait</button>
-        <button class="tog-b" id="tog-land" onclick="setOrient('landscape',this)"><i class="fa-regular fa-file" style="transform:rotate(-90deg);display:inline-block"></i> Landscape</button>
-      </div>
-      <div class="f-note" style="margin-top:6px">Landscape fits more columns. Portrait is A4 default.</div>
+  <!-- ── 6. SIGNATORIES ── -->
+  <div class="acc-section">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-signature"></i>Signatories</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
     </div>
-  </div>
-
-  <!-- STEP 6: Signatories -->
-  <div class="step-card">
-    <div class="step-hdr"><div class="step-badge">6</div><div><div class="step-title">Signatories &amp; Footer</div><div class="step-sub">Configure staff signatories, stamps, and their exact left-to-right order.</div></div></div>
-    <div class="step-body">
-
-      <div class="manual-row" style="margin-bottom:14px; padding: 10px; background:var(--abg); border:1px solid var(--aborder); border-radius:var(--r);">
-        <input type="checkbox" id="chk-stamp">
-        <label for="chk-stamp" style="cursor:pointer; color:var(--amber); font-weight:600;">Include College Stamp / Seal space</label>
+    <div class="acc-body">
+      <div class="sec-lbl">HOD (Required — Rightmost by default)</div>
+      <div class="sig-blk req">
+        <div class="sig-blk-hd">
+          <div class="sig-blk-title"><i class="fa-solid fa-user-tie" style="color:var(--m)"></i>Head of Department <span class="req-tag">Required</span></div>
+        </div>
+        <div class="manual-row"><input type="checkbox" id="hod-man" onchange="tMan('hod')"><label for="hod-man" style="cursor:pointer">Manual edit</label></div>
+        <div class="f-row">
+          <div class="f"><label>Select Staff</label><select id="hod-sel" onchange="fillSig('hod');debounceRender()"><option value="">— select —</option></select></div>
+          <div class="f"><label>Role in Event</label><input id="hod-role" type="text" placeholder="Presided by" oninput="debounceRender()"></div>
+        </div>
+        <div class="f"><label>Full Name</label><input id="hod-n" type="text" readonly oninput="debounceRender()"></div>
+        <div class="f"><label>Designation</label><input id="hod-d" type="text" value="Head of the Department" readonly oninput="debounceRender()"></div>
+        <div class="f"><label>Department (editable)</label><input id="hod-dept-txt" type="text" placeholder="Department name" oninput="debounceRender()"></div>
+        <div class="f"><label>College (editable)</label><input id="hod-col-txt" type="text" placeholder="College name" oninput="debounceRender()"></div>
       </div>
 
-      <!-- HOD (required) -->
-      <div class="sig-blk required" id="sig-hod">
-        <div class="sig-blk-head">
-          <div class="sig-blk-title"><i class="fa-solid fa-user-tie" style="color:var(--maroon)"></i> Head of Department <span class="req-tag">Required</span></div>
-        </div>
-        <div class="manual-row">
-          <input type="checkbox" id="hod-manual" onchange="toggleManual('hod')">
-          <label for="hod-manual" style="cursor:pointer">Manual edit (override auto-fill)</label>
-        </div>
-        <div class="g3">
-          <div class="f"><label>Select Staff</label><select id="hod-sel" onchange="fillSig('hod')"><option value="">— select —</option></select></div>
-          <div class="f"><label>Full Name</label><input id="hod-n" type="text" readonly></div>
-          <div class="f"><label>Role in Event</label><input id="hod-role" type="text" placeholder="Presided by"></div>
-          <div class="f"><label>Designation</label><input id="hod-d" type="text" value="Head of the Department" readonly></div>
-          <div class="f"><label>Show Department?</label><select id="hod-dept"><option value="yes">Show Department</option><option value="no">Name only</option></select></div>
-          <div class="f"><label>Show College?</label><select id="hod-col"><option value="yes">Show College</option><option value="no">No</option></select></div>
-        </div>
-      </div>
+      <div class="sec-lbl">Special Signatories (tick to include)</div>
+      <div id="sp-sigs-wrap"></div>
 
-      <!-- SPECIAL SIGNATORIES -->
-      <div class="sec-lbl" style="margin-top:4px">Special Signatories (tick to include)</div>
-      <div class="special-sig-grid" id="special-sigs-grid">
-        <!-- JS generates these below -->
-      </div>
-
-      <!-- Optional staff signatories -->
       <div class="sec-lbl">Additional Staff Signatories</div>
       <div id="opt-sigs-list"></div>
-      <button class="btn btn-ghost btn-sm" onclick="addOptSig()"><i class="fa-solid fa-plus"></i> Add Signatory</button>
+      <button class="btn btn-g btn-sm" style="width:100%" onclick="addOptSig()"><i class="fa-solid fa-plus"></i> Add Signatory</button>
 
-      <!-- Signatory order preview / config -->
-      <div class="sec-lbl" style="margin-top: 24px;">Signature Ordering (Left to Right)</div>
-      <div id="sig-order-preview" style="margin-top:8px;padding:14px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);">
-        <p style="font-size:12px; color:var(--c3); margin-bottom:10px;"><i class="fa-solid fa-arrows-up-down"></i> Drag to reorder signatories as they will appear left to right on the printed sheet.</p>
-        <div id="sig-order-list" class="col-order-list"></div>
+      <div class="sec-lbl">Signature Style</div>
+      <div class="f-row">
+        <div class="f"><label>Line Style</label>
+          <select id="sig-line-style" onchange="debounceRender()">
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+            <option value="dotted">Dotted</option>
+          </select>
+        </div>
+        <div class="f"><label>Signature Space Height</label>
+          <select id="sig-space-h" onchange="debounceRender()">
+            <option value="36">Small (36px)</option>
+            <option value="48" selected>Normal (48px)</option>
+            <option value="60">Large (60px)</option>
+            <option value="80">Extra Large (80px)</option>
+          </select>
+        </div>
       </div>
+      <div class="f-row">
+        <div class="f"><label>Stamp / Seal</label>
+          <select id="stamp-opt" onchange="debounceRender()">
+            <option value="none">No Stamp</option>
+            <option value="left">Stamp Left</option>
+            <option value="right">Stamp Right (default)</option>
+            <option value="each">Stamp Each Signatory</option>
+          </select>
+        </div>
+        <div class="f"><label>Show Date Below</label>
+          <select id="sig-date-opt" onchange="debounceRender()">
+            <option value="none">No Date</option>
+            <option value="all">Show for All</option>
+            <option value="hod">HOD Only</option>
+          </select>
+        </div>
+      </div>
+      <label class="cb-row"><input type="checkbox" id="sig-verified" onchange="debounceRender()"> Add "Verified by" counter-signature row</label>
+      <label class="cb-row"><input type="checkbox" id="sig-show-college" onchange="debounceRender()"> Show college name below each signatory</label>
 
+      <div class="sec-lbl">Signatory Order (Drag to Reorder)</div>
+      <div class="info info-blue"><i class="fa-solid fa-circle-info"></i><span>Left = leftmost on sheet. HOD is rightmost by default.</span></div>
+      <div class="drag-list" id="sig-order-list"></div>
     </div>
   </div>
 
-  <!-- ACTION BAR -->
-  <div class="action-bar">
-    <button class="btn btn-ghost" onclick="resetForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-    <button class="btn btn-gold" onclick="doPreview()"><i class="fa-solid fa-file-pdf"></i> Generate &amp; Download PDF</button>
+  <!-- ── 7. FRONT PAGE ── -->
+  <div class="acc-section">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title"><i class="fa-solid fa-book-open"></i>Front / Cover Page</div>
+      <i class="fa-solid fa-chevron-down acc-arrow"></i>
+    </div>
+    <div class="acc-body">
+      <label class="cb-row"><input type="checkbox" id="gen-cover" onchange="debounceRender()"> Generate cover / front page</label>
+      <div id="cover-opts" style="display:none;margin-top:8px">
+        <div class="f"><label>Cover Title</label><input id="cov-title" type="text" placeholder="e.g. ATTENDANCE REGISTER" oninput="debounceRender()"></div>
+        <label class="cb-row"><input type="checkbox" id="cov-member-table" checked onchange="debounceRender()"> Include member list with Present count column</label>
+        <div class="f"><label>Member Table Title</label><input id="cov-member-title" type="text" placeholder="Participant Summary" oninput="debounceRender()"></div>
+        <label class="cb-row"><input type="checkbox" id="cov-class-list" checked onchange="debounceRender()"> List classes with total enrolled &amp; total present box</label>
+      </div>
+      <script>
+        document.getElementById('gen-cover').addEventListener('change',function(){
+          document.getElementById('cover-opts').style.display=this.checked?'block':'none';
+        });
+      </script>
+    </div>
   </div>
 
-</div><!-- /steps -->
+  <!-- GENERATE BUTTON -->
+  <div class="sb-gen-btn">
+    <button class="btn btn-gold btn-full" onclick="doGenerate()" style="font-size:13px;padding:10px 18px">
+      <i class="fa-solid fa-file-pdf"></i> Generate &amp; Download PDF
+    </button>
+    <button class="btn btn-g btn-full" style="margin-top:6px;font-size:12px" onclick="doPrint()">
+      <i class="fa-solid fa-print"></i> Print
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ PREVIEW AREA ═══════════════ -->
+<div class="gen-preview-area" id="gen-preview-area">
+  <div class="preview-toolbar">
+    <div class="preview-toolbar-left">
+      <span class="preview-count" id="prev-count">Configure settings on the left to preview</span>
+    </div>
+    <div class="preview-toolbar-right">
+      <button class="btn btn-g btn-sm" onclick="doGenerate()" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">
+        <i class="fa-solid fa-file-pdf"></i> PDF
+      </button>
+      <button class="btn btn-g btn-sm" onclick="doPrint()" style="background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff">
+        <i class="fa-solid fa-print"></i> Print
+      </button>
+    </div>
+  </div>
+  <div class="a4-wrapper" id="sheets-wrap">
+    <div class="preview-empty" id="preview-empty">
+      <i class="fa-regular fa-file-lines"></i>
+      <div>Fill in the event details and select a class to see a live preview.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /gen-layout -->
 
 <script>
 const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
-function pmsg(type,data){window.parent.postMessage({type,...data},'*')}
-function toast(m,v){pmsg('toast',{msg:m,variant:v||'info'})}
-function showLoader(m){pmsg('showLoader',{msg:m||'Loading…'})}
-function hideLoader(){pmsg('hideLoader',{})}
+function pm(type,data){window.parent.postMessage({type,...(data||{})},'*')}
+function toast(m,v){pm('toast',{msg:m,variant:v||'info'})}
+function showLoader(m){pm('showLoader',{msg:m||'Loading…'})}
+function hideLoader(){pm('hideLoader')}
 async function gas(action,payload){
   const p=new URLSearchParams({action,payload:JSON.stringify(payload||{})});
-  const r=await fetch(GAS, { method: 'POST', body: p });
+  const r=await fetch(GAS+'?'+p);
   if(!r.ok) throw new Error('HTTP '+r.status);
   return r.json();
 }
@@ -355,636 +695,717 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function v(id){return document.getElementById(id)?.value?.trim()||''}
 function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||''}
 
-// ── STATE ──
-let ALL_STUDENTS=[], ALL_STAFF=[], ALL_AY=[], ALL_CLASSES=[], CFG={}, LOGOS=[];
-let ORIENT='portrait', OPT_SIG_CNT=0, CUSTOM_LOGO_B64=null, CUSTOM_LOGO_MIME=null;
+// STATE
+let ALL_STUDENTS=[], ALL_STAFF=[], ALL_AY=[], ALL_CLASSES=[], CFG={};
+let ORIENT='portrait', OPT_CNT=0, SIG_IDS=['hod'];
+let renderTimer=null;
 
 const SPECIALS=[
-  {id:'rector',label:'Rector',desig:'Rector<br>Loyola College (Autonomous), Chennai – 600 034'},
+  {id:'rector',label:'Rector',desig:'Rector'},
   {id:'secretary',label:'Secretary & Correspondent',desig:'Secretary & Correspondent'},
-  {id:'principal',label:'Principal',desig:'Principal<br>Loyola College (Autonomous), Chennai – 600 034'},
+  {id:'principal',label:'Principal',desig:'Principal'},
   {id:'vpadmin',label:'Vice Principal (Admin)',desig:'Vice Principal (Administration)',hasShift:true},
   {id:'vpacademic',label:'Vice Principal (Academic)',desig:'Vice Principal (Academic)',hasShift:true},
   {id:'vpinfra',label:'Vice Principal (Infrastructure)',desig:'Vice Principal (Infrastructure)',hasShift:true},
   {id:'vpdiscipline',label:'Vice Principal (Discipline)',desig:'Vice Principal (Discipline)',hasShift:true},
 ];
 
-let SIG_IDS = ['hod']; // Keeps track of ordering
-
-// Default column order
-const DEFAULT_COLS=[
-  {id:'sno',    label:'S.No.',         always:true,  enabled:true},
-  {id:'deptno', label:'Dept. No.',     always:false, enabled:true},
-  {id:'name',   label:'Student Name',  always:true,  enabled:true},
-  {id:'gender', label:'Gender',        always:false, enabled:false},
-  {id:'class',  label:'Class',         always:false, enabled:false},
-  {id:'batch',  label:'Batch Code',    always:false, enabled:false},
-  {id:'sem',    label:'Semester',      always:false, enabled:false},
-  {id:'shift',  label:'Shift',         always:false, enabled:false},
-  {id:'sec',    label:'Section',       always:false, enabled:false},
-  {id:'dob',    label:'Date of Birth', always:false, enabled:false},
-  {id:'contact',label:'Contact No.',   always:false, enabled:false},
-  {id:'email',  label:'Email',         always:false, enabled:false},
-  {id:'father', label:"Father's Name", always:false, enabled:false},
-  {id:'mother', label:"Mother's Name", always:false, enabled:false},
-  {id:'pcon',   label:'Parent Contact',always:false, enabled:false},
-  {id:'addr',   label:'Address',       always:false, enabled:false},
+const DEF_COLS=[
+  {id:'sno',   label:'S.No.',        always:true, en:true, align:'center', width:'auto'},
+  {id:'deptno',label:'Dept. No.',    always:false,en:true, align:'center', width:'auto'},
+  {id:'name',  label:'Student Name', always:true, en:true, align:'left',   width:'auto'},
+  {id:'gender',label:'Gender',       always:false,en:false,align:'center', width:'auto'},
+  {id:'class', label:'Class',        always:false,en:false,align:'left',   width:'auto'},
+  {id:'batch', label:'Batch Code',   always:false,en:false,align:'center', width:'auto'},
+  {id:'sem',   label:'Semester',     always:false,en:false,align:'center', width:'auto'},
+  {id:'shift', label:'Shift',        always:false,en:false,align:'center', width:'auto'},
+  {id:'sec',   label:'Section',      always:false,en:false,align:'center', width:'auto'},
+  {id:'dob',   label:'Date of Birth',always:false,en:false,align:'center', width:'auto'},
+  {id:'contact',label:'Contact No.', always:false,en:false,align:'left',   width:'auto'},
+  {id:'email', label:'Email',        always:false,en:false,align:'left',   width:'auto'},
+  {id:'father',label:"Father's Name",always:false,en:false,align:'left',   width:'auto'},
+  {id:'mother',label:"Mother's Name",always:false,en:false,align:'left',   width:'auto'},
+  {id:'pcon',  label:'Parent Contact',always:false,en:false,align:'left',  width:'auto'},
+  {id:'addr',  label:'Address',      always:false,en:false,align:'left',   width:'auto'},
 ];
-let COL_ORDER=[...DEFAULT_COLS];
+let COLS=[...DEF_COLS.map(c=>({...c}))];
 
-// ── BOOT ──
+// BOOT
 async function boot(){
   showLoader('Loading data…');
-  buildSpecialSigsHTML();
+  buildSpecialSigs();
   try{
     const[stR,sfR,ayR,clsR,cfgR]=await Promise.all([
       gas('getStudents',{}),gas('getStaff',{}),gas('getAcademicYears',{}),
       gas('getClasses',{}),gas('getConfig',{})
     ]);
-    if(stR.ok)  ALL_STUDENTS=stR.data||[];
-    if(sfR.ok)  ALL_STAFF=sfR.data||[];
-    if(ayR.ok)  ALL_AY=ayR.data||[];
+    if(stR.ok) ALL_STUDENTS=stR.data||[];
+    if(sfR.ok) ALL_STAFF=sfR.data||[];
+    if(ayR.ok) ALL_AY=ayR.data||[];
     if(clsR.ok) ALL_CLASSES=clsR.data||[];
     if(cfgR.ok){
       CFG=cfgR.data||{};
-      try{LOGOS=JSON.parse(CFG.logos||'[]')}catch{LOGOS=[]}
+      // Pre-fill header fields from config
+      sv('hdr-college',CFG.college_name||'Loyola College (Autonomous), Chennai – 600 034');
+      sv('hdr-est',CFG.college_est||'Reaccredited with A++ by NAAC | An Autonomous Institution');
+      sv('hdr-dept',CFG.dept_name||'PG & Research Department of Advanced Zoology & Biotechnology');
+      sv('hdr-sub1',CFG.subtitle1||'');
+      sv('hdr-sub2',CFG.subtitle2||'');
+      sv('footer-txt',CFG.watermark||'');
     }
-    // Populate AY select
     const active=ALL_AY.find(a=>a.Active==='TRUE');
-    const ayOpts=ALL_AY.map(a=>`<option value="${esc(a.Label)}" ${a.Active==='TRUE'?'selected':''}>${esc(a.Label)}</option>`).join('');
+    const ayOpts=ALL_AY.map(a=>`<option value="${esc(a.Label)}"${a.Active==='TRUE'?' selected':''}>${esc(a.Label)}</option>`).join('');
     document.getElementById('gen-ay').innerHTML='<option value="">— Select Year —</option>'+ayOpts;
-    if(active) document.getElementById('gen-ay').value=active.Label;
-    populateStaffDropdowns();
+    if(active) sv('gen-ay',active.Label);
+    populateStaff();
     buildClsGrid();
-    buildColOrderList();
+    buildColDragList();
     renderSigOrder();
-  }catch(e){
-    toast('Boot error: '+e.message,'err');
-  }
+    debounceRender();
+  }catch(e){ toast('Boot error: '+e.message,'err'); }
   hideLoader();
 }
 
-function buildSpecialSigsHTML() {
-  document.getElementById('special-sigs-grid').innerHTML = SPECIALS.map(sp => `
-    <div class="special-sig-item" id="ssi-${sp.id}">
-      <label class="special-sig-toggle"><input type="checkbox" id="chk-${sp.id}" onchange="toggleSpecialSig('${sp.id}')"><span class="special-sig-label">${sp.label}</span></label>
-      <div class="special-sig-fields" id="ssf-${sp.id}">
-        <input class="ssf-inp" id="${sp.id}-name" type="text" placeholder="Full Name">
-        <div class="ssf-row">
-          <input class="ssf-inp" id="${sp.id}-role" type="text" placeholder="Role in event" style="flex:1">
-          ${sp.hasShift ? `<select class="ssf-inp" id="${sp.id}-shift" style="flex:0 0 auto;width:auto"><option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option></select>` : ''}
-        </div>
-      </div>
-    </div>
-  `).join('');
+// ACCORDION
+function toggleAcc(hdr){
+  hdr.classList.toggle('open');
+  const body=hdr.nextElementSibling;
+  body.classList.toggle('open');
 }
 
-// ── CLASS GRID ──
+// CLASS GRID
 function buildClsGrid(){
-  const ayVal=v('gen-ay');
-  if(!ayVal){document.getElementById('cls-grid').innerHTML='<span style="color:var(--c3);font-size:13px">Select an academic year first.</span>';return}
-  let sts=ALL_STUDENTS.filter(s=>s.AcademicYear===ayVal&&s.Active!=='FALSE');
-  const map={};
-  sts.forEach(s=>{
-    const key=s.Class+(s.Section?' — '+s.Section:'');
-    map[key]=(map[key]||0)+1;
-  });
+  const ay=v('gen-ay');
   const grid=document.getElementById('cls-grid');
-  if(!Object.keys(map).length){grid.innerHTML='<span style="color:var(--c3);font-size:13px">No active students for this year.</span>';return}
+  if(!ay){grid.innerHTML='<span style="color:var(--c3);font-size:12px">Select a year first.</span>';return}
+  let sts=ALL_STUDENTS.filter(s=>s.AcademicYear===ay&&s.Active!=='FALSE');
+  const map={};
+  sts.forEach(s=>{const k=s.Class+(s.Section?' — '+s.Section:'');map[k]=(map[k]||0)+1;});
+  if(!Object.keys(map).length){grid.innerHTML='<span style="color:var(--c3);font-size:12px">No students for this year.</span>';return}
   const ORDER=ALL_CLASSES.map(c=>c.Label);
   const sorted=Object.keys(map).sort((a,b)=>{
     const ia=ORDER.findIndex(o=>a.startsWith(o)),ib=ORDER.findIndex(o=>b.startsWith(o));
     return ia>=0&&ib>=0?ia-ib:ia>=0?-1:ib>=0?1:a.localeCompare(b);
   });
   grid.innerHTML=sorted.map(k=>`
-    <label class="cls-chip" id="chip-${k.replace(/[^a-zA-Z0-9]/g,'_')}">
+    <label class="cb-row" id="chip-${CSS.escape(k)}">
       <input type="checkbox" value="${esc(k)}" onchange="toggleChip(this)">
-      <span class="cls-chip-name">${esc(getShortClsName(k))}</span>
-      <span class="cls-chip-count">${map[k]}</span>
+      <span style="flex:1;font-size:12px">${esc(shortName(k))}</span>
+      <span style="font-size:10.5px;color:var(--c4);background:var(--bg2);padding:1px 7px;border-radius:10px;border:1px solid var(--bd2)">${map[k]}</span>
     </label>`).join('');
-  updatePills();
 }
-
-function getShortClsName(chipKey){
+function shortName(chipKey){
   const parts=chipKey.split(' — ');
-  const clsLabel=parts[0];
-  const section=parts[1]||'';
-  const cls=ALL_CLASSES.find(c=>c.Label===clsLabel);
-  const shortName=cls&&cls.Short?cls.Short:clsLabel;
-  return section?shortName+' — '+section:shortName;
+  const cls=ALL_CLASSES.find(c=>c.Label===parts[0]);
+  const sn=cls&&cls.Short?cls.Short:parts[0];
+  return parts[1]?sn+' — '+parts[1]:sn;
 }
+function toggleChip(inp){inp.closest('.cb-row').classList.toggle('on',inp.checked);debounceRender()}
 
-function toggleChip(inp){
-  inp.closest('.cls-chip').classList.toggle('on',inp.checked);
-  updatePills();
+// GENDER
+function gAll(cb){
+  if(cb.checked){['gf-m','gf-f','gf-t'].forEach(id=>{const e=document.getElementById(id);if(e){e.checked=false;e.closest('.cb-row').classList.remove('on')}});cb.closest('.cb-row').classList.add('on')}
 }
-function updatePills(){
-  const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
-  document.getElementById('cls-pills').innerHTML=sel.map(c=>`<span class="cls-pill">${esc(getShortClsName(c))}</span>`).join('');
-}
-
-// ── GENDER FILTER ──
-function genderFilterAll(cb){
-  if(cb.checked){
-    ['gf-male','gf-female','gf-trans'].forEach(id=>{
-      const el=document.getElementById(id);if(el){el.checked=false;el.closest('.gender-chip').classList.remove('on')}
-    });
-    cb.closest('.gender-chip').classList.add('on');
-  }
-}
-function genderFilterUpdate(){
-  const anyOn=['gf-male','gf-female','gf-trans'].some(id=>document.getElementById(id)?.checked);
+function gUpd(){
+  const any=['gf-m','gf-f','gf-t'].some(id=>document.getElementById(id)?.checked);
   const allEl=document.getElementById('gf-all');
-  if(anyOn){allEl.checked=false;allEl.closest('.gender-chip').classList.remove('on')}
-  else{allEl.checked=true;allEl.closest('.gender-chip').classList.add('on')}
-  ['gf-male','gf-female','gf-trans'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.closest('.gender-chip').classList.toggle('on',el.checked);
-  });
+  if(any){allEl.checked=false;allEl.closest('.cb-row').classList.remove('on')}
+  else{allEl.checked=true;allEl.closest('.cb-row').classList.add('on')}
+  ['gf-m','gf-f','gf-t'].forEach(id=>{const e=document.getElementById(id);if(e)e.closest('.cb-row').classList.toggle('on',e.checked)});
+  debounceRender();
 }
-function getGenderFilter(){
+function getGF(){
   if(document.getElementById('gf-all')?.checked) return [];
-  const genders=[];
-  if(document.getElementById('gf-male')?.checked) genders.push('Male');
-  if(document.getElementById('gf-female')?.checked) genders.push('Female');
-  if(document.getElementById('gf-trans')?.checked) genders.push('Transgender');
-  return genders;
+  const g=[];
+  if(document.getElementById('gf-m')?.checked) g.push('Male');
+  if(document.getElementById('gf-f')?.checked) g.push('Female');
+  if(document.getElementById('gf-t')?.checked) g.push('Transgender');
+  return g;
 }
 
-// ── COLUMN ORDER ──
-function buildColOrderList(){
-  const el=document.getElementById('col-order-list');
-  el.innerHTML=COL_ORDER.filter(c=>!c.always).map((col,idx)=>{
-    return `<div class="col-order-row ${col.enabled?'active-col':''}" id="cor-${col.id}" draggable="true" ondragstart="colDragStart(event,'${col.id}')" ondragover="colDragOver(event)" ondrop="colDrop(event,'${col.id}')">
-      <i class="col-drag-handle fa-solid fa-grip-vertical"></i>
-      <input type="checkbox" class="col-toggle-cb" ${col.enabled?'checked':''} onchange="colToggle('${col.id}',this.checked)">
-      <span class="col-label">${esc(col.label)}</span>
-      <div class="col-move-btns">
-        <button class="col-move-btn" onclick="colMove('${col.id}',-1)" title="Move up"><i class="fa-solid fa-chevron-up"></i></button>
-        <button class="col-move-btn" onclick="colMove('${col.id}',1)" title="Move down"><i class="fa-solid fa-chevron-down"></i></button>
+// COLUMN DRAG LIST
+function buildColDragList(){
+  const el=document.getElementById('col-drag-list');
+  el.innerHTML=COLS.filter(c=>!c.always).map(c=>`
+    <div class="drag-item ${c.en?'on':''}" id="ci-${c.id}" draggable="true"
+      ondragstart="cds(event,'${c.id}')" ondragover="cdo(event)" ondrop="cdp(event,'${c.id}')">
+      <i class="drag-handle fa-solid fa-grip-vertical"></i>
+      <input type="checkbox" style="accent-color:var(--m);flex-shrink:0" ${c.en?'checked':''} onchange="ctog('${c.id}',this.checked)">
+      <span class="drag-label">${esc(c.label)}</span>
+      <div class="drag-btns">
+        <button class="drag-btn" onclick="cmove('${c.id}',-1)"><i class="fa-solid fa-chevron-up"></i></button>
+        <button class="drag-btn" onclick="cmove('${c.id}',1)"><i class="fa-solid fa-chevron-down"></i></button>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
-function colToggle(id,on){
-  const col=COL_ORDER.find(c=>c.id===id);
-  if(col){col.enabled=on;buildColOrderList();}
+function ctog(id,on){const c=COLS.find(x=>x.id===id);if(c){c.en=on;buildColDragList();debounceRender();}}
+function cmove(id,dir){
+  const i=COLS.findIndex(c=>c.id===id),ni=i+dir;
+  if(ni<0||ni>=COLS.length) return;
+  [COLS[i],COLS[ni]]=[COLS[ni],COLS[i]];
+  buildColDragList();debounceRender();
 }
-function colMove(id,dir){
-  const idx=COL_ORDER.findIndex(c=>c.id===id);
-  const newIdx=idx+dir;
-  if(newIdx<0||newIdx>=COL_ORDER.length) return;
-  if(newIdx===0&&COL_ORDER[0].always) return;
-  [COL_ORDER[idx],COL_ORDER[newIdx]]=[COL_ORDER[newIdx],COL_ORDER[idx]];
-  buildColOrderList();
-}
-let dragSrcId=null;
-function colDragStart(e,id){dragSrcId=id;e.dataTransfer.effectAllowed='move';}
-function colDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';}
-function colDrop(e,targetId){
-  e.preventDefault();
-  if(!dragSrcId||dragSrcId===targetId) return;
-  const si=COL_ORDER.findIndex(c=>c.id===dragSrcId);
-  const ti=COL_ORDER.findIndex(c=>c.id===targetId);
+let cDragSrc=null;
+function cds(e,id){cDragSrc=id;e.dataTransfer.effectAllowed='move'}
+function cdo(e){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('.drag-item').forEach(x=>x.classList.remove('drag-over'));e.currentTarget.classList.add('drag-over')}
+function cdp(e,tid){
+  e.preventDefault();document.querySelectorAll('.drag-item').forEach(x=>x.classList.remove('drag-over'));
+  if(!cDragSrc||cDragSrc===tid) return;
+  const si=COLS.findIndex(c=>c.id===cDragSrc),ti=COLS.findIndex(c=>c.id===tid);
   if(si<0||ti<0) return;
-  const moved=COL_ORDER.splice(si,1)[0];
-  COL_ORDER.splice(ti,0,moved);
-  buildColOrderList();
+  const m=COLS.splice(si,1)[0];COLS.splice(ti,0,m);
+  buildColDragList();debounceRender();
 }
 
-// ── CUSTOM COLUMNS ──
-function addSigCol(){
-  const row=document.createElement('div');
-  row.className='sig-input-row';
-  row.innerHTML=`<input type="text" placeholder="Column name"><button class="sig-rm-btn" onclick="rmSigCol(this)"><i class="fa-solid fa-xmark"></i></button>`;
-  document.getElementById('sig-cols-list').appendChild(row);
+// CUSTOM COLS
+function addCC(){
+  const r=document.createElement('div');r.className='cust-col-row';
+  r.innerHTML=`<input type="text" placeholder="Column name" oninput="debounceRender()"><button class="rm-btn" onclick="rmCC(this)"><i class="fa-solid fa-xmark"></i></button>`;
+  document.getElementById('sig-cols-list').appendChild(r);
 }
-function rmSigCol(btn){
-  const list=document.getElementById('sig-cols-list');
-  if(list.querySelectorAll('.sig-input-row').length>1) btn.closest('.sig-input-row').remove();
-}
-function getSigCols(){return [...document.querySelectorAll('#sig-cols-list .sig-input-row input')].map(i=>i.value.trim()||'Signature')}
+function rmCC(btn){const l=document.getElementById('sig-cols-list');if(l.querySelectorAll('.cust-col-row').length>1){btn.closest('.cust-col-row').remove();debounceRender();}}
+function getCC(){return[...document.querySelectorAll('#sig-cols-list .cust-col-row input')].map(i=>i.value.trim()||'Signature')}
 
-// ── LOGO ──
-function handleCustomLogo(inp){
-  const file=inp.files[0];if(!file)return;
-  if(file.size>4*1024*1024){toast('Logo file max 4 MB','err');return}
-  const reader=new FileReader();
-  reader.onload=e=>{
-    CUSTOM_LOGO_B64=e.target.result;
-    CUSTOM_LOGO_MIME=file.type;
-    document.getElementById('custom-logo-name').textContent=file.name;
-    const prev=document.getElementById('custom-logo-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:48px;height:48px;object-fit:contain;border-radius:4px">`;
-  };
-  reader.readAsDataURL(file);
-}
+// ORIENT
+function setOrient(o,el){ORIENT=o;document.querySelectorAll('.tog-b').forEach(b=>b.classList.remove('on'));el.classList.add('on');debounceRender();}
 
-// ── ORIENT ──
-function setOrient(o,el){
-  ORIENT=o;
-  document.querySelectorAll('.tog-b').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-}
-
-// ── STAFF DROPDOWNS ──
-function populateStaffDropdowns(){
+// STAFF
+function populateStaff(){
   const active=ALL_STAFF.filter(s=>s.Active!=='FALSE');
   const opts='<option value="">— select —</option>'+active.map(s=>`<option value="${esc(s.ID)}">${esc(s.Name)}${s.Designation?' — '+esc(s.Designation):''}</option>`).join('');
   document.getElementById('hod-sel').innerHTML=opts;
   document.querySelectorAll('.opt-staff-sel').forEach(el=>el.innerHTML=opts);
 }
-
-// ── MANUAL OVERRIDE ──
-function toggleManual(prefix){
-  const isM=document.getElementById(prefix+'-manual')?.checked;
-  const nEl=document.getElementById(prefix+'-n'),dEl=document.getElementById(prefix+'-d');
-  if(nEl) nEl.readOnly=!isM;
-  if(dEl) dEl.readOnly=!isM;
+function tMan(prefix){
+  const m=document.getElementById(prefix+'-man')?.checked;
+  const n=document.getElementById(prefix+'-n'),d=document.getElementById(prefix+'-d');
+  if(n)n.readOnly=!m;if(d)d.readOnly=!m;
 }
 function fillSig(prefix){
-  const selEl=document.getElementById(prefix+'-sel');if(!selEl)return;
-  const staff=ALL_STAFF.find(s=>s.ID===selEl.value);if(!staff)return;
-  if(!document.getElementById(prefix+'-manual')?.checked){
-    const nEl=document.getElementById(prefix+'-n'),dEl=document.getElementById(prefix+'-d');
-    if(nEl) nEl.value=staff.Name;
-    if(dEl) dEl.value=staff.Designation||'';
+  const sel=document.getElementById(prefix+'-sel');if(!sel)return;
+  const s=ALL_STAFF.find(x=>x.ID===sel.value);if(!s)return;
+  if(!document.getElementById(prefix+'-man')?.checked){
+    const n=document.getElementById(prefix+'-n'),d=document.getElementById(prefix+'-d');
+    if(n)n.value=s.Name;if(d)d.value=s.Designation||'';
   }
+  // Auto-fill dept and college for HOD
+  if(prefix==='hod'){
+    if(!v('hod-dept-txt')) sv('hod-dept-txt',s.Department||v('hdr-dept'));
+    if(!v('hod-col-txt')) sv('hod-col-txt',s.College||v('hdr-college'));
+  }
+  debounceRender();
 }
 
-// ── SIGNATORY REORDERING ENGINE ──
-function toggleSpecialSig(id){
+// SPECIAL SIGS
+function buildSpecialSigs(){
+  document.getElementById('sp-sigs-wrap').innerHTML=SPECIALS.map(sp=>`
+    <div class="sp-sig-item" id="ssi-${sp.id}">
+      <label class="sp-sig-toggle"><input type="checkbox" id="chk-${sp.id}" onchange="toggleSp('${sp.id}')"><span class="sp-sig-label">${sp.label}</span></label>
+      <div class="sp-sig-fields" id="spf-${sp.id}">
+        <div class="f" style="margin-bottom:5px"><label>Full Name</label><input id="${sp.id}-n" type="text" placeholder="Full Name" oninput="debounceRender()"></div>
+        <div class="f" style="margin-bottom:5px"><label>Role in Event</label><input id="${sp.id}-role" type="text" placeholder="Role" oninput="debounceRender()"></div>
+        <div class="f" style="margin-bottom:5px"><label>Designation (editable)</label><input id="${sp.id}-desig" type="text" value="${sp.desig}" oninput="debounceRender()"></div>
+        <div class="f" style="margin-bottom:5px"><label>Department</label><input id="${sp.id}-dept" type="text" placeholder="Department" oninput="debounceRender()"></div>
+        <div class="f" style="margin-bottom:0"><label>College</label><input id="${sp.id}-col" type="text" placeholder="College" oninput="debounceRender()"></div>
+        ${sp.hasShift?`<div class="f" style="margin-top:5px"><label>Shift</label><select id="${sp.id}-shift" onchange="debounceRender()"><option value="">No Shift</option><option value="Shift 1">Shift 1</option><option value="Shift 2">Shift 2</option></select></div>`:''}
+      </div>
+    </div>`).join('');
+}
+function toggleSp(id){
   const cb=document.getElementById('chk-'+id);
-  const item=document.getElementById('ssi-'+id);
-  item.classList.toggle('enabled',cb.checked);
-  
-  if(cb.checked && !SIG_IDS.includes(id)) SIG_IDS.push(id);
-  else if(!cb.checked) SIG_IDS = SIG_IDS.filter(x => x !== id);
-  renderSigOrder();
+  document.getElementById('ssi-'+id).classList.toggle('on',cb.checked);
+  if(cb.checked&&!SIG_IDS.includes(id)) SIG_IDS.push(id);
+  else if(!cb.checked) SIG_IDS=SIG_IDS.filter(x=>x!==id);
+  renderSigOrder();debounceRender();
 }
 
+// OPT SIGS
 function addOptSig(){
-  OPT_SIG_CNT++;
-  const id='os'+OPT_SIG_CNT;
+  OPT_CNT++;const id='os'+OPT_CNT;
   const active=ALL_STAFF.filter(s=>s.Active!=='FALSE');
-  const sOpts='<option value="">— select —</option>'+active.map(s=>`<option value="${esc(s.ID)}">${esc(s.Name)}${s.Designation?' — '+esc(s.Designation):''}</option>`).join('');
-  const div=document.createElement('div');
-  div.className='sig-blk';div.id=id;
-  div.innerHTML=`<div class="sig-blk-head">
-    <div class="sig-blk-title"><i class="fa-solid fa-signature" style="color:var(--gold)"></i> Signatory ${OPT_SIG_CNT}</div>
-    <button class="btn btn-ghost btn-xs" onclick="removeOptSig(this, '${id}')"><i class="fa-solid fa-xmark"></i> Remove</button>
-  </div>
-  <div class="manual-row"><input type="checkbox" id="${id}-manual" onchange="toggleManual('${id}')"><label for="${id}-manual" style="cursor:pointer">Manual edit</label></div>
-  <div class="g3">
-    <div class="f"><label>Select Staff</label><select class="opt-staff-sel" id="${id}-sel" onchange="fillSig('${id}')">${sOpts}</select></div>
-    <div class="f"><label>Full Name</label><input type="text" id="${id}-n" readonly></div>
-    <div class="f"><label>Role in Event</label><input type="text" id="${id}-role" placeholder="Convener / Organiser"></div>
-    <div class="f"><label>Designation</label><input type="text" id="${id}-d" readonly></div>
-    <div class="f"><label>Show Dept?</label><select id="${id}-dept"><option value="yes">Show</option><option value="no">No</option></select></div>
-    <div class="f"><label>Show College?</label><select id="${id}-col"><option value="yes">Show</option><option value="no">No</option></select></div>
-  </div>`;
+  const opts='<option value="">— select —</option>'+active.map(s=>`<option value="${esc(s.ID)}">${esc(s.Name)}${s.Designation?' — '+esc(s.Designation):''}</option>`).join('');
+  const div=document.createElement('div');div.className='sig-blk';div.id=id;
+  div.innerHTML=`<div class="sig-blk-hd"><div class="sig-blk-title"><i class="fa-solid fa-signature" style="color:var(--g)"></i> Signatory ${OPT_CNT}</div>
+    <button class="btn btn-g btn-xs" onclick="removeOpt(this,'${id}')"><i class="fa-solid fa-xmark"></i> Remove</button></div>
+  <div class="manual-row"><input type="checkbox" id="${id}-man" onchange="tMan('${id}')"><label for="${id}-man" style="cursor:pointer">Manual edit</label></div>
+  <div class="f-row"><div class="f"><label>Staff</label><select class="opt-staff-sel" id="${id}-sel" onchange="fillOpt('${id}')">${opts}</select></div>
+  <div class="f"><label>Role</label><input id="${id}-role" type="text" placeholder="Role" oninput="debounceRender()"></div></div>
+  <div class="f"><label>Full Name</label><input id="${id}-n" type="text" readonly oninput="debounceRender()"></div>
+  <div class="f"><label>Designation (editable)</label><input id="${id}-d" type="text" readonly oninput="debounceRender()"></div>
+  <div class="f"><label>Department (editable)</label><input id="${id}-dept" type="text" placeholder="Department" oninput="debounceRender()"></div>
+  <div class="f"><label>College (editable)</label><input id="${id}-col" type="text" placeholder="College" oninput="debounceRender()"></div>`;
   document.getElementById('opt-sigs-list').appendChild(div);
-  SIG_IDS.push(id);
-  renderSigOrder();
+  SIG_IDS.push(id);renderSigOrder();
 }
-function removeOptSig(btn, id){
+function fillOpt(id){
+  const sel=document.getElementById(id+'-sel');if(!sel)return;
+  const s=ALL_STAFF.find(x=>x.ID===sel.value);if(!s)return;
+  if(!document.getElementById(id+'-man')?.checked){
+    const n=document.getElementById(id+'-n'),d=document.getElementById(id+'-d');
+    if(n)n.value=s.Name;if(d)d.value=s.Designation||'';
+  }
+  if(!v(id+'-dept')) sv(id+'-dept',s.Department||'');
+  if(!v(id+'-col')) sv(id+'-col',s.College||'');
+  debounceRender();
+}
+function removeOpt(btn,id){
   btn.closest('.sig-blk').remove();
-  SIG_IDS = SIG_IDS.filter(x => x !== id);
-  renderSigOrder();
+  SIG_IDS=SIG_IDS.filter(x=>x!==id);
+  renderSigOrder();debounceRender();
 }
 
-function sigMove(id, dir){
-  const idx = SIG_IDS.indexOf(id);
-  const newIdx = idx + dir;
-  if(newIdx < 0 || newIdx >= SIG_IDS.length) return;
-  [SIG_IDS[idx], SIG_IDS[newIdx]] = [SIG_IDS[newIdx], SIG_IDS[idx]];
-  renderSigOrder();
-}
-let sigDragSrc = null;
-function sigDragStart(e,id){ sigDragSrc=id; e.dataTransfer.effectAllowed='move'; }
-function sigDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
-function sigDrop(e, targetId){
-  e.preventDefault();
-  if(!sigDragSrc || sigDragSrc===targetId) return;
-  const si = SIG_IDS.indexOf(sigDragSrc);
-  const ti = SIG_IDS.indexOf(targetId);
-  if(si<0 || ti<0) return;
-  const moved = SIG_IDS.splice(si, 1)[0];
-  SIG_IDS.splice(ti, 0, moved);
-  renderSigOrder();
-}
-
+// SIG ORDER
 function renderSigOrder(){
-  const container = document.getElementById('sig-order-list');
-  if(!container) return;
-  container.innerHTML = SIG_IDS.map(id => {
-    let label = '';
-    if(id === 'hod') label = '<i class="fa-solid fa-user-tie" style="color:var(--maroon)"></i> Head of Department';
-    else if(id.startsWith('os')) label = 'Additional Signatory ' + id.replace('os','');
-    else {
-      const sp = SPECIALS.find(s=>s.id===id);
-      if(sp) label = sp.label;
-    }
-    return `<div class="col-order-row active-col" id="so-${id}" draggable="true" ondragstart="sigDragStart(event,'${id}')" ondragover="sigDragOver(event)" ondrop="sigDrop(event,'${id}')">
-      <i class="col-drag-handle fa-solid fa-grip-vertical"></i>
-      <span class="col-label">${label}</span>
-      <div class="col-move-btns">
-        <button class="col-move-btn" onclick="sigMove('${id}',-1)" title="Move left"><i class="fa-solid fa-arrow-up"></i></button>
-        <button class="col-move-btn" onclick="sigMove('${id}',1)" title="Move right"><i class="fa-solid fa-arrow-down"></i></button>
+  const el=document.getElementById('sig-order-list');
+  el.innerHTML=SIG_IDS.map(id=>{
+    let lbl='';
+    if(id==='hod') lbl='<i class="fa-solid fa-user-tie" style="color:var(--m);font-size:10px"></i> Head of Department';
+    else if(id.startsWith('os')) lbl='Signatory '+id.replace('os','');
+    else{const sp=SPECIALS.find(s=>s.id===id);if(sp)lbl=sp.label;}
+    return `<div class="drag-item on" id="so-${id}" draggable="true"
+      ondragstart="sds(event,'${id}')" ondragover="sdo(event)" ondrop="sdp(event,'${id}')">
+      <i class="drag-handle fa-solid fa-grip-vertical"></i>
+      <span class="drag-label">${lbl}</span>
+      <div class="drag-btns">
+        <button class="drag-btn" onclick="smove('${id}',-1)"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="drag-btn" onclick="smove('${id}',1)"><i class="fa-solid fa-arrow-down"></i></button>
       </div>
     </div>`;
   }).join('');
 }
+function smove(id,dir){
+  const i=SIG_IDS.indexOf(id),ni=i+dir;
+  if(ni<0||ni>=SIG_IDS.length) return;
+  [SIG_IDS[i],SIG_IDS[ni]]=[SIG_IDS[ni],SIG_IDS[i]];
+  renderSigOrder();debounceRender();
+}
+let sDragSrc=null;
+function sds(e,id){sDragSrc=id;e.dataTransfer.effectAllowed='move'}
+function sdo(e){e.preventDefault();e.dataTransfer.dropEffect='move'}
+function sdp(e,tid){
+  e.preventDefault();if(!sDragSrc||sDragSrc===tid)return;
+  const si=SIG_IDS.indexOf(sDragSrc),ti=SIG_IDS.indexOf(tid);
+  if(si<0||ti<0)return;
+  const m=SIG_IDS.splice(si,1)[0];SIG_IDS.splice(ti,0,m);
+  renderSigOrder();debounceRender();
+}
 
-// ── BUILD SIGNATORY LIST USING SIG_IDS ──
-function buildSignatoryList(){
-  const sigs=[];
-  SIG_IDS.forEach(id => {
-    if(id === 'hod'){
-      const name = v('hod-n'), desig = v('hod-d')||'Head of the Department', role = v('hod-role');
-      sigs.push({name, desig, role, dept:document.getElementById('hod-dept')?.value==='yes', col:document.getElementById('hod-col')?.value==='yes', isHod:true});
+// HELPERS
+function autoDay(){const d=v('ev-date');if(!d)return;sv('ev-day',['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(d+'T00:00:00').getDay()])}
+function fmtDate(d){if(!d||!d.trim()||d==='—')return'—';try{return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}catch{return d}}
+function fmtTime(t){if(!t)return'';const[h,m]=t.split(':').map(Number);return`${h>12?h-12:h||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
+
+// GET SIGNATORIES
+function getSigs(){
+  return SIG_IDS.map(id=>{
+    if(id==='hod'){
+      return{name:v('hod-n'),desig:v('hod-d')||'Head of the Department',role:v('hod-role'),deptLine:v('hod-dept-txt'),colLine:v('hod-col-txt'),isHod:true};
     } else if(id.startsWith('os')){
-      const n = v(id+'-n'), d = v(id+'-d'), role = v(id+'-role');
-      if(n||d) sigs.push({name:n, desig:d, role, dept:document.getElementById(id+'-dept')?.value==='yes', col:document.getElementById(id+'-col')?.value==='yes'});
+      return{name:v(id+'-n'),desig:v(id+'-d'),role:v(id+'-role'),deptLine:v(id+'-dept'),colLine:v(id+'-col')};
     } else {
-      const sp = SPECIALS.find(s=>s.id===id);
-      if(!sp) return;
-      const name = v(id+'-name'), role = v(id+'-role');
-      const shift = sp.hasShift ? v(id+'-shift') : '';
-      sigs.push({name, desig:sp.desig+(shift?' ('+shift+')':''), role, dept:false, col:false});
+      const sp=SPECIALS.find(s=>s.id===id);if(!sp)return null;
+      const shift=sp.hasShift?v(id+'-shift'):'';
+      const desig=(v(id+'-desig')||sp.desig)+(shift?' ('+shift+')':'');
+      return{name:v(id+'-n'),desig,role:v(id+'-role'),deptLine:v(id+'-dept'),colLine:v(id+'-col')};
     }
-  });
-  return sigs;
+  }).filter(Boolean);
 }
 
-// ── AUTO DAY ──
-function autoDay(){
-  const d=v('ev-date');if(!d)return;
-  sv('ev-day',['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date(d+'T00:00:00').getDay()]);
+// ROW PADDING BY SETTING
+function rowPad(){const s=v('row-height');return{compact:'3px 5px',normal:'5px 5px',spacious:'8px 5px',signature:'16px 5px'}[s]||'5px 5px'}
+
+// DEBOUNCE RENDER
+function debounceRender(){clearTimeout(renderTimer);renderTimer=setTimeout(renderPreview,280)}
+
+// ROWS PER PAGE
+function getRowsPerPage(){
+  const val=v('rows-per-page');
+  if(val==='auto') return ORIENT==='portrait'?25:20;
+  return parseInt(val)||25;
 }
 
-// ── FORMAT HELPERS ──
-function fmtDate(d){if(!d||!d.trim()||d==='—')return '—';const dt=new Date(d);return isNaN(dt.getTime())?d:dt.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});}
-function fmtTime(t){if(!t)return '';const[h,m]=t.split(':').map(Number);return `${h>12?h-12:h||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`}
-
-// ── LOGO HTML ──
-function buildLogoHTML(customB64,customMime){
-  const mode=document.getElementById('logo-mode').value;
-  let imgs=[];
-  const style = `style="height:90px; object-fit:contain; margin:0 10px;"`; // Logos a little larger
-  
-  if(mode==='custom'&&customB64){
-    imgs.push(`<img src="${customB64}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
-  } else {
-    // Config logos
-    if(LOGOS.length){
-      LOGOS.filter(l=>l.url).forEach(l=>{ imgs.push(`<img src="${esc(l.url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`); });
-    } else {
-      const url=CFG.logo1_url||'https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png';
-      imgs.push(`<img src="${esc(url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
-    }
-    if(CFG.logo2_url) imgs.push(`<img src="${esc(CFG.logo2_url)}" class="sh-logo-img" ${style} onerror="this.style.display='none'">`);
-  }
-  return imgs.join('');
+// MARGIN MAP
+function getMarginCSS(){
+  const m=v('page-margin');
+  const mp={narrow:'8mm 9mm 9mm',normal:'13mm 14mm 14mm',wide:'18mm 20mm 18mm'}[m]||'13mm 14mm 14mm';
+  return mp;
 }
 
-// ── SHEET BUILDER ──
-const ROWS_PER_PAGE_PORTRAIT=25;
-const ROWS_PER_PAGE_LANDSCAPE=20;
+// LOGO HTML
+function buildLogoHTML(){
+  const sz=v('logo-size')||'md';
+  const pos=v('logo-pos')||'center';
+  const logoList=[];
+  if(document.getElementById('logo-loyola')?.checked) logoList.push('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png');
+  if(document.getElementById('logo-cent')?.checked) logoList.push('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/100.png');
+  if(document.getElementById('logo-dept')?.checked) logoList.push('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png');
+  const cu=v('logo-custom-url');if(cu) logoList.push(cu);
+  if(!logoList.length) return '';
+  const imgTags=logoList.map(url=>`<img src="${esc(url)}" class="sh-logo ${sz}" onerror="this.style.display='none'">`).join('<span class="sh-logo-sep"></span>');
+  const align=pos==='left'?'flex-start':pos==='right'?'flex-end':'center';
+  return `<div class="sh-logos" style="justify-content:${align}">${imgTags}</div>`;
+}
 
-function buildAllSheets(){
+// MAIN RENDER
+function renderPreview(){
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
-  if(!sel.length) return null;
-  const ayVal=v('gen-ay');
-  const semester=v('gen-sem'), shift=v('gen-shift'), secFlt=v('gen-sec'), sortBy=v('gen-sort');
-  const genderFilter=getGenderFilter();
-  const evName=v('ev-name'), evVenue=v('ev-venue');
-  const evDate=fmtDate(v('ev-date')), evDay=v('ev-day');
-  const evFrom=fmtTime(v('ev-tf')), evTo=fmtTime(v('ev-tt'));
-  const timeStr=evFrom&&evTo?`${evFrom} – ${evTo}`:evFrom||evTo||'';
-  const enabledCols=COL_ORDER.filter(c=>c.enabled);
-  const sigCols=getSigCols();
-  const signatories=buildSignatoryList();
-  const logoHTML=buildLogoHTML(CUSTOM_LOGO_B64,CUSTOM_LOGO_MIME);
-  const rowsPerPage=ORIENT==='portrait'?ROWS_PER_PAGE_PORTRAIT:ROWS_PER_PAGE_LANDSCAPE;
-  
-  let subHTML='';
-  if(CFG.subtitle1) subHTML+=`<div class="sh-subtitle">${esc(CFG.subtitle1)}</div>`;
-  if(CFG.subtitle2) subHTML+=`<div class="sh-subtitle">${esc(CFG.subtitle2)}</div>`;
-  
-  const allPages=[];
+  const evName=v('ev-name');
+  const wrap=document.getElementById('sheets-wrap');
+  const empty=document.getElementById('preview-empty');
+  if(!evName&&!sel.length){wrap.innerHTML='';wrap.appendChild(empty);empty.style.display='flex';document.getElementById('prev-count').textContent='Configure settings to preview';return}
+  empty.style.display='none';
+  if(!sel.length){wrap.innerHTML='<div style="color:rgba(255,255,255,.6);font-size:13px;padding:20px;text-align:center">Select at least one class to preview.</div>';document.getElementById('prev-count').textContent='No class selected';return}
+  const html=buildAllSheets(sel);
+  wrap.innerHTML=html||'<div style="color:rgba(255,255,255,.6);font-size:13px;padding:20px;text-align:center">No students match the current filters.</div>';
+  const sheetCount=wrap.querySelectorAll('.a4,.cover-page').length;
+  document.getElementById('prev-count').textContent=sheetCount+' sheet'+(sheetCount!==1?'s':'')+' ready';
+}
 
+function buildAllSheets(sel){
+  const ay=v('gen-ay');
+  const semester=v('gen-sem'),shift=v('gen-shift'),secFlt=v('gen-sec'),sortBy=v('gen-sort');
+  const gf=getGenderFilter();
+  const evName=v('ev-name'),evVenue=v('ev-venue'),evDate=fmtDate(v('ev-date')),evDay=v('ev-day');
+  const evFrom=fmtTime(v('ev-tf')),evTo=fmtTime(v('ev-tt'));
+  const timeStr=evFrom&&evTo?`${evFrom} – ${evTo}`:evFrom||evTo||'';
+  const enCols=COLS.filter(c=>c.en);
+  const custCols=getCC();
+  const sigs=getSigs();
+  const rpp=getRowsPerPage();
+  const mgn=getMarginCSS();
+  const border=v('page-border')||'none';
+  const logoHTML=buildLogoHTML();
+  let subHTML='';
+  if(v('hdr-sub1')) subHTML+=`<div class="sh-subtitle">${esc(v('hdr-sub1'))}</div>`;
+  if(v('hdr-sub2')) subHTML+=`<div class="sh-subtitle">${esc(v('hdr-sub2'))}</div>`;
+  const ruleClass=`sh-hdr-rule-${v('hdr-rule')||'bold'}`;
+  const hdrFont=v('hdr-font')||'f-times';
+  const hdrSz=v('hdr-font-sz')||'sz-md';
+  const deptSz=v('dept-font-sz')||'sz-md';
+  const evTitleSz=v('ev-title-sz')||'sz-md';
+  const tblFontSz=v('tbl-font-sz')||'8pt';
+  const sigLineStyle=v('sig-line-style')||'solid';
+  const sigSpH=v('sig-space-h')||'48';
+  const stampOpt=v('stamp-opt')||'none';
+  const sigDateOpt=v('sig-date-opt')||'none';
+  const showPgNum=document.getElementById('show-page-num')?.checked;
+  const wmLoyola=document.getElementById('wm-loyola')?.checked;
+  const wmDept=document.getElementById('wm-dept')?.checked;
+  const wmText=v('wm-text');
+  const footerTxt=v('footer-txt');
+  const showCollege=document.getElementById('sig-show-college')?.checked;
+  const sigVerified=document.getElementById('sig-verified')?.checked;
+
+  const allPages=[];
   sel.forEach(chip=>{
     const parts=chip.split(' — ');
-    const cls=parts[0].trim(), secFilter=parts[1]?.trim()||null;
-    let sts=ALL_STUDENTS.filter(s=>s.Class===cls&&s.AcademicYear===ayVal&&s.Active!=='FALSE');
+    const cls=parts[0].trim(),secFilter=parts[1]?.trim()||null;
+    let sts=ALL_STUDENTS.filter(s=>s.Class===cls&&s.AcademicYear===ay&&s.Active!=='FALSE');
     if(secFilter) sts=sts.filter(s=>s.Section===secFilter);
-    if(semester)  sts=sts.filter(s=>s.Semester===semester);
-    if(shift)     sts=sts.filter(s=>s.Shift===shift);
-    if(secFlt)    sts=sts.filter(s=>(s.Section||'').toUpperCase()===secFlt.toUpperCase());
-    if(genderFilter.length) sts=sts.filter(s=>genderFilter.includes(s.Gender));
-    
-    // Sort implementation (DeptNo vs Name)
-    if(sortBy === 'name'){
-      sts=sts.sort((a,b)=>(a.Name||'').localeCompare(b.Name||''));
-    } else {
-      sts=sts.sort((a,b)=> (a.DeptNo||'').localeCompare(b.DeptNo||'', undefined, {numeric: true, sensitivity: 'base'}));
-    }
-
-    const shortCls=getShortClsName(chip);
-    const totalPages=Math.max(1,Math.ceil(sts.length/rowsPerPage));
-    
-    for(let p=0;p<totalPages;p++){
-      const pageStudents=sts.slice(p*rowsPerPage,(p+1)*rowsPerPage);
-      const isFirst=p===0;
-      const isLast=p===totalPages-1;
-      const globalPageIdx=allPages.length;
-      allPages.push({chip,shortCls,cls,secFilter,pageStudents,isFirst,isLast,totalPages,pageNum:p+1,globalPageIdx,sts,semester,shift,ayVal,evName,evVenue,evDate,evDay,timeStr,enabledCols,sigCols,signatories,logoHTML,subHTML,shortName:shortCls.split(' — ')[0]});
+    if(semester) sts=sts.filter(s=>s.Semester===semester);
+    if(shift) sts=sts.filter(s=>s.Shift===shift);
+    if(secFlt) sts=sts.filter(s=>(s.Section||'').toUpperCase()===secFlt.toUpperCase());
+    if(gf.length) sts=sts.filter(s=>gf.includes(s.Gender));
+    if(sortBy==='name') sts.sort((a,b)=>(a.Name||'').localeCompare(b.Name||''));
+    else if(sortBy==='batch') sts.sort((a,b)=>(a.Batch||'').localeCompare(b.Batch||''));
+    else sts.sort((a,b)=>(a.DeptNo||'').localeCompare(b.DeptNo||'',undefined,{numeric:true}));
+    const sn=shortName(chip);
+    const totalPg=Math.max(1,Math.ceil(sts.length/rpp));
+    for(let p=0;p<totalPg;p++){
+      allPages.push({chip,sn,cls,secFilter,sts,pageStudents:sts.slice(p*rpp,(p+1)*rpp),isFirst:p===0,isLast:p===totalPg-1,pageNum:p+1,totalPg,ay,semester,shift,evName,evVenue,evDate,evDay,timeStr,enCols,custCols,sigs,rpp,mgn,border,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,evTitleSz,tblFontSz,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showPgNum,wmLoyola,wmDept,wmText,footerTxt,showCollege,sigVerified});
     }
   });
-  const totalAllPages=allPages.length;
-  return allPages.map((pd,pi)=>buildSinglePage(pd,pi+1,totalAllPages)).join('');
+  const total=allPages.length;
+
+  // Cover page
+  let coverHTML='';
+  if(document.getElementById('gen-cover')?.checked){
+    coverHTML=buildCoverPage(sel,ay,semester,shift,allPages.length,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn)+'\n';
+  }
+
+  return coverHTML+allPages.map((pd,pi)=>buildPage(pd,pi+1,total)).join('\n');
 }
 
-function buildSinglePage(pd, globalPageNum, totalGlobalPages){
-  const{chip,shortCls,cls,secFilter,pageStudents,isFirst,isLast,totalPages,pageNum,sts,semester,shift,ayVal,evName,evVenue,evDate,evDay,timeStr,enabledCols,sigCols,signatories,logoHTML,subHTML}=pd;
-  
-  // Center alignment and Dept No autofit for Header
-  const thead=`<tr>${enabledCols.map(c=>{
-    let extraStyles = 'text-align:center;';
-    if(c.id==='deptno') extraStyles += ' width:1%; white-space:nowrap;';
-    if(c.id==='name') extraStyles += ' min-width:120px;';
-    return `<th class="${c.id==='sno'?'td-sno':''}" style="${extraStyles}">${esc(c.label)}</th>`;
-  }).join('')}${sigCols.map(s=>`<th class="td-sig" style="text-align:center;">${esc(s)}</th>`).join('')}</tr>`;
-  
-  // Table body mapping (autofit Dept No inline)
+function buildPage(pd,gpn,total){
+  const{chip,sn,cls,secFilter,sts,pageStudents,isFirst,isLast,pageNum,totalPg,ay,semester,shift,evName,evVenue,evDate,evDay,timeStr,enCols,custCols,sigs,mgn,border,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,evTitleSz,tblFontSz,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showPgNum,wmLoyola,wmDept,wmText,footerTxt,showCollege,sigVerified}=pd;
+  const pad=rowPad();
+
+  // TABLE HEADER
+  const thead=`<tr>${enCols.map(c=>`<th class="${c.id==='sno'?'sno center':c.id==='deptno'?'center':''}" style="text-align:${c.align||'left'}">${esc(c.label)}</th>`).join('')}${custCols.map(s=>`<th class="sig-td center" style="text-align:center">${esc(s)}</th>`).join('')}</tr>`;
+
+  // TABLE BODY
   const tbody=pageStudents.map((st,i)=>{
-    const globalI=((pageNum-1)*( ORIENT==='portrait'?ROWS_PER_PAGE_PORTRAIT:ROWS_PER_PAGE_LANDSCAPE))+i;
-    const cells=enabledCols.map(c=>{
+    const gi=((pageNum-1)*pd.rpp)+i;
+    const cells=enCols.map(c=>{
+      let val='';
       switch(c.id){
-        case 'sno':    return `<td class="td-sno" style="text-align:center;">${globalI+1}</td>`;
-        case 'deptno': return `<td style="width:1%; white-space:nowrap; text-align:center;">${esc(st.DeptNo||'')}</td>`;
-        case 'name':   return `<td>${esc(st.Name)}</td>`;
-        case 'gender': return `<td style="text-align:center;">${esc(st.Gender||'')}</td>`;
-        case 'class':  return `<td>${esc(st.Class||'')}</td>`;
-        case 'batch':  return `<td style="text-align:center;">${esc(st.Batch||'')}</td>`;
-        case 'sem':    return `<td style="text-align:center;">${esc(st.Semester||'')}</td>`;
-        case 'shift':  return `<td style="text-align:center;">${esc(st.Shift||'')}</td>`;
-        case 'sec':    return `<td style="text-align:center;">${esc(st.Section||'')}</td>`;
-        case 'dob':    return `<td>${st.DOB?fmtDate(st.DOB):''}</td>`;
-        case 'contact':return `<td>${esc(st.Contact||'')}</td>`;
-        case 'email':  return `<td>${esc(st.Email||'')}</td>`;
-        case 'father': return `<td>${esc(st.Father||'')}</td>`;
-        case 'mother': return `<td>${esc(st.Mother||'')}</td>`;
-        case 'pcon':   return `<td>${esc(st.ParentContact||'')}</td>`;
-        case 'addr':   return `<td>${esc(st.Address||'')}</td>`;
-        default:       return `<td></td>`;
+        case 'sno': return`<td class="sno" style="text-align:center;padding:${pad};font-size:${tblFontSz}">${gi+1}</td>`;
+        case 'deptno': return`<td style="text-align:center;white-space:nowrap;width:1%;padding:${pad};font-size:${tblFontSz}">${esc(st.DeptNo||'')}</td>`;
+        case 'name': return`<td style="text-align:left;padding:${pad};font-size:${tblFontSz}">${esc(st.Name)}</td>`;
+        case 'gender': val=st.Gender||'';break;
+        case 'class': val=st.Class||'';break;
+        case 'batch': val=st.Batch||'';break;
+        case 'sem': val=st.Semester||'';break;
+        case 'shift': val=st.Shift||'';break;
+        case 'sec': val=st.Section||'';break;
+        case 'dob': val=st.DOB?fmtDate(st.DOB):'';break;
+        case 'contact': val=st.Contact||'';break;
+        case 'email': val=st.Email||'';break;
+        case 'father': val=st.Father||'';break;
+        case 'mother': val=st.Mother||'';break;
+        case 'pcon': val=st.ParentContact||'';break;
+        case 'addr': val=st.Address||'';break;
+        default: val='';
       }
+      return`<td style="text-align:${c.align||'left'};padding:${pad};font-size:${tblFontSz}">${esc(val)}</td>`;
     }).join('');
-    const sigCells=sigCols.map(()=>`<td class="td-sig"></td>`).join('');
-    return `<tr>${cells}${sigCells}</tr>`;
+    const sigCells=custCols.map(()=>`<td class="sig-td" style="padding:${pad}"></td>`).join('');
+    return`<tr class="data-row">${cells}${sigCells}</tr>`;
   }).join('');
 
-  // DETAILS BOX (Venue, Date, Time, Class, Academic Year, Shift)
+  // TOTALS
+  const totalsHTML=isLast?`<div class="sh-totals">
+    <div class="sh-tot"><div class="sh-tot-lbl">Total Enrolled</div><div class="sh-tot-val">${sts.length}</div></div>
+    <div class="sh-tot"><div class="sh-tot-lbl">Total Present</div><div class="sh-tot-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
+  </div>`:'';
+
+  // SIGNATURES
+  const sigHTML=isLast?buildSigFooter(sigs,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showCollege,sigVerified):'';
+
+  // WATERMARK
+  let wmHTML='';
+  if(wmLoyola) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png"></div>`;
+  else if(wmDept) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png"></div>`;
+  else if(wmText) wmHTML+=`<div class="sh-watermark" style="font-size:60pt;font-weight:900;color:#000;letter-spacing:2px;white-space:nowrap;opacity:.04">${esc(wmText)}</div>`;
+
+  // PAGE NUMBER
+  const pgNumHTML=showPgNum?`<div class="sh-page-num">Page ${gpn} of ${total}  |  ${esc(sn)}</div>`:'';
+  const footHTML=footerTxt?`<div class="sh-footer-txt">${esc(footerTxt)}</div>`:'';
+
+  // META (first page only)
   const metaItems=[
-    {l:'Venue',v:evVenue||''},
-    {l:'Date',v:`${evDate}${evDay?' ('+evDay+')':''}`},
-    {l:'Time',v:timeStr},
-    {l:'Class',v:shortCls}, // Shows Short Name (+ section if applied)
-    {l:'Academic Year',v:ayVal||''},
-    {l:'Shift',v:shift||''},
+    {l:'Venue',v:evVenue},{l:'Date',v:`${evDate}${evDay?' ('+evDay+')':''}`},
+    {l:'Time',v:timeStr},{l:'Class',v:sn},
+    {l:'Academic Year',v:ay},{l:'Semester',v:semester},{l:'Shift',v:shift},
   ].filter(m=>m.v&&m.v.trim());
   let metaHTML='';
   for(let i=0;i<metaItems.length;i+=2){
     const a=metaItems[i],b=metaItems[i+1];
-    if(b) metaHTML+=`<div class="sh-meta-cell"><span class="sh-meta-label">${esc(a.l)}:</span><span class="sh-meta-val">${esc(a.v)}</span></div><div class="sh-meta-cell"><span class="sh-meta-label">${esc(b.l)}:</span><span class="sh-meta-val">${esc(b.v)}</span></div>`;
-    else  metaHTML+=`<div class="sh-meta-cell full"><span class="sh-meta-label">${esc(a.l)}:</span><span class="sh-meta-val">${esc(a.v)}</span></div>`;
+    if(b) metaHTML+=`<div class="sh-mc"><span class="sh-ml">${esc(a.l)}:</span><span class="sh-mv">${esc(a.v)}</span></div><div class="sh-mc"><span class="sh-ml">${esc(b.l)}:</span><span class="sh-mv">${esc(b.v)}</span></div>`;
+    else metaHTML+=`<div class="sh-mc full"><span class="sh-ml">${esc(a.l)}:</span><span class="sh-mv">${esc(a.v)}</span></div>`;
   }
 
-  // Stamp and Seal configuration
-  const incStamp = document.getElementById('chk-stamp')?.checked;
-
-  // Signature block (only on last page of each class)
-  const sigHTML=signatories.map(sig=>`
-    <div class="sh-sig-block" style="text-align:center; flex:1; padding:0 10px;">
-      <div class="sh-sig-space" style="height:55px;"></div>
-      <div class="sh-sig-name" style="font-weight:700; font-size:13px; margin-bottom:2px;">${esc(sig.name||'')}</div>
-      ${sig.role?`<div class="sh-sig-role" style="font-size:11px; color:#333; margin-bottom:2px;">${esc(sig.role)}</div>`:''}
-      <div class="sh-sig-desig" style="font-size:11px; font-weight:600;">${sig.desig||''}</div>
-      ${sig.dept&&CFG.dept_name?`<div class="sh-sig-dept" style="font-size:11px;">${esc(CFG.dept_name)}</div>`:''}
-      ${sig.col&&CFG.college_name?`<div class="sh-sig-dept" style="font-size:11px;">${esc(CFG.college_name)}</div>`:''}
-      <div class="sh-sig-seal" style="height:50px; margin-top:8px; color:var(--c4); font-size:10px; display:flex; align-items:center; justify-content:center; border-top:1px dashed transparent;">${incStamp ? '(Seal / Stamp)' : ''}</div>
-    </div>`).join('');
-
-  // Page number and footer
-  const pageNumHTML=`<div class="sh-page-num">Page ${globalPageNum} of ${totalGlobalPages} | ${esc(shortCls)}</div>`;
-  const wmHTML=`<div class="sh-watermark">${esc(CFG.watermark||((CFG.dept_name||'')+'·'+(CFG.college_name||'')))}</div>`;
-  
-  const incBgWatermark = document.getElementById('chk-watermark').checked;
-  const bgWatermarkHTML = incBgWatermark ? `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:60%; height:60%; opacity:0.06; background:url('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/watermark.png') no-repeat center/contain; pointer-events:none; z-index:0;"></div>` : '';
+  const mgnStyle=`padding:${mgn}`;
+  const borderClass=`sh-border-${pd.border||'none'}`;
 
   if(isFirst){
-    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column; position:relative; z-index:1;">
-      ${bgWatermarkHTML}
-      <div class="sh-header">
-        <div class="sh-logos">${logoHTML}</div>
-        <div class="sh-college">${esc(CFG.college_name||'Loyola College (Autonomous), Chennai – 600 034')}</div>
-        ${CFG.college_est?`<div class="sh-est">${esc(CFG.college_est)}</div>`:''}
-        <div class="sh-dept">${esc(CFG.dept_name||'PG & Research Department of Advanced Zoology & Biotechnology')}</div>
-        ${subHTML}
+    return`<div class="a4 ${ORIENT} ${borderClass}" style="${mgnStyle}">
+      ${wmHTML}
+      <div class="sh-content">
+        <div class="sh-hdr">
+          ${logoHTML}
+          <div class="sh-college ${hdrFont} ${hdrSz}">${esc(v('hdr-college'))}</div>
+          ${v('hdr-est')?`<div class="sh-est">${esc(v('hdr-est'))}</div>`:''}
+          <div class="sh-dept ${deptSz}">${esc(v('hdr-dept'))}</div>
+          ${subHTML}
+          ${v('hdr-motto')?`<div class="sh-subtitle" style="font-style:normal;font-weight:600;font-size:8pt;margin-top:3px">${esc(v('hdr-motto'))}</div>`:''}
+        </div>
+        <hr class="${ruleClass}">
+        <div class="sh-ev">
+          <span class="sh-ev-name ${evTitleSz}">${esc(evName)}</span>
+          ${v('ev-type')?`<span class="sh-ev-sub">${esc(v('ev-type'))}${v('ev-ref')?' · Ref: '+esc(v('ev-ref')):''}</span>`:''}
+          <span class="sh-ev-attn">— Attendance Sheet —</span>
+        </div>
+        <div class="sh-meta">${metaHTML}</div>
+        ${v('ev-rp')?`<div style="font-size:7.5pt;margin-bottom:5px;color:#333"><strong>Resource Person:</strong> ${esc(v('ev-rp'))}</div>`:''}
+        ${v('ev-org')?`<div style="font-size:7.5pt;margin-bottom:5px;color:#333"><strong>Organising Committee:</strong> ${esc(v('ev-org'))}</div>`:''}
+        <table class="sh-table" style="font-size:${tblFontSz}"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+        ${totalsHTML}${sigHTML}${pgNumHTML}${footHTML}
       </div>
-      
-      <div class="sh-ev-title" style="text-align:center; padding:15px 0;">
-        <div class="sh-ev-title-main" style="font-size:18px; font-weight:700; text-transform:uppercase;">${esc(evName)}</div>
-        <div class="sh-attendance-label" style="font-size:14px; margin-top:4px; font-weight:600; color:#444;">— ATTENDANCE SHEET —</div>
-      </div>
-      
-      <div class="sh-meta">${metaHTML}</div>
-      <table class="sh-table" style="flex:1; position:relative; z-index:1;"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
-      ${isLast?`<div class="sh-totals"><div class="sh-total-box"><div class="sh-total-label">Total Enrolled</div><div class="sh-total-val">${sts.length}</div></div><div class="sh-total-box"><div class="sh-total-label">Total Present</div><div class="sh-total-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div></div>`:''}
-      ${isLast?`<div class="sh-sig-footer" style="position:relative; z-index:1;"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
-      ${pageNumHTML}${wmHTML}
     </div>`;
   } else {
-    return `<div class="a4-sheet ${ORIENT}" style="display:flex;flex-direction:column; position:relative; z-index:1;">
-      ${bgWatermarkHTML}
-      <div class="sh-cont-header">
-        <div class="sh-cont-ev">${esc(evName)}</div>
-        <div class="sh-cont-date">${esc(evDate)}${evDay?' ('+esc(evDay)+')':''} | ${esc(shortCls)}</div>
+    return`<div class="a4 ${ORIENT} ${borderClass}" style="${mgnStyle}">
+      ${wmHTML}
+      <div class="sh-content">
+        <div class="sh-cont-hdr">
+          <span class="sh-cont-ev">${esc(evName)}</span>
+          <span class="sh-cont-info">${esc(evDate)}${evDay?' ('+esc(evDay)+')':''} | ${esc(sn)} | Pg ${pageNum}/${totalPg}</span>
+        </div>
+        <table class="sh-table" style="font-size:${tblFontSz}"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+        ${totalsHTML}${sigHTML}${pgNumHTML}${footHTML}
       </div>
-      <table class="sh-table" style="flex:1; position:relative; z-index:1;"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
-      ${isLast?`<div class="sh-totals"><div class="sh-total-box"><div class="sh-total-label">Total Enrolled</div><div class="sh-total-val">${sts.length}</div></div><div class="sh-total-box"><div class="sh-total-label">Total Present</div><div class="sh-total-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div></div>`:''}
-      ${isLast?`<div class="sh-sig-footer" style="margin-top:auto; position:relative; z-index:1;"><div class="sh-sig-row">${sigHTML}</div></div>`:''}
-      ${pageNumHTML}${wmHTML}
     </div>`;
   }
 }
 
-// ── PREVIEW ──
-async function doPreview(){
-  const evName=v('ev-name');
-  if(!evName){toast('Please enter the event name.','err');return}
-  const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
-  if(!sel.length){toast('Please select at least one class.','err');return}
-  // Check HOD (HOD will be in SIG_IDS but needs name if not selected)
-  if(!v('hod-n') && !document.getElementById('hod-sel').value && SIG_IDS.includes('hod')){
-    toast('Please select or enter the HOD details.','err');return;
-  }
-  showLoader('Building attendance sheets…');
-  await new Promise(r=>setTimeout(r,50));
-  try{
-    const html=buildAllSheets();
-    if(!html){hideLoader();toast('No students found for selected filters.','err');return}
-    const count=sel.length;
-    const firstChip=sel[0];
-    const shortCls=getShortClsName(firstChip).replace(/[^a-zA-Z0-9 ]/g,'').trim().slice(0,20);
-    const evShort=(evName||'Event').replace(/[^a-zA-Z0-9 ]/g,'').trim().slice(0,10);
-    const dateStr=v('ev-date')||new Date().toISOString().slice(0,10);
-    const filename=`${shortCls} - ${evShort} - ${dateStr}.pdf`;
-    hideLoader();
-    pmsg('printOverlay',{html,count,filename});
-    gas('addLog',{user:'admin',action:'SHEET GENERATED',detail:`"${evName}" — ${sel.map(s=>getShortClsName(s)).join(', ')}`}).catch(()=>{});
-  }catch(e){
-    hideLoader();toast('Error building sheets: '+e.message,'err');
-    console.error(e);
-  }
+function buildSigFooter(sigs,lineStyle,spH,stampOpt,dateOpt,showCollege,sigVerified){
+  if(!sigs.length) return '';
+  const lineClass=`sh-sig-line-${lineStyle}`;
+  // Stamp logic
+  let stampLeftHTML='',stampRightHTML='';
+  if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;text-align:center"><div style="height:${spH}px;width:80px;border:1px dashed #CCC;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#AAA">Seal</div></div>`;
+  if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;text-align:center"><div style="height:${spH}px;width:80px;border:1px dashed #CCC;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#AAA">Seal</div></div>`;
+
+  const sigBlks=sigs.map((sig,i)=>{
+    const dateHTML=(dateOpt==='all'||(dateOpt==='hod'&&sig.isHod))?`<div class="sh-sig-date">Date: _______________</div>`:'';
+    const deptLine=sig.deptLine?`<div class="sh-sig-dept">${esc(sig.deptLine)}</div>`:'';
+    const colLine=(sig.colLine||showCollege)?`<div class="sh-sig-col">${esc(sig.colLine||v('hdr-college'))}</div>`:'';
+    const eachStamp=stampOpt==='each'?`<div style="height:35px;width:60px;border:1px dashed #CCC;border-radius:50%;margin:3px auto 0;display:flex;align-items:center;justify-content:center;font-size:6pt;color:#AAA">Seal</div>`:'';
+    return`<div class="sh-sig-blk">
+      <div class="sh-sig-space ${lineClass}" style="height:${spH}px"></div>
+      <div class="sh-sig-name">${esc(sig.name||'')}</div>
+      ${sig.role?`<div class="sh-sig-role">${esc(sig.role)}</div>`:''}
+      <div class="sh-sig-desig">${esc(sig.desig||'')}</div>
+      ${deptLine}${colLine}${eachStamp}${dateHTML}
+    </div>`;
+  }).join('');
+
+  const verifiedRow=sigVerified?`<div style="margin-top:12px;padding-top:8px;border-top:1px dashed #CCC;display:flex;align-items:center;gap:8px;font-size:7.5pt;color:#555"><span style="white-space:nowrap;font-weight:700">Verified by:</span><span style="flex:1;border-bottom:1px solid #AAA;height:14px"></span></div>`:'';
+
+  return`<div class="sh-sig-footer"><div class="sh-sig-row">${stampLeftHTML}${sigBlks}${stampRightHTML}</div>${verifiedRow}</div>`;
 }
 
-// ── RESET ──
-function resetForm(){
-  if(!confirm('Reset all generate fields?')) return;
-  ['ev-name','ev-venue','ev-date','ev-day','ev-tf','ev-tt','hod-n','hod-role','gen-sec'].forEach(id=>sv(id,''));
-  sv('hod-d','Head of the Department');
-  sv('gen-sort', 'deptno');
-  sv('logo-mode','config');
-  document.getElementById('custom-logo-wrap').style.display='none';
-  document.getElementById('opt-sigs-list').innerHTML='';
-  document.querySelectorAll('#cls-grid input').forEach(c=>{c.checked=false;c.closest('.cls-chip')?.classList.remove('on')});
-  document.getElementById('cls-pills').innerHTML='';
-  document.getElementById('chk-stamp').checked = false;
-  document.getElementById('chk-watermark').checked = true;
-  
-  SPECIALS.forEach(sp=>{
-    const id = sp.id;
-    const cb=document.getElementById('chk-'+id);if(cb) cb.checked=false;
-    const item=document.getElementById('ssi-'+id);if(item) item.classList.remove('enabled');
-    const inp=document.getElementById(id+'-name');if(inp) inp.value='';
-    const role=document.getElementById(id+'-role');if(role) role.value='';
-  });
-  
-  ORIENT='portrait';
-  document.getElementById('tog-port').classList.add('on');
-  document.getElementById('tog-land').classList.remove('on');
-  COL_ORDER=[...DEFAULT_COLS.map(c=>({...c}))];
-  buildColOrderList();
-  CUSTOM_LOGO_B64=null; CUSTOM_LOGO_MIME=null; OPT_SIG_CNT=0;
-  SIG_IDS=['hod'];
-  renderSigOrder();
-  
-  document.getElementById('sig-cols-list').innerHTML='<div class="sig-input-row"><input type="text" value="Signature" placeholder="Column name"><button class="sig-rm-btn" onclick="rmSigCol(this)"><i class="fa-solid fa-xmark"></i></button></div>';
-  document.getElementById('hod-manual').checked=false;
-  toggleManual('hod');
+// COVER PAGE
+function buildCoverPage(sel,ay,semester,shift,totalSheets,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn){
+  const showMembTable=document.getElementById('cov-member-table')?.checked;
+  const showClsList=document.getElementById('cov-class-list')?.checked;
+  const covTitle=v('cov-title')||'ATTENDANCE REGISTER';
+  const memTitle=v('cov-member-title')||'Participant Summary';
+
+  let clsRows='';
+  if(showClsList){
+    sel.forEach(chip=>{
+      let sts=ALL_STUDENTS.filter(s=>s.Class===chip.split(' — ')[0]&&s.AcademicYear===ay&&s.Active!=='FALSE');
+      const sn=shortName(chip);
+      clsRows+=`<tr><td>${esc(sn)}</td><td style="text-align:center">${sts.length}</td><td class="present-td"></td></tr>`;
+    });
+  }
+
+  const evRef=v('ev-ref');
+  const evType=v('ev-type');
+  const evRP=v('ev-rp');
+  const evOrg=v('ev-org');
+
+  return`<div class="cover-page portrait" style="padding:${mgn}">
+    <div class="sh-hdr">
+      ${logoHTML}
+      <div class="sh-college ${hdrFont} ${hdrSz}">${esc(v('hdr-college'))}</div>
+      ${v('hdr-est')?`<div class="sh-est">${esc(v('hdr-est'))}</div>`:''}
+      <div class="sh-dept ${deptSz}">${esc(v('hdr-dept'))}</div>
+      ${subHTML}
+    </div>
+    <hr class="${ruleClass}">
+    <div class="cover-title">
+      <h1>${esc(covTitle)}</h1>
+      <p style="font-size:12pt;font-weight:700">${esc(evName)}</p>
+      ${evType?`<p style="font-size:9pt;color:#555">${esc(evType)}</p>`:''}
+    </div>
+    <div class="cover-event-box">
+      <h3>Event Details</h3>
+      <div class="cover-event-grid">
+        ${evVenue?`<span class="cover-event-lbl">Venue:</span><span class="cover-event-val">${esc(evVenue)}</span>`:''}
+        ${evDate?`<span class="cover-event-lbl">Date:</span><span class="cover-event-val">${esc(evDate)}${evDay?' ('+evDay+')':''}</span>`:''}
+        ${timeStr?`<span class="cover-event-lbl">Time:</span><span class="cover-event-val">${esc(timeStr)}</span>`:''}
+        ${ay?`<span class="cover-event-lbl">Academic Year:</span><span class="cover-event-val">${esc(ay)}</span>`:''}
+        ${semester?`<span class="cover-event-lbl">Semester:</span><span class="cover-event-val">${esc(semester)}</span>`:''}
+        ${evRef?`<span class="cover-event-lbl">Ref. No.:</span><span class="cover-event-val">${esc(evRef)}</span>`:''}
+        ${evRP?`<span class="cover-event-lbl">Resource Person:</span><span class="cover-event-val">${esc(evRP)}</span>`:''}
+        ${evOrg?`<span class="cover-event-lbl">Organised by:</span><span class="cover-event-val">${esc(evOrg)}</span>`:''}
+        <span class="cover-event-lbl">Total Sheets:</span><span class="cover-event-val">${totalSheets}</span>
+      </div>
+    </div>
+    ${showMembTable&&clsRows?`<div style="margin-top:16px">
+      <h3 style="font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${esc(memTitle)}</h3>
+      <table class="cover-members-table">
+        <thead><tr><th>Class / Section</th><th style="text-align:center">Total Enrolled</th><th class="present-td" style="text-align:center">Total Present</th></tr></thead>
+        <tbody>${clsRows}</tbody>
+      </table>
+    </div>`:''}
+    <div class="cover-footer">
+      ${esc(v('footer-txt')||v('hdr-dept')+'  ·  '+v('hdr-college'))}
+    </div>
+  </div>`;
 }
+
+// GENERATE PDF
+function doGenerate(){
+  const evName=v('ev-name');if(!evName){toast('Please enter the event name.','err');return}
+  const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
+  if(!sel.length){toast('Select at least one class.','err');return}
+  // Build filename
+  const sn=shortName(sel[0]).replace(/[^a-zA-Z0-9 ]/g,' ').trim().slice(0,18);
+  const evShort=evName.replace(/[^a-zA-Z0-9 ]/g,' ').trim().slice(0,10);
+  const dt=v('ev-date')||new Date().toISOString().slice(0,10);
+  const fname=`${sn} - ${evShort} - ${dt}.pdf`;
+  const html=buildAllSheets(sel);
+  if(!html){toast('No students match the filters.','err');return}
+  const cnt=document.querySelectorAll('#sheets-wrap .a4, #sheets-wrap .cover-page').length||sel.length;
+  // Log
+  gas('addLog',{user:'admin',action:'SHEET GENERATED',detail:`"${evName}" — ${sel.map(s=>shortName(s)).join(', ')}`}).catch(()=>{});
+  pm('printOverlay',{html,count:cnt,filename:fname});
+}
+
+function doPrint(){
+  const evName=v('ev-name');if(!evName){toast('Please enter the event name.','err');return}
+  const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
+  if(!sel.length){toast('Select at least one class.','err');return}
+  const html=buildAllSheets(sel);
+  if(!html){toast('No students match the filters.','err');return}
+  const cnt=sel.length;
+  pm('printOverlay',{html,count:cnt,filename:'attendance.pdf'});
+}
+
+function scrollToPreview(){
+  document.getElementById('gen-preview-area').scrollIntoView({behavior:'smooth'});
+}
+
+function resetAll(){
+  if(!confirm('Reset all settings?'))return;
+  ['ev-name','ev-venue','ev-date','ev-day','ev-tf','ev-tt','ev-ref','ev-rp','ev-org','gen-sec','wm-text','footer-txt','cov-title','cov-member-title'].forEach(id=>sv(id,''));
+  ['hod-n','hod-role','hod-dept-txt','hod-col-txt'].forEach(id=>sv(id,''));
+  sv('hod-d','Head of the Department');
+  sv('gen-sort','deptno');sv('rows-per-page','auto');sv('page-margin','normal');
+  sv('logo-size','md');sv('logo-pos','center');sv('logo-custom-url','');
+  sv('hdr-font','f-times');sv('hdr-font-sz','sz-md');sv('dept-font-sz','sz-md');sv('ev-title-sz','sz-md');
+  sv('hdr-rule','bold');sv('page-border','none');
+  sv('tbl-font-sz','8pt');sv('row-height','normal');
+  sv('sig-line-style','solid');sv('sig-space-h','48');sv('stamp-opt','none');sv('sig-date-opt','none');
+  document.querySelectorAll('#cls-grid input').forEach(c=>{c.checked=false;c.closest('.cb-row')?.classList.remove('on')});
+  SPECIALS.forEach(sp=>{
+    const cb=document.getElementById('chk-'+sp.id);if(cb){cb.checked=false}
+    document.getElementById('ssi-'+sp.id)?.classList.remove('on');
+  });
+  document.getElementById('opt-sigs-list').innerHTML='';
+  document.getElementById('gen-cover').checked=false;
+  document.getElementById('cover-opts').style.display='none';
+  document.getElementById('cov-member-table').checked=true;
+  document.getElementById('cov-class-list').checked=true;
+  document.getElementById('show-page-num').checked=true;
+  document.getElementById('wm-loyola').checked=false;
+  document.getElementById('wm-dept').checked=false;
+  document.getElementById('sig-verified').checked=false;
+  document.getElementById('sig-show-college').checked=false;
+  ['logo-loyola','logo-cent','logo-dept'].forEach(id=>{const e=document.getElementById(id);if(e)e.checked=id==='logo-loyola'});
+  document.getElementById('gf-all').checked=true;
+  document.getElementById('gf-all').closest('.cb-row').classList.add('on');
+  ['gf-m','gf-f','gf-t'].forEach(id=>{const e=document.getElementById(id);if(e){e.checked=false;e.closest('.cb-row').classList.remove('on')}});
+  ORIENT='portrait';document.getElementById('tog-port').classList.add('on');document.getElementById('tog-land').classList.remove('on');
+  COLS=[...DEF_COLS.map(c=>({...c}))];buildColDragList();
+  SIG_IDS=['hod'];renderSigOrder();OPT_CNT=0;
+  document.getElementById('sig-cols-list').innerHTML='<div class="cust-col-row"><input type="text" value="Signature" placeholder="Column name" oninput="debounceRender()"><button class="rm-btn" onclick="rmCC(this)"><i class="fa-solid fa-xmark"></i></button></div>';
+  document.getElementById('hod-man').checked=false;tMan('hod');
+  // Re-fill config values
+  sv('hdr-college',CFG.college_name||'');sv('hdr-est',CFG.college_est||'');
+  sv('hdr-dept',CFG.dept_name||'');sv('footer-txt',CFG.watermark||'');
+  debounceRender();
+}
+
+// LISTEN FOR EVENTS
+document.querySelectorAll('input,select,textarea').forEach(el=>{
+  if(!el.hasAttribute('onchange')&&!el.hasAttribute('oninput')&&el.type!=='checkbox'&&el.type!=='radio'){
+    el.addEventListener('change',debounceRender);
+  }
+});
 
 boot();
 </script>
