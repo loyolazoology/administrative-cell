@@ -1064,7 +1064,7 @@ function renderPreview(){
 function buildAllSheets(sel){
   const ay=v('gen-ay');
   const semester=v('gen-sem'),shift=v('gen-shift'),secFlt=v('gen-sec'),sortBy=v('gen-sort');
-  const gf=getGenderFilter();
+  const gf=getGF();
   const evName=v('ev-name'),evVenue=v('ev-venue'),evDate=fmtDate(v('ev-date')),evDay=v('ev-day');
   const evFrom=fmtTime(v('ev-tf')),evTo=fmtTime(v('ev-tt'));
   const timeStr=evFrom&&evTo?`${evFrom} – ${evTo}`:evFrom||evTo||'';
