@@ -25,7 +25,7 @@ html,body{background:var(--bg);font-family:var(--fn);color:var(--c);-webkit-font
 body{padding:0;margin:0;overflow-x:hidden}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:10px}
 
-/* LAYOUT: 2-col on desktop, stack on mobile */
+/* LAYOUT */
 .gen-layout{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
 .gen-sidebar{height:100vh;overflow-y:auto;background:var(--w);border-right:1px solid var(--bd2);display:flex;flex-direction:column}
 .gen-preview-area{height:100vh;overflow-y:auto;background:#888;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px}
@@ -55,16 +55,12 @@ body{padding:0;margin:0;overflow-x:hidden}
 .f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--m);box-shadow:0 0 0 2px rgba(139,38,53,.06)}
 .f input[readonly]{background:var(--bg2);color:var(--c3)}
 .f textarea{resize:vertical;min-height:56px}
-.f-note{font-size:10px;color:var(--c4);margin-top:2px}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.f-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;font-family:var(--fn)}
-.btn-p{background:var(--m);color:#fff;border-color:var(--m)}.btn-p:hover{background:var(--ml)}
 .btn-g{background:var(--w);color:var(--c2);border-color:var(--bd)}.btn-g:hover{border-color:var(--m);color:var(--m);background:var(--mp)}
 .btn-gold{background:var(--g);color:#fff;border-color:var(--g)}.btn-gold:hover{background:var(--gl)}
-.btn-red{background:var(--rbg);color:var(--red);border-color:var(--rbd)}.btn-red:hover{background:var(--red);color:#fff}
 .btn-xs{padding:3px 8px;font-size:11px}
 .btn-sm{padding:5px 11px;font-size:12px}
 .btn-full{width:100%;justify-content:center}
@@ -74,27 +70,22 @@ body{padding:0;margin:0;overflow-x:hidden}
 .cb-row input{accent-color:var(--m);flex-shrink:0}
 .cb-row:has(input:checked){border-color:rgba(139,38,53,.3);background:var(--mp);color:var(--m)}
 .cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.cb-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
 
-/* DRAG ROWS (columns & sigs) */
+/* DRAG ROWS */
 .drag-list{display:flex;flex-direction:column;gap:4px}
 .drag-item{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--w);border:1.5px solid var(--bd2);border-radius:5px;transition:all .15s;cursor:default}
 .drag-item.on{background:rgba(139,38,53,.04);border-color:rgba(139,38,53,.2)}
-.drag-item.dragging{opacity:.4}
 .drag-item.drag-over{border-color:var(--m);background:var(--mp)}
 .drag-handle{color:var(--c4);cursor:grab;font-size:11px;flex-shrink:0}
-.drag-handle:active{cursor:grabbing}
 .drag-label{flex:1;font-size:12px;font-weight:500;color:var(--c2)}
-.drag-item.on .drag-label{color:var(--m);font-weight:600}
 .drag-btns{display:flex;gap:2px;flex-shrink:0}
-.drag-btn{width:20px;height:20px;border:1px solid var(--bd);border-radius:3px;background:var(--bg2);color:var(--c4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s;flex-shrink:0}
+.drag-btn{width:20px;height:20px;border:1px solid var(--bd);border-radius:3px;background:var(--bg2);color:var(--c4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s}
 .drag-btn:hover{background:var(--m);color:#fff;border-color:var(--m)}
 
 /* TOGGLE */
 .tog-g{display:flex;border:1.5px solid var(--bd);border-radius:5px;overflow:hidden;width:fit-content}
 .tog-b{padding:6px 14px;background:transparent;border:none;color:var(--c3);font-family:var(--fn);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
 .tog-b.on{background:var(--m);color:#fff}
-.tog-b:not(.on):hover{background:var(--ms);color:var(--m)}
 
 /* SIG BLOCK */
 .sig-blk{background:var(--w);border:1.5px solid var(--bd2);border-radius:6px;padding:11px;margin-bottom:8px}
@@ -103,10 +94,10 @@ body{padding:0;margin:0;overflow-x:hidden}
 .sig-blk-title{font-size:12px;font-weight:700;color:var(--c2);display:flex;align-items:center;gap:6px}
 .req-tag{font-size:9.5px;background:var(--ms);color:var(--m);border:1px solid rgba(139,38,53,.2);padding:1px 7px;border-radius:20px}
 .manual-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11.5px;color:var(--c3)}
-.manual-row input[type=checkbox]{accent-color:var(--m)}
+.manual-row input{accent-color:var(--m)}
 
 /* SPECIAL SIG */
-.sp-sig-item{border:1.5px solid var(--bd);border-radius:5px;overflow:hidden;background:var(--w);margin-bottom:5px;transition:border-color .15s}
+.sp-sig-item{border:1.5px solid var(--bd);border-radius:5px;overflow:hidden;background:var(--w);margin-bottom:5px;}
 .sp-sig-item.on{border-color:rgba(139,38,53,.3);background:rgba(139,38,53,.02)}
 .sp-sig-toggle{display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer;user-select:none}
 .sp-sig-toggle input{accent-color:var(--m)}
@@ -117,8 +108,6 @@ body{padding:0;margin:0;overflow-x:hidden}
 /* INFO */
 .info{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:5px;font-size:12px;border:1px solid;margin-bottom:10px}
 .info-amb{background:var(--abg);border-color:var(--abd);color:var(--amb)}
-.info-grn{background:var(--gbg);border-color:var(--gbdr);color:var(--grn)}
-.info-red{background:var(--rbg);border-color:var(--rbd);color:var(--red)}
 .info-blue{background:var(--bbg);border-color:#B3CCE8;color:var(--blue)}
 
 /* SEC LABEL */
@@ -127,10 +116,9 @@ body{padding:0;margin:0;overflow-x:hidden}
 
 /* CUSTOM COL ROW */
 .cust-col-row{display:flex;gap:6px;margin-bottom:5px;align-items:center}
-.cust-col-row input{flex:1;padding:6px 9px;border:1.5px solid var(--bd);border-radius:5px;background:var(--bg2);font-size:12.5px;font-family:var(--fn);transition:border-color .15s}
+.cust-col-row input{flex:1;padding:6px 9px;border:1.5px solid var(--bd);border-radius:5px;background:var(--bg2);font-size:12.5px;font-family:var(--fn)}
 .cust-col-row input:focus{outline:none;border-color:var(--m);background:var(--w)}
-.rm-btn{width:28px;height:28px;background:var(--rbg);border:1px solid var(--rbd);border-radius:5px;color:var(--red);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.rm-btn:hover{background:var(--red);color:#fff}
+.rm-btn{width:28px;height:28px;background:var(--rbg);border:1px solid var(--rbd);border-radius:5px;color:var(--red);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* PREVIEW AREA */
 .preview-toolbar{width:100%;max-width:794px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;flex-shrink:0}
@@ -138,7 +126,6 @@ body{padding:0;margin:0;overflow-x:hidden}
 .preview-toolbar-right{display:flex;align-items:center;gap:8px}
 .preview-count{font-size:12px;color:rgba(255,255,255,.75);font-weight:500}
 .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:13px;gap:12px;flex:1;min-height:300px}
-.preview-empty i{font-size:40px;opacity:.4}
 
 /* A4 WRAPPER */
 .a4-wrapper{width:100%;max-width:794px;display:flex;flex-direction:column;gap:20px}
@@ -150,7 +137,7 @@ body{padding:0;margin:0;overflow-x:hidden}
 
 /* --- SHEET INTERNALS --- */
 .sh-border-none{}
-.sh-border-thin{border:1px solid #555}
+.sh-border-thin{border:1px solid #444}
 .sh-border-double{border:3px double #333}
 .sh-border-box{outline:1.5px solid #333;outline-offset:-5px}
 
@@ -188,8 +175,8 @@ body{padding:0;margin:0;overflow-x:hidden}
 .sh-ev-sub{font-size:8pt;color:#444;display:block;margin-top:3px;font-style:italic}
 .sh-ev-attn{font-size:8pt;color:#333;display:block;margin-top:2px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 
-.sh-meta{border:1px solid #AAA;display:grid;grid-template-columns:1fr 1fr;margin-bottom:7px;font-size:8pt}
-.sh-mc{padding:4px 8px;border-right:1px solid #CCC;border-bottom:1px solid #CCC;display:flex;gap:5px;line-height:1.5}
+.sh-meta{border:1px solid #777;display:grid;grid-template-columns:1fr 1fr;margin-bottom:7px;font-size:8pt}
+.sh-mc{padding:4px 8px;border-right:1px solid #AAA;border-bottom:1px solid #AAA;display:flex;gap:5px;line-height:1.5}
 .sh-mc:nth-child(2n){border-right:none}
 .sh-mc:nth-last-child(-n+2){border-bottom:none}
 .sh-mc.full{grid-column:1/-1;border-right:none}
@@ -197,39 +184,38 @@ body{padding:0;margin:0;overflow-x:hidden}
 .sh-mv{color:#111}
 
 .sh-table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:6px}
-.sh-table th{background:#1C1917;color:#fff;padding:5px 6px;font-weight:700;font-size:7.5pt;letter-spacing:.3px;text-align:left;white-space:nowrap}
+.sh-table th{background:#333;color:#fff;padding:5px 6px;font-weight:700;font-size:8pt;letter-spacing:.3px;text-align:left;white-space:nowrap}
 .sh-table th.center{text-align:center}
-.sh-table td{border:1px solid #AAA;padding:4px 5px;vertical-align:middle}
-.sh-table th{border:1px solid #1C1917}
-.sh-table tr.data-row td{background:#fff}
+/* Made transparent so watermark passes through, slightly darkened borders for professional print */
+.sh-table td{border:1px solid #777;padding:4px 5px;vertical-align:middle;background:transparent}
+.sh-table th{border:1px solid #333}
+.sh-table tr.data-row td{background:transparent}
 .sno{text-align:center;width:22px;font-weight:700}
 .sig-td{min-width:52px;height:26px}
 
 .sh-totals{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
 .sh-tot{border:1px solid #666;text-align:center;min-width:108px}
 .sh-tot-lbl{background:#333;color:#fff;font-size:6.5pt;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 7px}
-.sh-tot-val{font-size:18pt;font-weight:700;color:#111;padding:4px 8px;line-height:1}
+.sh-tot-val{font-size:18pt;font-weight:700;color:#111;padding:4px 8px;line-height:1;background:transparent}
 
 .sh-sig-footer{border-top:1.5px solid #111;padding-top:10px;flex-shrink:0}
-.sh-sig-row{display:flex;gap:6px}
-.sh-sig-blk{text-align:center;flex:1}
-.sh-sig-blk.align-left{text-align:left}
-.sh-sig-blk.align-right{text-align:right}
-.sh-sig-space{margin-bottom:4px}
+.sh-sig-row{display:flex;gap:6px;align-items:flex-end;}
+/* Flex alignment for perfectly centered signature text */
+.sh-sig-blk{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;}
+.sh-sig-space{margin-bottom:4px; width: 100%;}
 .sh-sig-line-solid{border-bottom:1px solid #444}
 .sh-sig-line-dashed{border-bottom:1px dashed #666}
 .sh-sig-line-dotted{border-bottom:1px dotted #666}
-.sh-sig-name{font-size:8.5pt;font-weight:700;color:#111}
-.sh-sig-role{font-size:7.5pt;color:#555;margin-top:1px;font-style:italic}
-.sh-sig-desig{font-size:8pt;color:#333;margin-top:1px;font-weight:600}
-.sh-sig-dept{font-size:7.5pt;color:#555;margin-top:1px}
-.sh-sig-col{font-size:7.5pt;color:#555;margin-top:1px}
-.sh-sig-stamp{font-size:7pt;color:#888;font-style:italic;margin-top:3px;height:20px;display:flex;align-items:center;justify-content:center}
-.sh-sig-date{font-size:7pt;color:#777;margin-top:2px;border-top:1px dotted #CCC;padding-top:2px}
+.sh-sig-name{font-size:8.5pt;font-weight:700;color:#111;text-align:center;}
+.sh-sig-role{font-size:7.5pt;color:#555;margin-top:2px;font-style:italic;text-align:center;}
+.sh-sig-desig{font-size:8pt;color:#333;margin-top:2px;font-weight:600;text-align:center;}
+.sh-sig-dept{font-size:7.5pt;color:#555;margin-top:1px;text-align:center;}
+.sh-sig-col{font-size:7.5pt;color:#555;margin-top:1px;text-align:center;}
+.sh-sig-date{font-size:8pt;color:#111;margin-top:10px;padding-top:6px;font-weight:600;text-align:center;}
 
 .sh-page-num{text-align:center;font-size:7pt;color:#777;margin-top:6px;padding-top:5px;border-top:1px dashed #CCC;flex-shrink:0}
 .sh-footer-txt{text-align:center;font-size:6.5pt;color:#999;font-style:italic;margin-top:3px;flex-shrink:0}
-.sh-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.05;display:flex;align-items:center;justify-content:center}
+.sh-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.1;display:flex;align-items:center;justify-content:center}
 .sh-watermark img{width:180px;height:180px;object-fit:contain}
 .sh-content{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
 
@@ -250,8 +236,8 @@ body{padding:0;margin:0;overflow-x:hidden}
 .cover-event-lbl{font-weight:700;color:#333}
 .cover-event-val{color:#111}
 .cover-members-table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:8px}
-.cover-members-table th{background:#1C1917;color:#fff;padding:5px 8px;text-align:left;font-size:8.5pt;border:1px solid #1C1917}
-.cover-members-table td{border:1px solid #AAA;padding:5px 8px;height:28px}
+.cover-members-table th{background:#333;color:#fff;padding:5px 8px;text-align:left;font-size:8.5pt;border:1px solid #333}
+.cover-members-table td{border:1px solid #777;padding:5px 8px;height:28px}
 .cover-members-table .present-td{width:80px;text-align:center}
 .cover-footer{margin-top:auto;padding-top:16px;border-top:1px solid #CCC;font-size:8pt;color:#666;text-align:center}
 
@@ -297,7 +283,6 @@ body{padding:0;margin:0;overflow-x:hidden}
 
 <div class="gen-layout">
 
-<!-- ═══════════════ SIDEBAR ═══════════════ -->
 <div class="gen-sidebar" id="gen-sidebar">
   <div class="sb-top">
     <h2><i class="fa-solid fa-file-circle-plus" style="color:var(--m);margin-right:7px;font-size:14px"></i>Generate Sheet</h2>
@@ -307,7 +292,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 1. EVENT DETAILS ── -->
   <div class="acc-section">
     <div class="acc-header open" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-calendar-days"></i>Event Details</div>
@@ -341,7 +325,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 2. CLASS SELECTION ── -->
   <div class="acc-section">
     <div class="acc-header open" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-users"></i>Class Selection</div>
@@ -383,7 +366,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 3. HEADER & BRANDING ── -->
   <div class="acc-section">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-heading"></i>Header &amp; Branding</div>
@@ -471,7 +453,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 4. COLUMNS ── -->
   <div class="acc-section">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-table-columns"></i>Column Configuration</div>
@@ -507,7 +488,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 5. PAGE LAYOUT ── -->
   <div class="acc-section">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-file-lines"></i>Page Layout</div>
@@ -547,7 +527,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 6. SIGNATORIES ── -->
   <div class="acc-section">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-signature"></i>Signatories</div>
@@ -596,12 +575,11 @@ body{padding:0;margin:0;overflow-x:hidden}
         </div>
       </div>
       <div class="f-row">
-        <div class="f"><label>Stamp / Seal</label>
+        <div class="f"><label>Stamp / Seal Space</label>
           <select id="stamp-opt" onchange="debounceRender()">
-            <option value="none">No Stamp</option>
-            <option value="left">Stamp Left</option>
-            <option value="right">Stamp Right (default)</option>
-            <option value="each">Stamp Each Signatory</option>
+            <option value="none">None</option>
+            <option value="left">Blank Space Left</option>
+            <option value="right">Blank Space Right</option>
           </select>
         </div>
         <div class="f"><label>Show Date Below</label>
@@ -621,7 +599,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- ── 7. FRONT PAGE ── -->
   <div class="acc-section">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="acc-title"><i class="fa-solid fa-book-open"></i>Front / Cover Page</div>
@@ -643,7 +620,6 @@ body{padding:0;margin:0;overflow-x:hidden}
     </div>
   </div>
 
-  <!-- GENERATE BUTTON -->
   <div class="sb-gen-btn">
     <button class="btn btn-gold btn-full" onclick="doGenerate()" style="font-size:13px;padding:10px 18px">
       <i class="fa-solid fa-file-pdf"></i> Generate &amp; Download PDF
@@ -654,7 +630,6 @@ body{padding:0;margin:0;overflow-x:hidden}
   </div>
 </div>
 
-<!-- ═══════════════ PREVIEW AREA ═══════════════ -->
 <div class="gen-preview-area" id="gen-preview-area">
   <div class="preview-toolbar">
     <div class="preview-toolbar-left">
@@ -677,9 +652,7 @@ body{padding:0;margin:0;overflow-x:hidden}
   </div>
 </div>
 
-</div><!-- /gen-layout -->
-
-<script>
+</div><script>
 const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
 function pm(type,data){window.parent.postMessage({type,...(data||{})},'*')}
 function toast(m,v){pm('toast',{msg:m,variant:v||'info'})}
@@ -788,7 +761,7 @@ function buildClsGrid(){
     return ia>=0&&ib>=0?ia-ib:ia>=0?-1:ib>=0?1:a.localeCompare(b);
   });
   grid.innerHTML=sorted.map(k=>`
-    <label class="cb-row" id="chip-${CSS.escape(k)}">
+    <label class="cb-row" id="chip-${k.replace(/[^a-zA-Z0-9-_]/g, '_')}">
       <input type="checkbox" value="${esc(k)}" onchange="toggleChip(this)">
       <span style="flex:1;font-size:12px">${esc(shortName(k))}</span>
       <span style="font-size:10.5px;color:var(--c4);background:var(--bg2);padding:1px 7px;border-radius:10px;border:1px solid var(--bd2)">${map[k]}</span>
@@ -1241,22 +1214,22 @@ function buildPage(pd,gpn,total){
 function buildSigFooter(sigs,lineStyle,spH,stampOpt,dateOpt,showCollege,sigVerified){
   if(!sigs.length) return '';
   const lineClass=`sh-sig-line-${lineStyle}`;
-  // Stamp logic
+  
+  // Stamp logic (Removed Borders & Circles - Left as blank space alignment helper)
   let stampLeftHTML='',stampRightHTML='';
-  if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;text-align:center"><div style="height:${spH}px;width:80px;border:1px dashed #CCC;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#AAA">Seal</div></div>`;
-  if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;text-align:center"><div style="height:${spH}px;width:80px;border:1px dashed #CCC;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:7pt;color:#AAA">Seal</div></div>`;
+  if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
+  if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
 
   const sigBlks=sigs.map((sig,i)=>{
-    const dateHTML=(dateOpt==='all'||(dateOpt==='hod'&&sig.isHod))?`<div class="sh-sig-date">Date: _______________</div>`:'';
+    const dateHTML=(dateOpt==='all'||(dateOpt==='hod'&&sig.isHod))?`<div class="sh-sig-date">Date: DD / MM / YYYY</div>`:'';
     const deptLine=sig.deptLine?`<div class="sh-sig-dept">${esc(sig.deptLine)}</div>`:'';
     const colLine=(sig.colLine||showCollege)?`<div class="sh-sig-col">${esc(sig.colLine||v('hdr-college'))}</div>`:'';
-    const eachStamp=stampOpt==='each'?`<div style="height:35px;width:60px;border:1px dashed #CCC;border-radius:50%;margin:3px auto 0;display:flex;align-items:center;justify-content:center;font-size:6pt;color:#AAA">Seal</div>`:'';
     return`<div class="sh-sig-blk">
       <div class="sh-sig-space ${lineClass}" style="height:${spH}px"></div>
       <div class="sh-sig-name">${esc(sig.name||'')}</div>
       ${sig.role?`<div class="sh-sig-role">${esc(sig.role)}</div>`:''}
       <div class="sh-sig-desig">${esc(sig.desig||'')}</div>
-      ${deptLine}${colLine}${eachStamp}${dateHTML}
+      ${deptLine}${colLine}${dateHTML}
     </div>`;
   }).join('');
 
