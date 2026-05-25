@@ -28,7 +28,7 @@ body{padding:0;margin:0;overflow-x:hidden}
 /* LAYOUT */
 .gen-layout{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
 .gen-sidebar{height:100vh;overflow-y:auto;background:var(--w);border-right:1px solid var(--bd2);display:flex;flex-direction:column}
-.gen-preview-area{height:100vh;overflow-y:auto;background:#888;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px}
+.gen-preview-area{height:100vh;overflow-y:auto;background:#555;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px}
 
 /* SIDEBAR HEADER */
 .sb-top{padding:14px 16px;border-bottom:1px solid var(--bd2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(90deg,rgba(139,38,53,.04),transparent)}
@@ -124,121 +124,166 @@ body{padding:0;margin:0;overflow-x:hidden}
 .preview-toolbar{width:100%;max-width:794px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;flex-shrink:0}
 .preview-toolbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .preview-toolbar-right{display:flex;align-items:center;gap:8px}
-.preview-count{font-size:12px;color:rgba(255,255,255,.75);font-weight:500}
-.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:13px;gap:12px;flex:1;min-height:300px}
+.preview-count{font-size:12px;color:rgba(255,255,255,.9);font-weight:600}
+.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:14px;gap:12px;flex:1;min-height:300px}
 
 /* A4 WRAPPER */
 .a4-wrapper{width:100%;max-width:794px;display:flex;flex-direction:column;gap:20px}
 
 /* A4 SHEET */
-.a4{background:#fff;font-family:'Times New Roman',Times,serif;color:#111;box-shadow:0 4px 24px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.a4{background:#fff;font-family:'Times New Roman',Times,serif;color:#111;box-shadow:0 4px 24px rgba(0,0,0,.3);position:relative;overflow:hidden}
 .a4.portrait{width:210mm;min-height:297mm;padding:13mm 14mm 14mm;display:flex;flex-direction:column}
 .a4.landscape{width:297mm;min-height:210mm;padding:10mm 12mm 12mm;display:flex;flex-direction:column}
 
 /* --- SHEET INTERNALS --- */
 .sh-border-none{}
-.sh-border-thin{border:1px solid #444}
-.sh-border-double{border:3px double #333}
-.sh-border-box{outline:1.5px solid #333;outline-offset:-5px}
+.sh-border-thin{border:1px solid #111}
+.sh-border-double{border:3px double #111}
+.sh-border-box{outline:1.5px solid #111;outline-offset:-5px}
 
-.sh-hdr{text-align:center;margin-bottom:6px; display:flex; flex-direction:column; align-items:center;}
+.sh-hdr{text-align:center;margin-bottom:6px; display:flex; flex-direction:column; align-items:center; width:100%;}
 .sh-logos{display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:8px;width:100%;}
-.sh-logo{object-fit:contain; max-width: 100%;}
-.sh-logo.sm{height:35px;}
-.sh-logo.md{height:50px;}
-.sh-logo.lg{height:65px;}
+
+/* PERFECTED LOGO SIZES */
+.sh-logo{object-fit:contain; flex-shrink:0; display:block;}
+.sh-logo.sm{width:45px; height:45px;}
+.sh-logo.md{width:60px; height:60px;}
+.sh-logo.lg{width:80px; height:80px;}
+
 .sh-college{font-weight:700;color:#111;line-height:1.25}
 .sh-college.f-times{font-family:'Times New Roman',serif}
 .sh-college.f-arial{font-family:Arial,sans-serif}
 .sh-college.f-calibri{font-family:'Calibri',Calibri,sans-serif}
 .sh-college.f-georgia{font-family:Georgia,serif}
-.sh-college.sz-sm{font-size:13pt}
-.sh-college.sz-md{font-size:15pt}
-.sh-college.sz-lg{font-size:17pt}
-.sh-est{font-size:7.5pt;color:#555;margin-top:2px}
-.sh-dept{font-weight:700;color:#111;margin-top:3px}
-.sh-dept.sz-sm{font-size:9pt}
-.sh-dept.sz-md{font-size:10.5pt}
-.sh-dept.sz-lg{font-size:12pt}
-.sh-subtitle{font-size:8pt;color:#444;margin-top:2px;font-style:italic}
-.sh-hdr-rule-single{border:none;border-top:1px solid #333;margin:5px 0;width:100%}
-.sh-hdr-rule-double{border:none;border-top:3px double #333;margin:5px 0;width:100%}
-.sh-hdr-rule-bold{border:none;border-top:2.5px solid #111;margin:5px 0;width:100%}
+.sh-college.sz-sm{font-size:14pt}
+.sh-college.sz-md{font-size:16pt}
+.sh-college.sz-lg{font-size:18pt}
+.sh-est{font-size:8pt;color:#333;margin-top:2px}
+.sh-dept{font-weight:700;color:#111;margin-top:4px}
+.sh-dept.sz-sm{font-size:10pt}
+.sh-dept.sz-md{font-size:12pt}
+.sh-dept.sz-lg{font-size:14pt}
+.sh-subtitle{font-size:9pt;color:#333;margin-top:2px;font-style:italic}
+.sh-hdr-rule-single{border:none;border-top:1px solid #111;margin:8px 0;width:100%}
+.sh-hdr-rule-double{border:none;border-top:3px double #111;margin:8px 0;width:100%}
+.sh-hdr-rule-bold{border:none;border-top:2.5px solid #111;margin:8px 0;width:100%}
 .sh-hdr-rule-none{display:none}
 
-.sh-ev{text-align:center;margin-bottom:6px;width:100%}
+.sh-ev{text-align:center;margin-bottom:10px;width:100%}
 .sh-ev-name{font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:inline-block;padding-bottom:2px;border-bottom:1.5px solid #111}
-.sh-ev-name.sz-sm{font-size:10pt}
-.sh-ev-name.sz-md{font-size:12pt}
-.sh-ev-name.sz-lg{font-size:14pt}
-.sh-ev-sub{font-size:8pt;color:#444;display:block;margin-top:3px;font-style:italic}
-.sh-ev-attn{font-size:8pt;color:#333;display:block;margin-top:2px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.sh-ev-name.sz-sm{font-size:11pt}
+.sh-ev-name.sz-md{font-size:13pt}
+.sh-ev-name.sz-lg{font-size:15pt}
+.sh-ev-sub{font-size:9pt;color:#333;display:block;margin-top:4px;font-style:italic}
+.sh-ev-attn{font-size:9pt;color:#111;display:block;margin-top:4px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
 
-.sh-meta{border:1px solid #777;display:grid;grid-template-columns:1fr 1fr;margin-bottom:7px;font-size:8pt;width:100%}
-.sh-mc{padding:4px 8px;border-right:1px solid #AAA;border-bottom:1px solid #AAA;display:flex;gap:5px;line-height:1.5}
+.sh-meta{border:1px solid #111;display:grid;grid-template-columns:1fr 1fr;margin-bottom:10px;font-size:9pt;width:100%; box-sizing:border-box;}
+.sh-mc{padding:5px 10px;border-right:1px solid #111;border-bottom:1px solid #111;display:flex;gap:5px;line-height:1.5}
 .sh-mc:nth-child(2n){border-right:none}
 .sh-mc:nth-last-child(-n+2){border-bottom:none}
 .sh-mc.full{grid-column:1/-1;border-right:none}
-.sh-ml{font-weight:700;min-width:80px;white-space:nowrap;color:#222}
+.sh-ml{font-weight:700;min-width:90px;white-space:nowrap;color:#111}
 .sh-mv{color:#111}
 
-.sh-table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:6px}
-.sh-table th{background:#333;color:#fff;padding:5px 6px;font-weight:700;font-size:8pt;letter-spacing:.3px;text-align:left;white-space:nowrap}
+.sh-table{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:10px}
+.sh-table th{background:#EFEFEF;color:#111;padding:8px 6px;font-weight:700;font-size:9pt;letter-spacing:.3px;text-align:left;white-space:nowrap; border:1px solid #111;}
 .sh-table th.center{text-align:center}
-/* Transparent backgrounds for watermark visibility */
-.sh-table td{border:1px solid #777;padding:4px 5px;vertical-align:middle;background:transparent}
-.sh-table th{border:1px solid #333}
+/* Enforcing space for signatures */
+.sh-table td{border:1px solid #111;padding:6px;vertical-align:middle;background:transparent;}
 .sh-table tr.data-row td{background:transparent}
-.sno{text-align:center;width:22px;font-weight:700}
-.sig-td{min-width:52px;height:26px}
+.sno{text-align:center;width:30px;font-weight:700}
+.sig-td{min-width:100px;} /* Plenty of width */
 
-.sh-totals{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px;width:100%}
-.sh-tot{border:1px solid #666;text-align:center;min-width:108px}
-.sh-tot-lbl{background:#333;color:#fff;font-size:6.5pt;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 7px}
-.sh-tot-val{font-size:18pt;font-weight:700;color:#111;padding:4px 8px;line-height:1;background:transparent}
+.sh-totals{display:flex;justify-content:flex-end;gap:12px;margin-bottom:15px;width:100%}
+.sh-tot{border:1px solid #111;text-align:center;min-width:120px}
+.sh-tot-lbl{background:#EFEFEF;color:#111;font-size:7pt;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:4px 8px; border-bottom:1px solid #111;}
+.sh-tot-val{font-size:18pt;font-weight:700;color:#111;padding:6px 10px;line-height:1;background:transparent}
 
-.sh-sig-footer{border-top:1.5px solid #111;padding-top:10px;flex-shrink:0;width:100%}
-.sh-sig-row{display:flex;gap:6px;align-items:flex-end;}
-/* Flex alignment for perfectly centered signature text */
-.sh-sig-blk{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;}
-.sh-sig-space{margin-bottom:4px; width: 100%;}
-.sh-sig-line-solid{border-bottom:1px solid #444}
-.sh-sig-line-dashed{border-bottom:1px dashed #666}
-.sh-sig-line-dotted{border-bottom:1px dotted #666}
-.sh-sig-name{font-size:8.5pt;font-weight:700;color:#111;text-align:center;}
-.sh-sig-role{font-size:7.5pt;color:#555;margin-top:2px;font-style:italic;text-align:center;}
-.sh-sig-desig{font-size:8pt;color:#333;margin-top:2px;font-weight:600;text-align:center;}
-.sh-sig-dept{font-size:7.5pt;color:#555;margin-top:1px;text-align:center;}
-.sh-sig-col{font-size:7.5pt;color:#555;margin-top:1px;text-align:center;}
-.sh-sig-date{font-size:8pt;color:#111;margin-top:10px;padding-top:6px;font-weight:600;text-align:center;}
+.sh-sig-footer{border-top:1.5px solid #111;padding-top:15px;flex-shrink:0;width:100%;margin-top:auto;}
+.sh-sig-row{display:flex;gap:15px;align-items:flex-end;justify-content:space-between;width:100%;}
+.sh-sig-blk{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-width:0;}
+.sh-sig-space{margin-bottom:6px; width: 100%;}
+.sh-sig-line-solid{border-bottom:1.5px solid #111}
+.sh-sig-line-dashed{border-bottom:1.5px dashed #111}
+.sh-sig-line-dotted{border-bottom:1.5px dotted #111}
+.sh-sig-name{font-size:9pt;font-weight:700;color:#111;text-align:center;}
+.sh-sig-role{font-size:8pt;color:#333;margin-top:2px;font-style:italic;text-align:center;}
+.sh-sig-desig{font-size:8.5pt;color:#111;margin-top:2px;font-weight:600;text-align:center;}
+.sh-sig-dept{font-size:8pt;color:#333;margin-top:2px;text-align:center;}
+.sh-sig-col{font-size:8pt;color:#333;margin-top:2px;text-align:center;}
+.sh-sig-date{font-size:9pt;color:#111;margin-top:15px;padding-top:6px;font-weight:700;text-align:center;}
 
-.sh-page-num{text-align:center;font-size:7pt;color:#777;margin-top:6px;padding-top:5px;border-top:1px dashed #CCC;flex-shrink:0;width:100%}
-.sh-footer-txt{text-align:center;font-size:6.5pt;color:#999;font-style:italic;margin-top:3px;flex-shrink:0;width:100%}
-.sh-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.1;display:flex;align-items:center;justify-content:center}
-.sh-watermark img{width:180px;height:180px;object-fit:contain}
+.sh-page-num{text-align:center;font-size:8pt;color:#555;margin-top:10px;padding-top:8px;border-top:1px dashed #AAA;flex-shrink:0;width:100%}
+.sh-footer-txt{text-align:center;font-size:7.5pt;color:#777;font-style:italic;margin-top:4px;flex-shrink:0;width:100%}
+.sh-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.08;display:flex;align-items:center;justify-content:center}
+.sh-watermark img{width:250px;height:250px;object-fit:contain}
 .sh-content{position:relative;z-index:1;display:flex;flex-direction:column;flex:1;width:100%}
 
 /* CONT HEADER (page 2+) */
-.sh-cont-hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:5px;margin-bottom:7px;border-bottom:1.5px solid #555;font-size:8pt;width:100%}
-.sh-cont-ev{font-weight:700;color:#111}
-.sh-cont-info{color:#555}
+.sh-cont-hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;margin-bottom:10px;border-bottom:1.5px solid #111;font-size:9pt;width:100%}
+.sh-cont-ev{font-weight:700;color:#111;text-transform:uppercase;}
+.sh-cont-info{color:#333;font-weight:600;}
 
-/* COVER PAGE */
-.cover-page{background:#fff;font-family:'Times New Roman',Times,serif;color:#111;box-shadow:0 4px 24px rgba(0,0,0,.25)}
-.cover-page.portrait{width:210mm;min-height:297mm;padding:18mm 16mm;display:flex;flex-direction:column}
-.cover-title{text-align:center;margin:20px 0 18px;padding:18px 20px;border:2px solid #111;width:100%}
-.cover-title h1{font-size:18pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.cover-title p{font-size:10pt;color:#444;margin:3px 0}
-.cover-event-box{border:1.5px solid #555;padding:14px 16px;margin-bottom:18px;width:100%}
-.cover-event-box h3{font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #CCC;padding-bottom:5px;margin-bottom:8px}
-.cover-event-grid{display:grid;grid-template-columns:130px 1fr;gap:3px 10px;font-size:9pt}
-.cover-event-lbl{font-weight:700;color:#333}
-.cover-event-val{color:#111}
-.cover-members-table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:8px}
-.cover-members-table th{background:#333;color:#fff;padding:5px 8px;text-align:left;font-size:8.5pt;border:1px solid #333}
-.cover-members-table td{border:1px solid #777;padding:5px 8px;height:28px}
-.cover-members-table .present-td{width:80px;text-align:center}
-.cover-footer{margin-top:auto;padding-top:16px;border-top:1px solid #CCC;font-size:8pt;color:#666;text-align:center;width:100%}
+/* PERFECTED COVER PAGE ALIGNMENT */
+.cover-page {
+  background:#fff;
+  font-family:'Times New Roman',Times,serif;
+  color:#111;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.cover-page.portrait{width:210mm;min-height:297mm;padding:20mm 16mm;}
+.cover-page.landscape{width:297mm;min-height:210mm;padding:15mm 20mm;}
+
+.cover-title {
+  text-align:center;
+  margin:30px auto;
+  padding:25px 20px;
+  border:3px solid #111;
+  width:90%;
+  background:#FAFAFA;
+  box-sizing: border-box;
+}
+.cover-title h1{font-size:22pt;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px; color:#000;}
+.cover-title p{font-size:13pt;color:#111;margin:5px 0; font-weight:700;}
+
+.cover-event-box {
+  border:2px solid #111;
+  padding:20px;
+  margin:0 auto 25px;
+  width:90%;
+  text-align:left;
+  background:#fff;
+  box-sizing: border-box;
+}
+.cover-event-box h3{font-size:12pt;font-weight:800;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:15px; color:#000;}
+.cover-event-grid{display:grid;grid-template-columns:160px 1fr;gap:8px 15px;font-size:11pt; line-height:1.5;}
+.cover-event-lbl{font-weight:800;color:#111;}
+.cover-event-val{color:#000; font-weight:500;}
+
+.cover-members-table {
+  width:90%;
+  margin: 15px auto 0;
+  border-collapse:collapse;
+  font-size:11pt;
+}
+.cover-members-table th{background:#EFEFEF;color:#111;padding:10px;text-align:center;font-size:10.5pt;border:1.5px solid #111; text-transform:uppercase; letter-spacing:0.5px;}
+.cover-members-table td{border:1.5px solid #111;padding:10px;height:35px; text-align:center; font-weight:600;}
+.cover-members-table .present-td{width:120px;}
+
+.cover-footer {
+  margin-top:auto;
+  padding-top:20px;
+  border-top:2px solid #111;
+  font-size:10pt;
+  color:#333;
+  text-align:center;
+  width:100%;
+  font-weight:600;
+}
 
 /* SIDEBAR BOTTOM GENERATE BUTTON */
 .sb-gen-btn{padding:14px 16px;border-top:1px solid var(--bd2);background:var(--w);flex-shrink:0}
@@ -269,11 +314,11 @@ body{padding:0;margin:0;overflow-x:hidden}
   .gen-layout{display:block!important}
   .gen-sidebar,.preview-toolbar{display:none!important}
   .gen-preview-area{background:#fff!important;padding:0!important;height:auto!important;overflow:visible!important}
-  .a4-wrapper{max-width:none!important}
+  .a4-wrapper{max-width:none!important;gap:0!important;}
   .a4,.cover-page{box-shadow:none!important;page-break-after:always;break-after:page;transform:none!important;margin:0!important}
   .a4:last-child,.cover-page:last-child{page-break-after:avoid;break-after:avoid}
   .a4.portrait,.cover-page.portrait{width:210mm!important;padding:10mm 12mm 12mm!important;min-height:0!important}
-  .a4.landscape{width:297mm!important;padding:9mm 11mm 11mm!important;min-height:0!important}
+  .a4.landscape,.cover-page.landscape{width:297mm!important;padding:9mm 11mm 11mm!important;min-height:0!important}
   @page{margin:0;size:A4}
 }
 </style>
@@ -464,17 +509,17 @@ body{padding:0;margin:0;overflow-x:hidden}
       <div class="f-row">
         <div class="f"><label>Row Height</label>
           <select id="row-height" onchange="debounceRender()">
-            <option value="compact">Compact (4px pad)</option>
-            <option value="normal" selected>Normal (6px pad)</option>
-            <option value="spacious">Spacious (9px pad)</option>
-            <option value="signature">Sig. Space (18px)</option>
+            <option value="compact">Compact Pad (5px)</option>
+            <option value="normal">Normal Pad (10px)</option>
+            <option value="spacious">Spacious Pad (15px)</option>
+            <option value="signature" selected>Signature Pad (20px)</option>
           </select>
         </div>
         <div class="f"><label>Table Font Size</label>
           <select id="tbl-font-sz" onchange="debounceRender()">
             <option value="7pt">7pt (Very Small)</option>
-            <option value="8pt" selected>8pt (Default)</option>
-            <option value="9pt">9pt (Larger)</option>
+            <option value="8pt">8pt (Small)</option>
+            <option value="9pt" selected>9pt (Default)</option>
             <option value="10pt">10pt (Large)</option>
           </select>
         </div>
@@ -643,26 +688,26 @@ body{padding:0;margin:0;overflow-x:hidden}
       </button>
     </div>
   </div>
-  <div class="a4-wrapper" id="sheets-wrap">
-    <div class="preview-empty" id="preview-empty">
-      <i class="fa-regular fa-file-lines"></i>
-      <div>Fill in the event details and select a class to see a live preview.</div>
-    </div>
+  
+  <div class="preview-empty" id="preview-empty">
+    <i class="fa-regular fa-file-lines" style="font-size:40px;opacity:.4"></i>
+    <div id="prev-msg">Fill in the event details and select a class to see a live preview.</div>
   </div>
+
+  <div class="a4-wrapper" id="sheets-wrap"></div>
 </div>
 
 </div><script>
 const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
 
-// UPDATED PM FUNCTION: Fallback to alerts/native print if not in an iframe
+// Fix for Standalone execution (so Print actually opens the print dialog smoothly)
 function pm(type,data){
   if(window.parent !== window){
     window.parent.postMessage({type,...(data||{})},'*');
   } else {
-    // We are running standalone
-    if(type === 'toast' && data.variant === 'err') alert("Error: " + data.msg);
+    if(type === 'toast' && data.variant === 'err') alert("Alert: " + data.msg);
     if(type === 'printOverlay') {
-       setTimeout(() => window.print(), 500); 
+       setTimeout(() => window.print(), 300); 
     }
   }
 }
@@ -730,7 +775,6 @@ async function boot(){
     if(clsR.ok) ALL_CLASSES=clsR.data||[];
     if(cfgR.ok){
       CFG=cfgR.data||{};
-      // Pre-fill header fields from config
       sv('hdr-college',CFG.college_name||'Loyola College (Autonomous), Chennai – 600 034');
       sv('hdr-est',CFG.college_est||'Reaccredited with A++ by NAAC | An Autonomous Institution');
       sv('hdr-dept',CFG.dept_name||'PG & Research Department of Advanced Zoology & Biotechnology');
@@ -748,8 +792,7 @@ async function boot(){
     renderSigOrder();
     debounceRender();
   }catch(e){ 
-      // If running locally or offline, notify user clearly
-      toast('Failed to fetch data from server. Check your Google Apps Script URL.','err'); 
+      toast('Failed to fetch data from server. (Are you offline or is the script down?)','err'); 
   }
   hideLoader();
 }
@@ -767,6 +810,10 @@ function buildClsGrid(){
   const grid=document.getElementById('cls-grid');
   if(!ay){grid.innerHTML='<span style="color:var(--c3);font-size:12px">Select a year first.</span>';return}
   let sts=ALL_STUDENTS.filter(s=>s.AcademicYear===ay&&s.Active!=='FALSE');
+  
+  // FIX: Pre-filter completely unique students for accurate grid counts
+  sts = Array.from(new Map(sts.map(s => [s.DeptNo || s.Name, s])).values());
+  
   const map={};
   sts.forEach(s=>{const k=s.Class+(s.Section?' — '+s.Section:'');map[k]=(map[k]||0)+1;});
   if(!Object.keys(map).length){grid.innerHTML='<span style="color:var(--c3);font-size:12px">No students for this year.</span>';return}
@@ -876,7 +923,6 @@ function fillSig(prefix){
     const n=document.getElementById(prefix+'-n'),d=document.getElementById(prefix+'-d');
     if(n)n.value=s.Name;if(d)d.value=s.Designation||'';
   }
-  // Auto-fill dept and college for HOD
   if(prefix==='hod'){
     if(!v('hod-dept-txt')) sv('hod-dept-txt',s.Department||v('hdr-dept'));
     if(!v('hod-col-txt')) sv('hod-col-txt',s.College||v('hdr-college'));
@@ -1000,7 +1046,7 @@ function getSigs(){
 }
 
 // ROW PADDING BY SETTING
-function rowPad(){const s=v('row-height');return{compact:'3px 5px',normal:'5px 5px',spacious:'8px 5px',signature:'16px 5px'}[s]||'5px 5px'}
+function rowPad(){const s=v('row-height');return{compact:'4px 6px',normal:'8px 6px',spacious:'12px 6px',signature:'18px 6px'}[s]||'8px 6px'}
 
 // DEBOUNCE RENDER
 function debounceRender(){clearTimeout(renderTimer);renderTimer=setTimeout(renderPreview,280)}
@@ -1008,7 +1054,7 @@ function debounceRender(){clearTimeout(renderTimer);renderTimer=setTimeout(rende
 // ROWS PER PAGE
 function getRowsPerPage(){
   const val=v('rows-per-page');
-  if(val==='auto') return ORIENT==='portrait'?25:20;
+  if(val==='auto') return ORIENT==='portrait'?25:15;
   return parseInt(val)||25;
 }
 
@@ -1034,19 +1080,52 @@ function buildLogoHTML(){
   return `<div class="sh-logos" style="justify-content:${align}">${imgTags}</div>`;
 }
 
-// MAIN RENDER
+// BUG FIX: CRASH PROOF RENDER PREVIEW
 function renderPreview(){
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
   const evName=v('ev-name');
+  
   const wrap=document.getElementById('sheets-wrap');
   const empty=document.getElementById('preview-empty');
-  if(!evName&&!sel.length){wrap.innerHTML='';wrap.appendChild(empty);empty.style.display='flex';document.getElementById('prev-count').textContent='Configure settings to preview';return}
-  empty.style.display='none';
-  if(!sel.length){wrap.innerHTML='<div style="color:rgba(255,255,255,.6);font-size:13px;padding:20px;text-align:center">Select at least one class to preview.</div>';document.getElementById('prev-count').textContent='No class selected';return}
+  const msg=document.getElementById('prev-msg');
+  const countEl=document.getElementById('prev-count');
+
+  // Completely wipe wrapper
+  wrap.innerHTML='';
+
+  // 1. If nothing is selected or typed
+  if(!evName && !sel.length){
+    empty.style.display='flex';
+    msg.textContent='Fill in the event details and select a class to see a live preview.';
+    countEl.textContent='Configure settings to preview';
+    return;
+  }
+
+  // 2. If no class is selected
+  if(!sel.length){
+    empty.style.display='flex';
+    msg.textContent='Select at least one class from the sidebar to preview sheets.';
+    countEl.textContent='No class selected';
+    return;
+  }
+  
+  // Try building HTML
   const html=buildAllSheets(sel);
-  wrap.innerHTML=html||'<div style="color:rgba(255,255,255,.6);font-size:13px;padding:20px;text-align:center">No students match the current filters.</div>';
+  
+  // 3. If filters eliminated all students
+  if(!html){
+    empty.style.display='flex';
+    msg.textContent='No students match the current filters.';
+    countEl.textContent='0 sheets ready';
+    return;
+  }
+  
+  // SUCCESS: Hide empty state, inject sheets
+  empty.style.display='none';
+  wrap.innerHTML=html;
+  
   const sheetCount=wrap.querySelectorAll('.a4,.cover-page').length;
-  document.getElementById('prev-count').textContent=sheetCount+' sheet'+(sheetCount!==1?'s':'')+' ready';
+  countEl.textContent=sheetCount+' sheet'+(sheetCount!==1?'s':'')+' ready';
 }
 
 function buildAllSheets(sel){
@@ -1071,7 +1150,7 @@ function buildAllSheets(sel){
   const hdrSz=v('hdr-font-sz')||'sz-md';
   const deptSz=v('dept-font-sz')||'sz-md';
   const evTitleSz=v('ev-title-sz')||'sz-md';
-  const tblFontSz=v('tbl-font-sz')||'8pt';
+  const tblFontSz=v('tbl-font-sz')||'9pt';
   const sigLineStyle=v('sig-line-style')||'solid';
   const sigSpH=v('sig-space-h')||'48';
   const stampOpt=v('stamp-opt')||'none';
@@ -1085,30 +1164,43 @@ function buildAllSheets(sel){
   const sigVerified=document.getElementById('sig-verified')?.checked;
 
   const allPages=[];
+  const coverData=[]; // Data exactly filtered to fix duplicate bug
+
   sel.forEach(chip=>{
     const parts=chip.split(' — ');
     const cls=parts[0].trim(),secFilter=parts[1]?.trim()||null;
+    
+    // FETCH AND STRICTLY FILTER OUT DUPLICATE STUDENTS
     let sts=ALL_STUDENTS.filter(s=>s.Class===cls&&s.AcademicYear===ay&&s.Active!=='FALSE');
+    sts = Array.from(new Map(sts.map(s => [s.DeptNo || s.Name, s])).values());
+
     if(secFilter) sts=sts.filter(s=>s.Section===secFilter);
     if(semester) sts=sts.filter(s=>s.Semester===semester);
     if(shift) sts=sts.filter(s=>s.Shift===shift);
     if(secFlt) sts=sts.filter(s=>(s.Section||'').toUpperCase()===secFlt.toUpperCase());
     if(gf.length) sts=sts.filter(s=>gf.includes(s.Gender));
+    
     if(sortBy==='name') sts.sort((a,b)=>(a.Name||'').localeCompare(b.Name||''));
     else if(sortBy==='batch') sts.sort((a,b)=>(a.Batch||'').localeCompare(b.Batch||''));
     else sts.sort((a,b)=>(a.DeptNo||'').localeCompare(b.DeptNo||'',undefined,{numeric:true}));
+    
     const sn=shortName(chip);
     const totalPg=Math.max(1,Math.ceil(sts.length/rpp));
+    
+    // Save EXACT mathematical count for the cover page to prevent doubled numbers
+    if(sts.length > 0) coverData.push({ sn: sn, count: sts.length });
+    
     for(let p=0;p<totalPg;p++){
       allPages.push({chip,sn,cls,secFilter,sts,pageStudents:sts.slice(p*rpp,(p+1)*rpp),isFirst:p===0,isLast:p===totalPg-1,pageNum:p+1,totalPg,ay,semester,shift,evName,evVenue,evDate,evDay,timeStr,enCols,custCols,sigs,rpp,mgn,border,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,evTitleSz,tblFontSz,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showPgNum,wmLoyola,wmDept,wmText,footerTxt,showCollege,sigVerified});
     }
   });
+  
+  if(allPages.length === 0) return '';
   const total=allPages.length;
 
-  // Cover page
   let coverHTML='';
   if(document.getElementById('gen-cover')?.checked){
-    coverHTML=buildCoverPage(sel,ay,semester,shift,allPages.length,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn)+'\n';
+    coverHTML=buildCoverPage(coverData,ay,semester,shift,allPages.length,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn)+'\n';
   }
 
   return coverHTML+allPages.map((pd,pi)=>buildPage(pd,pi+1,total)).join('\n');
@@ -1118,10 +1210,8 @@ function buildPage(pd,gpn,total){
   const{chip,sn,cls,secFilter,sts,pageStudents,isFirst,isLast,pageNum,totalPg,ay,semester,shift,evName,evVenue,evDate,evDay,timeStr,enCols,custCols,sigs,mgn,border,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,evTitleSz,tblFontSz,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showPgNum,wmLoyola,wmDept,wmText,footerTxt,showCollege,sigVerified}=pd;
   const pad=rowPad();
 
-  // TABLE HEADER
   const thead=`<tr>${enCols.map(c=>`<th class="${c.id==='sno'?'sno center':c.id==='deptno'?'center':''}" style="text-align:${c.align||'left'}">${esc(c.label)}</th>`).join('')}${custCols.map(s=>`<th class="sig-td center" style="text-align:center">${esc(s)}</th>`).join('')}</tr>`;
 
-  // TABLE BODY
   const tbody=pageStudents.map((st,i)=>{
     const gi=((pageNum-1)*pd.rpp)+i;
     const cells=enCols.map(c=>{
@@ -1151,26 +1241,21 @@ function buildPage(pd,gpn,total){
     return`<tr class="data-row">${cells}${sigCells}</tr>`;
   }).join('');
 
-  // TOTALS
   const totalsHTML=isLast?`<div class="sh-totals">
     <div class="sh-tot"><div class="sh-tot-lbl">Total Enrolled</div><div class="sh-tot-val">${sts.length}</div></div>
     <div class="sh-tot"><div class="sh-tot-lbl">Total Present</div><div class="sh-tot-val">&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
   </div>`:'';
 
-  // SIGNATURES
   const sigHTML=isLast?buildSigFooter(sigs,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showCollege,sigVerified):'';
 
-  // WATERMARK
   let wmHTML='';
   if(wmLoyola) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png"></div>`;
   else if(wmDept) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png"></div>`;
   else if(wmText) wmHTML+=`<div class="sh-watermark" style="font-size:60pt;font-weight:900;color:#000;letter-spacing:2px;white-space:nowrap;opacity:.04">${esc(wmText)}</div>`;
 
-  // PAGE NUMBER
   const pgNumHTML=showPgNum?`<div class="sh-page-num">Page ${gpn} of ${total}  |  ${esc(sn)}</div>`:'';
   const footHTML=footerTxt?`<div class="sh-footer-txt">${esc(footerTxt)}</div>`:'';
 
-  // META (first page only)
   const metaItems=[
     {l:'Venue',v:evVenue},{l:'Date',v:`${evDate}${evDay?' ('+evDay+')':''}`},
     {l:'Time',v:timeStr},{l:'Class',v:sn},
@@ -1230,7 +1315,6 @@ function buildSigFooter(sigs,lineStyle,spH,stampOpt,dateOpt,showCollege,sigVerif
   if(!sigs.length) return '';
   const lineClass=`sh-sig-line-${lineStyle}`;
   
-  // Stamp logic (Removed Borders & Circles - Left as blank space alignment helper)
   let stampLeftHTML='',stampRightHTML='';
   if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
   if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
@@ -1253,20 +1337,23 @@ function buildSigFooter(sigs,lineStyle,spH,stampOpt,dateOpt,showCollege,sigVerif
   return`<div class="sh-sig-footer"><div class="sh-sig-row">${stampLeftHTML}${sigBlks}${stampRightHTML}</div>${verifiedRow}</div>`;
 }
 
-// COVER PAGE
-function buildCoverPage(sel,ay,semester,shift,totalSheets,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn){
+// BUG FIX: PERFECT COVER PAGE ALIGNMENT & MATH
+function buildCoverPage(coverData,ay,semester,shift,totalSheets,evName,evVenue,evDate,evDay,timeStr,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,mgn){
   const showMembTable=document.getElementById('cov-member-table')?.checked;
   const showClsList=document.getElementById('cov-class-list')?.checked;
   const covTitle=v('cov-title')||'ATTENDANCE REGISTER';
   const memTitle=v('cov-member-title')||'Participant Summary';
 
   let clsRows='';
+  let totalEnrolled=0;
   if(showClsList){
-    sel.forEach(chip=>{
-      let sts=ALL_STUDENTS.filter(s=>s.Class===chip.split(' — ')[0]&&s.AcademicYear===ay&&s.Active!=='FALSE');
-      const sn=shortName(chip);
-      clsRows+=`<tr><td>${esc(sn)}</td><td style="text-align:center">${sts.length}</td><td class="present-td"></td></tr>`;
+    coverData.forEach(cd=>{
+      clsRows+=`<tr><td>${esc(cd.sn)}</td><td style="text-align:center">${cd.count}</td><td class="present-td"></td></tr>`;
+      totalEnrolled += cd.count;
     });
+    if(coverData.length > 1) {
+       clsRows+=`<tr style="font-weight:800; background:#EFEFEF;"><td>GRAND TOTAL</td><td style="text-align:center">${totalEnrolled}</td><td class="present-td"></td></tr>`;
+    }
   }
 
   const evRef=v('ev-ref');
@@ -1274,7 +1361,7 @@ function buildCoverPage(sel,ay,semester,shift,totalSheets,evName,evVenue,evDate,
   const evRP=v('ev-rp');
   const evOrg=v('ev-org');
 
-  return`<div class="cover-page portrait" style="padding:${mgn}">
+  return`<div class="cover-page ${ORIENT}" style="padding:${mgn}">
     <div class="sh-hdr">
       ${logoHTML}
       <div class="sh-college ${hdrFont} ${hdrSz}">${esc(v('hdr-college'))}</div>
@@ -1302,8 +1389,8 @@ function buildCoverPage(sel,ay,semester,shift,totalSheets,evName,evVenue,evDate,
         <span class="cover-event-lbl">Total Sheets:</span><span class="cover-event-val">${totalSheets}</span>
       </div>
     </div>
-    ${showMembTable&&clsRows?`<div style="margin-top:16px">
-      <h3 style="font-size:10pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${esc(memTitle)}</h3>
+    ${showMembTable&&clsRows?`<div style="margin-top:16px; width:90%;">
+      <h3 style="font-size:10pt;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;text-align:left;">${esc(memTitle)}</h3>
       <table class="cover-members-table">
         <thead><tr><th>Class / Section</th><th style="text-align:center">Total Enrolled</th><th class="present-td" style="text-align:center">Total Present</th></tr></thead>
         <tbody>${clsRows}</tbody>
@@ -1320,7 +1407,6 @@ function doGenerate(){
   const evName=v('ev-name');if(!evName){toast('Please enter the event name.','err');return}
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
   if(!sel.length){toast('Select at least one class.','err');return}
-  // Build filename
   const sn=shortName(sel[0]).replace(/[^a-zA-Z0-9 ]/g,' ').trim().slice(0,18);
   const evShort=evName.replace(/[^a-zA-Z0-9 ]/g,' ').trim().slice(0,10);
   const dt=v('ev-date')||new Date().toISOString().slice(0,10);
@@ -1329,8 +1415,6 @@ function doGenerate(){
   if(!html){toast('No students match the filters.','err');return}
   const cnt=document.querySelectorAll('#sheets-wrap .a4, #sheets-wrap .cover-page').length||sel.length;
   gas('addLog',{user:'admin',action:'SHEET GENERATED',detail:`"${evName}" — ${sel.map(s=>shortName(s)).join(', ')}`}).catch(()=>{});
-  
-  // This will send to parent iframe if it exists, or trigger print fallback if standalone
   pm('printOverlay',{html,count:cnt,filename:fname});
 }
 
@@ -1338,10 +1422,10 @@ function doPrint(){
   const evName=v('ev-name');if(!evName){toast('Please enter the event name.','err');return}
   const sel=[...document.querySelectorAll('#cls-grid input:checked')].map(i=>i.value);
   if(!sel.length){toast('Select at least one class.','err');return}
-  
-  // If we are standalone, trigger native print!
   if(window.parent === window){
-    window.print();
+    // Update preview then trigger print smoothly
+    renderPreview();
+    setTimeout(() => window.print(), 300);
   } else {
     const html=buildAllSheets(sel);
     if(!html){toast('No students match the filters.','err');return}
@@ -1362,7 +1446,7 @@ function resetAll(){
   sv('logo-size','md');sv('logo-pos','center');sv('logo-custom-url','');
   sv('hdr-font','f-times');sv('hdr-font-sz','sz-md');sv('dept-font-sz','sz-md');sv('ev-title-sz','sz-md');
   sv('hdr-rule','bold');sv('page-border','none');
-  sv('tbl-font-sz','8pt');sv('row-height','normal');
+  sv('tbl-font-sz','9pt');sv('row-height','signature');
   sv('sig-line-style','solid');sv('sig-space-h','48');sv('stamp-opt','none');sv('sig-date-opt','none');
   document.querySelectorAll('#cls-grid input').forEach(c=>{c.checked=false;c.closest('.cb-row')?.classList.remove('on')});
   SPECIALS.forEach(sp=>{
@@ -1388,13 +1472,11 @@ function resetAll(){
   SIG_IDS=['hod'];renderSigOrder();OPT_CNT=0;
   document.getElementById('sig-cols-list').innerHTML='<div class="cust-col-row"><input type="text" value="Signature" placeholder="Column name" oninput="debounceRender()"><button class="rm-btn" onclick="rmCC(this)"><i class="fa-solid fa-xmark"></i></button></div>';
   document.getElementById('hod-man').checked=false;tMan('hod');
-  // Re-fill config values
   sv('hdr-college',CFG.college_name||'');sv('hdr-est',CFG.college_est||'');
   sv('hdr-dept',CFG.dept_name||'');sv('footer-txt',CFG.watermark||'');
   debounceRender();
 }
 
-// LISTEN FOR EVENTS
 document.querySelectorAll('input,select,textarea').forEach(el=>{
   if(!el.hasAttribute('onchange')&&!el.hasAttribute('oninput')&&el.type!=='checkbox'&&el.type!=='radio'){
     el.addEventListener('change',debounceRender);
