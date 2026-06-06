@@ -3,178 +3,224 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Department Letter Generator — Loyola College</title>
+<title>Letter Generator — Loyola College</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
   --maroon:#6b0f1a;--gold:#b8952a;--light-gold:#f5e9c8;--cream:#fdf8f0;
   --dark:#1a0a0f;--gray:#6b6b6b;--border:#d4c09a;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);min-height:100vh;}
-.app-header{background:var(--maroon);padding:14px 28px;display:flex;align-items:center;gap:16px;box-shadow:0 2px 12px #0004;}
-.header-title{color:#fff;}
-.header-title h1{font-size:17px;font-weight:bold;letter-spacing:.5px;}
-.header-title p{font-size:11px;color:#e8c98a;margin-top:2px;}
-.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);}
-.tab-btn{padding:13px 26px;border:none;background:none;font-family:'Georgia',serif;font-size:13px;color:var(--gray);border-bottom:3px solid transparent;cursor:pointer;display:flex;align-items:center;gap:7px;transition:color .2s;}
+html,body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);min-height:100vh;}
+
+/* APP SHELL */
+.app-header{background:var(--maroon);padding:12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px #0004;}
+.header-title h1{font-size:16px;font-weight:bold;color:#fff;letter-spacing:.4px;}
+.header-title p{font-size:10px;color:#e8c98a;margin-top:2px;}
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;}
+.tab-btn{padding:12px 22px;border:none;background:none;font-family:'Georgia',serif;font-size:13px;color:var(--gray);border-bottom:3px solid transparent;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:color .2s;}
 .tab-btn.active{color:var(--maroon);border-bottom-color:var(--gold);font-weight:bold;}
-.tab-btn:hover{color:var(--maroon);}
-.form-wrap{max-width:860px;margin:0 auto;padding:28px 16px;}
-.form-section{background:#fff;border-radius:10px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
-.form-section-head{background:var(--maroon);padding:12px 20px;color:#f5e9c8;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;}
-.form-section-body{padding:20px;}
-.row{display:grid;gap:16px;margin-bottom:16px;}
+
+/* FORM */
+.form-wrap{max-width:860px;margin:0 auto;padding:20px 14px;}
+.form-section{background:#fff;border-radius:10px;border:1px solid var(--border);margin-bottom:18px;overflow:hidden;}
+.form-section-head{background:var(--maroon);padding:11px 18px;color:#f5e9c8;font-size:12px;font-weight:bold;display:flex;align-items:center;gap:8px;}
+.form-section-body{padding:16px;}
+.row{display:grid;gap:14px;margin-bottom:14px;}
 .row-2{grid-template-columns:1fr 1fr;}
 .row-3{grid-template-columns:1fr 1fr 1fr;}
-.field label{display:block;font-size:11px;font-weight:bold;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
-.field label i{margin-right:5px;color:var(--gold);}
-.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Georgia',serif;outline:none;background:#fff;color:var(--dark);transition:border-color .2s;}
+.field label{display:block;font-size:10px;font-weight:bold;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.field label i{margin-right:4px;color:var(--gold);}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Georgia',serif;outline:none;background:#fff;color:var(--dark);}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--maroon);}
-.field textarea{resize:vertical;min-height:80px;}
-.radio-group{display:flex;gap:12px;flex-wrap:wrap;}
-.radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;padding:7px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;transition:all .15s;}
+.field textarea{resize:vertical;min-height:72px;}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;}
+.radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;}
 .radio-opt.selected{border-color:var(--maroon);background:var(--light-gold);font-weight:bold;}
-.check-opt{display:flex;align-items:center;cursor:pointer;padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:#fff;transition:all .15s;flex-direction:column;min-width:130px;}
+.check-opt{display:flex;align-items:center;cursor:pointer;padding:7px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:#fff;flex-direction:column;min-width:120px;}
 .check-opt.selected{border-color:var(--maroon);background:var(--maroon);color:#fff;}
-.check-opt .hour-time{font-size:10px;opacity:.75;margin-top:2px;}
-.check-top{display:flex;align-items:center;gap:8px;}
-table.students-table{width:100%;border-collapse:collapse;font-size:12.5px;}
-table.students-table th{background:var(--maroon);color:#f5e9c8;padding:8px 10px;text-align:left;font-weight:bold;}
-table.students-table td{padding:6px 8px;border-bottom:1px solid #eee;}
+.check-opt .hour-time{font-size:9px;opacity:.8;margin-top:2px;}
+.check-top{display:flex;align-items:center;gap:7px;}
+table.students-table{width:100%;border-collapse:collapse;font-size:12px;}
+table.students-table th{background:var(--maroon);color:#f5e9c8;padding:7px 9px;text-align:left;}
+table.students-table td{padding:5px 7px;border-bottom:1px solid #eee;}
 table.students-table tr:nth-child(even){background:#faf6ee;}
-.btn{padding:9px 20px;border-radius:7px;border:none;cursor:pointer;font-family:'Georgia',serif;font-size:13px;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
+.btn{padding:8px 18px;border-radius:7px;border:none;cursor:pointer;font-family:'Georgia',serif;font-size:13px;display:inline-flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--maroon);color:#fff;font-weight:bold;}
 .btn-primary:hover{background:#8b1523;}
 .btn-gold{background:var(--gold);color:#fff;font-weight:bold;}
 .btn-gold:hover{background:#9a7a1e;}
 .btn-outline{background:#fff;border:1.5px solid var(--maroon);color:var(--maroon);}
-.btn-outline:hover{background:var(--light-gold);}
-.btn-danger{background:#fee;border:1px solid #fcc;color:#c00;padding:4px 10px;}
+.btn-danger{background:#fee;border:1px solid #fcc;color:#c00;padding:4px 9px;font-size:12px;}
 .btn-add{background:#fff;border:1.5px dashed var(--maroon);color:var(--maroon);}
-.staff-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:end;}
+.staff-row{display:grid;gap:10px;margin-bottom:12px;align-items:end;padding:12px;background:#fdf8f0;border-radius:8px;border:1px solid var(--border);}
 
-/* PREVIEW WRAP */
-.preview-wrap{padding:24px 16px;}
-.preview-actions{max-width:900px;margin:0 auto 16px;display:flex;gap:10px;justify-content:flex-end;align-items:center;flex-wrap:wrap;}
-.print-tip{font-size:12px;color:var(--gray);font-style:italic;margin-right:auto;}
+/* PREVIEW */
+.preview-wrap{padding:20px 14px;}
+.preview-actions{max-width:900px;margin:0 auto 14px;display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap;}
+.print-tip{font-size:11px;color:var(--gray);font-style:italic;margin-right:auto;}
+.overflow-notice{max-width:900px;margin:0 auto 10px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:7px 12px;font-size:12px;color:#856404;display:none;}
 #pages-container{max-width:900px;margin:0 auto;}
 
-/* ====== LETTER / A4 PAGE STYLES ====== */
+/* ========== A4 LETTER PAGE ========== */
+/* 
+  A4 = 297mm tall. Padding top 1.2cm + bottom 1.5cm = 2.7cm used.
+  Content area = ~294.3mm - we target ~1040px at 96dpi screen.
+  Font 10.5pt, line-height 1.4 → ~20px per line → ~52 lines fit.
+  We budget:
+    Title:        1 line  = 20px
+    Meta row:     1 line  = 20px  (date/place inline)
+    From block:   6 lines = 120px
+    To block:     4 lines = 80px
+    Subject:      1 line  = 20px
+    Salutation:   1 line  = 20px
+    Body:         ~4 lines= 80px
+    Hours table:  (1+n) × 20px  (compact)
+    Students:     header+n rows
+    Closing:      3 lines = 60px
+    Signatures:   ~80px
+  Total fixed overhead (no students, 3 hours): ~500px
+  Remaining for students at ~18px/row: ~540px → ~30 rows possible
+  We cap inline at 8 to be safe and keep signatures on same page.
+*/
 .a4-page{
   font-family:'Times New Roman',Times,serif;
-  font-size:11.5pt;
-  line-height:1.5;
+  font-size:10.5pt;
+  line-height:1.4;
   color:#000;
   background:#fff;
-  padding:1.4cm 2cm 1.8cm 2cm;
+  padding:1.2cm 1.8cm 1.5cm 1.8cm;
   width:210mm;
   min-height:297mm;
-  margin:0 auto 20px auto;
-  box-shadow:0 4px 32px #0003;
+  margin:0 auto 24px auto;
+  box-shadow:0 4px 24px #0003;
   box-sizing:border-box;
   position:relative;
-  overflow:hidden;
-}
-.letter-title{text-align:center;font-size:11pt;font-weight:bold;text-decoration:underline;margin-bottom:12px;text-transform:uppercase;}
-.letter-meta{display:flex;flex-direction:column;align-items:flex-end;margin-bottom:12px;}
-.letter-meta-table{border-collapse:collapse;}
-.letter-meta-table td{padding:1px 4px;font-size:11pt;}
-.letter-meta-table td:first-child{text-align:right;font-weight:bold;padding-right:2px;}
-.letter-meta-table td:nth-child(2){text-align:center;padding:1px 6px;}
-.letter-meta-table td:nth-child(3){text-align:left;}
-.letter-from{margin-bottom:12px;font-size:11pt;}
-.letter-to{margin-bottom:12px;font-size:11pt;}
-.letter-subject{margin-bottom:10px;font-size:11pt;}
-.letter-body{text-align:justify;font-size:11pt;margin-bottom:10px;text-indent:40px;white-space:pre-wrap;line-height:1.5;}
-.letter-closing{font-size:11pt;margin-bottom:6px;}
-
-/* Compact table in letter */
-.compact-table{width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:10px;}
-.compact-table th,.compact-table td{border:1px solid #000;padding:3px 6px;text-align:center;}
-.compact-table td.txt-left{text-align:left;}
-
-/* SIGNATURE BLOCK — 3 column layout */
-.sign-row{
   display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  margin-top:6px;
-  gap:10px;
+  flex-direction:column;
 }
+.letter-content-area{flex:1;}
+.letter-sig-area{margin-top:auto;padding-top:6px;}
+
+/* TOP META ROW: From-block left, Date/Place right on same line */
+.letter-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.letter-from-block{font-size:10.5pt;line-height:1.45;}
+.letter-date-place{text-align:right;font-size:10.5pt;line-height:1.6;}
+.letter-date-place table{border-collapse:collapse;margin-left:auto;}
+.letter-date-place td{padding:0 2px;font-size:10.5pt;}
+.letter-date-place td:first-child{font-weight:bold;text-align:right;}
+.letter-date-place td:nth-child(2){padding:0 5px;text-align:center;}
+
+.letter-title{text-align:center;font-size:11pt;font-weight:bold;text-decoration:underline;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+.letter-to{margin-bottom:9px;font-size:10.5pt;line-height:1.45;}
+.letter-subject{margin-bottom:8px;font-size:10.5pt;}
+.letter-salutation{margin-bottom:7px;font-size:10.5pt;}
+.letter-body{text-align:justify;font-size:10.5pt;margin-bottom:8px;text-indent:36px;white-space:pre-wrap;line-height:1.45;}
+.letter-closing{font-size:10.5pt;margin-bottom:4px;}
+
+/* HOURS — compact single-row table */
+.hours-compact-table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:8px;}
+.hours-compact-table th{background:#222;color:#fff;padding:3px 6px;border:1px solid #444;}
+.hours-compact-table td{border:1px solid #aaa;padding:2px 6px;}
+.hours-compact-table td.h-label{font-weight:bold;width:120px;}
+.hours-compact-table td.h-time{color:#333;}
+
+/* STUDENTS table in letter */
+.compact-table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:8px;}
+.compact-table th,.compact-table td{border:1px solid #888;padding:2px 5px;text-align:center;}
+.compact-table td.txt-left{text-align:left;}
+.compact-table th{background:#444;color:#fff;}
+
+/* SIGNATURES */
+.sign-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
 .sign-left{text-align:left;flex:1;}
 .sign-center{text-align:center;flex:1;}
 .sign-right{text-align:right;flex:1;}
-.sign-block{margin-bottom:14px;}
-.sign-name{font-weight:bold;font-size:10.5pt;margin-top:44px;}
-.sign-role{font-size:9.5pt;color:#222;}
-.sign-dept{font-size:9.5pt;color:#444;}
-.sign-date-line{margin-top:5px;font-size:10pt;}
-.date-ph{color:#bbb;letter-spacing:1px;}
+.sign-spacer{height:38px;}
+.sign-name{font-weight:bold;font-size:10pt;}
+.sign-role{font-size:9pt;}
+.sign-dept{font-size:9pt;color:#333;}
+.sign-date-line{font-size:9.5pt;margin-top:3px;}
+.date-ph{letter-spacing:1px;color:#999;}
 
-/* Page number for annexure */
-.annexure-page-num{
-  text-align:center;font-size:9pt;color:#666;
-  position:absolute;bottom:0.8cm;width:calc(100% - 4cm);left:2cm;
-}
+/* Annexure */
+.annexure-page-num{text-align:center;font-size:8pt;color:#888;position:absolute;bottom:0.7cm;left:1.8cm;right:1.8cm;}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:#0008;z-index:999;display:flex;align-items:center;justify-content:center;}
-.modal-box{background:#fff;border-radius:12px;padding:28px 32px;max-width:440px;width:90%;box-shadow:0 8px 40px #0005;}
-.modal-box h3{font-size:16px;color:var(--maroon);margin-bottom:14px;}
-.modal-box .steps{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:12px 0;}
-.modal-box .step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;}
-.modal-box .step-num{background:var(--maroon);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
-.modal-box .close-btn{margin-top:16px;width:100%;}
+.modal-overlay{position:fixed;inset:0;background:#0009;z-index:9999;display:flex;align-items:center;justify-content:center;}
+.modal-box{background:#fff;border-radius:12px;padding:24px 28px;max-width:420px;width:92%;box-shadow:0 8px 40px #0005;}
+.modal-box h3{font-size:15px;color:var(--maroon);margin-bottom:12px;}
+.modal-step{display:flex;align-items:flex-start;gap:9px;margin-bottom:7px;font-size:13px;}
+.modal-step-num{background:var(--maroon);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
 
-.overflow-notice{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:8px 14px;font-size:12px;color:#856404;margin-bottom:10px;display:none;}
+/* MOBILE */
+@media(max-width:640px){
+  .row-2{grid-template-columns:1fr;}
+  .row-3{grid-template-columns:1fr 1fr;}
+  .a4-page{width:100%;min-height:auto;padding:12px 10px 16px 10px;box-shadow:0 2px 12px #0002;}
+  .letter-top-row{flex-direction:column;gap:8px;}
+  .letter-date-place{text-align:left;}
+  .letter-date-place table{margin-left:0;}
+  .sign-row{flex-direction:column;gap:16px;}
+  .sign-left,.sign-center,.sign-right{text-align:left!important;flex:unset;width:100%;}
+  .preview-actions{flex-direction:column;align-items:stretch;}
+  .preview-actions .btn{justify-content:center;}
+  .print-tip{margin-right:0;}
+  #pages-container{overflow-x:auto;}
+  .hours-compact-table{font-size:9pt;}
+  .compact-table{font-size:9pt;}
+}
 
-/* ===== PRINT STYLES ===== */
+/* ====== PRINT ====== */
 @media print{
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { margin: 0; padding: 0; background: white !important; }
-  .app-header, .tabs, #pane-form, .preview-actions, .overflow-notice, .modal-overlay { display: none !important; }
-  #pane-preview { display: block !important; }
-  .preview-wrap { padding: 0 !important; }
-  #pages-container { max-width: none !important; margin: 0 !important; }
-  .a4-page {
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 1.4cm 2cm 1.8cm 2cm !important;
-    width: 210mm !important;
-    min-height: 297mm !important;
-    page-break-after: always;
-    page-break-inside: avoid;
-    overflow: visible !important;
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body>*{display:none!important;}
+  #pane-preview{display:block!important;}
+  .preview-wrap{padding:0!important;}
+  .preview-actions,.overflow-notice{display:none!important;}
+  #pages-container{max-width:none!important;margin:0!important;}
+  .a4-page{
+    box-shadow:none!important;
+    margin:0!important;
+    padding:1.2cm 1.8cm 1.5cm 1.8cm!important;
+    width:210mm!important;
+    min-height:297mm!important;
+    page-break-after:always;
+    page-break-inside:avoid;
   }
-  .a4-page:last-child { page-break-after: avoid; }
-  @page { size: A4; margin: 0; }
+  .a4-page:last-child{page-break-after:avoid;}
+  @page{size:A4;margin:0;}
 }
 </style>
 </head>
 <body>
 
+<!-- MODAL -->
 <div class="modal-overlay" id="print-modal" style="display:none;">
   <div class="modal-box">
-    <h3><i class="fa-solid fa-print"></i> Printing Your Letter</h3>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div>Select <strong>"Save as PDF"</strong> or your printer.</div></div>
-      <div class="step"><div class="step-num">2</div><div>Set margins to <strong>None / 0</strong> for best output.</div></div>
-      <div class="step"><div class="step-num">3</div><div>Disable <strong>"Headers and footers"</strong> in print settings.</div></div>
+    <h3><i class="fa-solid fa-print"></i> Print / Save as PDF</h3>
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;">
+      <div class="modal-step"><div class="modal-step-num">1</div><div>In the print dialog, set <strong>Destination</strong> to "Save as PDF" or choose your printer.</div></div>
+      <div class="modal-step"><div class="modal-step-num">2</div><div>Set <strong>Margins</strong> to <strong>None</strong>.</div></div>
+      <div class="modal-step"><div class="modal-step-num">3</div><div>Uncheck <strong>Headers and footers</strong>.</div></div>
     </div>
-    <p id="modal-mobile-note" style="display:none;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:10px 12px;font-size:12px;"><strong>On mobile:</strong> Tap <em>Share → Print</em>, pinch-zoom thumbnail → tap PDF icon.</p>
-    <button class="btn btn-primary close-btn" onclick="closePrintModal()"><i class="fa-solid fa-print"></i> Print Now</button>
+    <div id="modal-mobile-note" style="display:none;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:9px 11px;font-size:12px;margin-bottom:10px;"><strong>Mobile:</strong> Tap Share → Print, pinch thumbnail → tap PDF icon.</div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('print-modal').style.display='none'">Cancel</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="doPrint()"><i class="fa-solid fa-print"></i> Open Print Dialog</button>
+    </div>
   </div>
 </div>
 
+<!-- HEADER -->
 <div class="app-header">
   <div class="header-title">
-    <h1>Department Letter Generator</h1>
+    <h1><i class="fa-solid fa-file-lines" style="margin-right:8px;opacity:.8;"></i>Department Letter Generator</h1>
     <p>PG &amp; Research Dept. of Advanced Zoology and Biotechnology, Loyola College</p>
   </div>
 </div>
 
+<!-- TABS -->
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('form',this)" id="tab-form"><i class="fa-solid fa-pen-to-square"></i> Fill Details</button>
   <button class="tab-btn" onclick="switchTab('preview',this)" id="tab-preview"><i class="fa-regular fa-file-lines"></i> Preview &amp; Download</button>
@@ -182,31 +228,32 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 
 <!-- ===== FORM PANE ===== -->
 <div id="pane-form" class="form-wrap">
+
   <div class="form-section">
     <div class="form-section-head"><i class="fa-solid fa-user-pen"></i> 1. Sender Details</div>
     <div class="form-section-body">
       <div class="row row-2">
-        <div class="field"><label><i class="fa-solid fa-user"></i> Full Name</label><input id="s-name" type="text" value="Varadharaj D." oninput="syncPreview()"/></div>
-        <div class="field"><label><i class="fa-solid fa-id-badge"></i> Department Number</label><input id="s-deptno" type="text" placeholder="e.g. 25-UAZ-016" oninput="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-solid fa-user"></i>Full Name</label><input id="s-name" type="text" value="Varadharaj D." oninput="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-solid fa-id-badge"></i>Department Number</label><input id="s-deptno" type="text" placeholder="25-UAZ-016" oninput="syncPreview()"/></div>
       </div>
       <div class="row row-2">
-        <div class="field"><label><i class="fa-solid fa-graduation-cap"></i> Class</label>
+        <div class="field"><label><i class="fa-solid fa-graduation-cap"></i>Class</label>
           <select id="s-class" onchange="syncPreview()">
             <option>I B.Sc. AZ-BT</option><option>II B.Sc. AZ-BT</option><option>III B.Sc. AZ-BT</option>
             <option>I M.Sc. Zoo</option><option>II M.Sc. Zoo</option>
           </select>
         </div>
-        <div class="field"><label><i class="fa-solid fa-briefcase"></i> Post / Role</label>
+        <div class="field"><label><i class="fa-solid fa-briefcase"></i>Post / Role</label>
           <select id="s-role-select" onchange="handleRoleSelect()">
             <option>Department Secretary</option><option>Department Joint Secretary</option>
             <option>Event Secretary</option><option>Cultural Secretary</option>
             <option>Cultural Joint Secretary</option><option>Sports Secretary</option>
-            <option>Sports Joint Secretary</option><option value="custom">Other (Custom Entry)</option>
+            <option>Sports Joint Secretary</option><option value="custom">Other (Custom)</option>
           </select>
         </div>
       </div>
       <div id="role-custom-wrap" style="display:none;" class="row">
-        <div class="field"><label><i class="fa-solid fa-keyboard"></i> Custom Role</label><input id="s-role-custom" type="text" placeholder="Enter designation" oninput="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-solid fa-keyboard"></i>Custom Role</label><input id="s-role-custom" type="text" placeholder="Enter designation" oninput="syncPreview()"/></div>
       </div>
     </div>
   </div>
@@ -215,17 +262,17 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
     <div class="form-section-head"><i class="fa-solid fa-calendar-days"></i> 2. Letter Information</div>
     <div class="form-section-body">
       <div class="row row-2">
-        <div class="field"><label><i class="fa-solid fa-heading"></i> Letter Title</label><input id="l-title" type="text" value="Letter for Request for Physical Attendance" oninput="syncPreview()"/></div>
-        <div class="field"><label><i class="fa-solid fa-venus-mars"></i> Gender (salutation)</label>
+        <div class="field"><label><i class="fa-solid fa-heading"></i>Letter Title</label><input id="l-title" type="text" value="Letter for Request for Physical Attendance" oninput="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-solid fa-venus-mars"></i>Salutation</label>
           <div class="radio-group">
-            <label class="radio-opt" id="gen-m" onclick="selectGender('male')"><input type="radio" name="gender" style="display:none"/> <i class="fa-solid fa-mars"></i> Male (Sir)</label>
-            <label class="radio-opt selected" id="gen-f" onclick="selectGender('female')"><input type="radio" name="gender" checked style="display:none"/> <i class="fa-solid fa-venus"></i> Female (Ma'am)</label>
+            <label class="radio-opt" id="gen-m" onclick="selectGender('male')"><i class="fa-solid fa-mars"></i> Male (Sir)</label>
+            <label class="radio-opt selected" id="gen-f" onclick="selectGender('female')"><i class="fa-solid fa-venus"></i> Female (Ma'am)</label>
           </div>
         </div>
       </div>
       <div class="row row-2">
-        <div class="field"><label><i class="fa-regular fa-calendar"></i> Date</label><input id="l-date" type="date" onchange="syncPreview()"/></div>
-        <div class="field"><label><i class="fa-solid fa-location-dot"></i> Place</label><input id="l-place" type="text" value="Chennai" oninput="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-regular fa-calendar"></i>Date</label><input id="l-date" type="date" onchange="syncPreview()"/></div>
+        <div class="field"><label><i class="fa-solid fa-location-dot"></i>Place</label><input id="l-place" type="text" value="Chennai" oninput="syncPreview()"/></div>
       </div>
     </div>
   </div>
@@ -234,47 +281,47 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
     <div class="form-section-head"><i class="fa-solid fa-flag"></i> 3. Event Details</div>
     <div class="form-section-body">
       <div class="row row-2">
-        <div class="field"><label><i class="fa-solid fa-star"></i> Event Name</label><input id="e-name" type="text" placeholder="e.g. Inter-College Cricket Tournament" oninput="triggerAutoUpdate()"/></div>
-        <div class="field"><label><i class="fa-regular fa-calendar-check"></i> Event Date</label><input id="e-date" type="date" onchange="triggerAutoUpdate()"/></div>
+        <div class="field"><label><i class="fa-solid fa-star"></i>Event Name</label><input id="e-name" type="text" placeholder="Inter-College Cricket Tournament" oninput="triggerAutoUpdate()"/></div>
+        <div class="field"><label><i class="fa-regular fa-calendar-check"></i>Event Date</label><input id="e-date" type="date" onchange="triggerAutoUpdate()"/></div>
       </div>
       <div class="row row-2">
-        <div class="field"><label><i class="fa-solid fa-building-columns"></i> Venue</label><input id="e-venue" type="text" placeholder="e.g. Loyola College" oninput="triggerAutoUpdate()"/></div>
-        <div class="field"><label><i class="fa-solid fa-map-pin"></i> Event Location</label>
+        <div class="field"><label><i class="fa-solid fa-building-columns"></i>Venue</label><input id="e-venue" type="text" placeholder="Loyola College" oninput="triggerAutoUpdate()"/></div>
+        <div class="field"><label><i class="fa-solid fa-map-pin"></i>Location</label>
           <div class="radio-group">
-            <label class="radio-opt selected" id="loc-in" onclick="selectLocation('inside')"><input type="radio" name="location" checked style="display:none"/> Inside College</label>
-            <label class="radio-opt" id="loc-out" onclick="selectLocation('outside')"><input type="radio" name="location" style="display:none"/> Outside College</label>
+            <label class="radio-opt selected" id="loc-in" onclick="selectLocation('inside')">Inside College</label>
+            <label class="radio-opt" id="loc-out" onclick="selectLocation('outside')">Outside College</label>
           </div>
         </div>
       </div>
-      <div class="field"><label><i class="fa-solid fa-list-check"></i> Reason</label>
+      <div class="field"><label><i class="fa-solid fa-list-check"></i>Reason</label>
         <div class="radio-group" style="margin-top:6px;">
-          <label class="radio-opt selected" id="r-sp" onclick="selectReason('sports_practice')"><input type="radio" name="reason" checked style="display:none"/> Sports Practice</label>
-          <label class="radio-opt" id="r-se" onclick="selectReason('sports_event')"><input type="radio" name="reason" style="display:none"/> Sports Event</label>
-          <label class="radio-opt" id="r-cp" onclick="selectReason('cultural_practice')"><input type="radio" name="reason" style="display:none"/> Cultural Practice</label>
-          <label class="radio-opt" id="r-ce" onclick="selectReason('cultural_event')"><input type="radio" name="reason" style="display:none"/> Cultural Event</label>
-          <label class="radio-opt" id="r-te" onclick="selectReason('technical_event')"><input type="radio" name="reason" style="display:none"/> Technical Event</label>
-          <label class="radio-opt" id="r-ot" onclick="selectReason('other')"><input type="radio" name="reason" style="display:none"/> Other</label>
+          <label class="radio-opt selected" id="r-sp" onclick="selectReason('sports_practice')">Sports Practice</label>
+          <label class="radio-opt" id="r-se" onclick="selectReason('sports_event')">Sports Event</label>
+          <label class="radio-opt" id="r-cp" onclick="selectReason('cultural_practice')">Cultural Practice</label>
+          <label class="radio-opt" id="r-ce" onclick="selectReason('cultural_event')">Cultural Event</label>
+          <label class="radio-opt" id="r-te" onclick="selectReason('technical_event')">Technical Event</label>
+          <label class="radio-opt" id="r-ot" onclick="selectReason('other')">Other</label>
         </div>
-        <div id="reason-custom-wrap" style="display:none;margin-top:10px;">
-          <input type="text" id="reason-custom" placeholder="Specify the reason..." oninput="triggerAutoUpdate()"/>
+        <div id="reason-custom-wrap" style="display:none;margin-top:8px;">
+          <input type="text" id="reason-custom" placeholder="Specify reason..." oninput="triggerAutoUpdate()" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Georgia',serif;"/>
         </div>
       </div>
     </div>
   </div>
 
   <div class="form-section">
-    <div class="form-section-head"><i class="fa-solid fa-align-left"></i> 4. Editable Subject &amp; Body</div>
+    <div class="form-section-head"><i class="fa-solid fa-align-left"></i> 4. Subject &amp; Body</div>
     <div class="form-section-body">
       <div class="field" style="margin-bottom:12px;"><label>Subject</label><input id="l-subject" type="text" oninput="syncPreview()"/></div>
-      <div class="field"><label>Letter Body</label><textarea id="l-body" rows="6" oninput="syncPreview()"></textarea></div>
-      <button class="btn btn-outline" style="margin-top:10px;font-size:11px;" onclick="forceAutoUpdateText();syncPreview()"><i class="fa-solid fa-rotate-right"></i> Regenerate from Event Details</button>
+      <div class="field"><label>Letter Body</label><textarea id="l-body" rows="5" oninput="syncPreview()"></textarea></div>
+      <button class="btn btn-outline" style="margin-top:10px;font-size:11px;" onclick="forceAutoUpdateText();syncPreview()"><i class="fa-solid fa-rotate-right"></i> Regenerate</button>
     </div>
   </div>
 
   <div class="form-section">
     <div class="form-section-head"><i class="fa-regular fa-clock"></i> 5. Hours Requested</div>
     <div class="form-section-body">
-      <div style="display:flex;flex-wrap:wrap;gap:10px;" id="hours-container"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;" id="hours-container"></div>
     </div>
   </div>
 
@@ -283,28 +330,28 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
     <div class="form-section-body">
       <div style="overflow-x:auto;">
         <table class="students-table">
-          <thead><tr><th>#</th><th>Full Name</th><th>Dept. Number</th><th>Class</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>Full Name</th><th>Dept. No.</th><th>Class</th><th></th></tr></thead>
           <tbody id="students-body"></tbody>
         </table>
       </div>
-      <button class="btn btn-add" style="margin-top:12px;" onclick="addStudent()"><i class="fa-solid fa-plus"></i> Add Student</button>
+      <button class="btn btn-add" style="margin-top:10px;" onclick="addStudent()"><i class="fa-solid fa-plus"></i> Add Student</button>
     </div>
   </div>
 
   <div class="form-section">
-    <div class="form-section-head"><i class="fa-solid fa-chalkboard-user"></i> 7. Staff &amp; HOD</div>
+    <div class="form-section-head"><i class="fa-solid fa-chalkboard-user"></i> 7. Accompanying Staff &amp; HOD</div>
     <div class="form-section-body">
       <div id="staff-list"></div>
-      <button class="btn btn-add" onclick="addStaff()"><i class="fa-solid fa-plus"></i> Add Accompanying Staff</button>
-      <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border);">
-        <div class="row row-2">
-          <div class="field"><label><i class="fa-solid fa-person-chalkboard"></i> Head of the Department Name</label><input id="hod-name" type="text" value="Dr. V. Pushpa Rani" oninput="syncPreview()"/></div>
+      <button class="btn btn-add" onclick="addStaff()"><i class="fa-solid fa-plus"></i> Add Staff</button>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <div class="field" style="max-width:380px;"><label><i class="fa-solid fa-person-chalkboard"></i>Head of the Department Name</label>
+          <input id="hod-name" type="text" value="Dr. V. Pushpa Rani" oninput="syncPreview()"/>
         </div>
       </div>
     </div>
   </div>
 
-  <div style="display:flex;justify-content:flex-end;gap:12px;padding-bottom:32px;">
+  <div style="display:flex;justify-content:flex-end;gap:12px;padding-bottom:28px;">
     <button class="btn btn-primary" onclick="switchTab('preview',document.getElementById('tab-preview'))"><i class="fa-regular fa-eye"></i> Preview Letter</button>
   </div>
 </div>
@@ -313,121 +360,62 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 <div id="pane-preview" style="display:none;">
   <div class="preview-wrap">
     <div class="preview-actions">
-      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Download PDF or Print. Set margins to None for best output.</span>
+      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Set margins to None when printing/saving PDF.</span>
       <button class="btn btn-outline" onclick="switchTab('form',document.getElementById('tab-form'))"><i class="fa-solid fa-arrow-left"></i> Edit</button>
       <button class="btn btn-gold" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
       <button class="btn btn-primary" onclick="showPrintModal()"><i class="fa-solid fa-print"></i> Print</button>
     </div>
-    <div class="overflow-notice" id="overflow-notice"><i class="fa-solid fa-circle-info"></i> Students list moved to Annexure — letter fits on one page.</div>
-
+    <div class="overflow-notice" id="overflow-notice"></div>
     <div id="pages-container">
-      <div id="print-root" style="display:contents;">
-        <!-- Page 1: Letter -->
-        <div class="a4-page" id="letter-page">
-          <div class="letter-title" id="lv-title"></div>
-          <div class="letter-meta">
-            <table class="letter-meta-table">
-              <tr><td>Date</td><td>:</td><td id="lv-date"></td></tr>
-              <tr><td>Place</td><td>:</td><td id="lv-place"></td></tr>
-            </table>
-          </div>
-          <div class="letter-from">
-            <div><strong>From,</strong></div>
-            <div id="lv-sname"></div><div id="lv-sdeptno"></div>
-            <div id="lv-sclass"></div><div id="lv-srole"></div>
-            <div>PG &amp; Research Department of Advanced Zoology and Biotechnology,</div>
-            <div>Loyola College (Autonomous), Chennai – 600 034.</div>
-          </div>
-          <div class="letter-to">
-            <div><strong>To</strong></div>
-            <div>The Head of the Department,</div>
-            <div>PG &amp; Research Department of Advanced Zoology and Biotechnology,</div>
-            <div>Loyola College (Autonomous), Chennai – 600 034.</div>
-          </div>
-          <div class="letter-subject"><strong>Sub:</strong> <span id="lv-subject"></span></div>
-          <div style="margin-bottom:10px;">Respected <span id="lv-salutation">Ma'am</span>,</div>
-          <div class="letter-body" id="lv-body"></div>
-
-          <!-- Hours table -->
-          <div id="lv-hours-wrap" style="margin-bottom:10px;">
-            <table class="compact-table">
-              <thead><tr><th>Hour</th><th>Time</th></tr></thead>
-              <tbody id="lv-hours-body"></tbody>
-            </table>
-          </div>
-
-          <!-- Students section (inline or reference) -->
-          <div id="lv-students-section"></div>
-
-          <!-- Closing -->
-          <div class="letter-closing" id="lv-closing">
-            <div>We assure you that the mentioned students will attend all remaining hours responsibly. We therefore earnestly request you to kindly grant the attendance permission.</div>
-            <div style="margin-top:10px;">Thanking you,</div>
-            <div>Yours faithfully,</div>
-          </div>
-
-          <!-- Signatures -->
-          <div class="sign-row" id="lv-sign-row"></div>
-        </div>
-
-        <!-- Annexure pages rendered dynamically -->
-        <div id="annexure-container"></div>
-      </div>
+      <!-- Pages injected by JS -->
     </div>
   </div>
 </div>
 
 <script>
+/* ============================================================
+   DATA & CONSTANTS
+   ============================================================ */
 const HOURS=[
-  {label:"1st Hour",time:"08:15 AM – 09:10 AM"},
-  {label:"2nd Hour",time:"09:10 AM – 10:05 AM"},
-  {label:"3rd Hour",time:"10:05 AM – 11:00 AM"},
-  {label:"4th Hour",time:"11:25 AM – 12:20 PM"},
-  {label:"5th Hour",time:"12:20 PM – 01:15 PM"},
+  {label:"1st Hour",time:"08:15–09:10 AM"},
+  {label:"2nd Hour",time:"09:10–10:05 AM"},
+  {label:"3rd Hour",time:"10:05–11:00 AM"},
+  {label:"4th Hour",time:"11:25 AM–12:20 PM"},
+  {label:"5th Hour",time:"12:20–01:15 PM"},
 ];
 const FULL_CLASS={
-  "I B.Sc. AZ-BT":"I Year B.Sc. Advanced Zoology and Biotechnology",
-  "II B.Sc. AZ-BT":"II Year B.Sc. Advanced Zoology and Biotechnology",
-  "III B.Sc. AZ-BT":"III Year B.Sc. Advanced Zoology and Biotechnology",
+  "I B.Sc. AZ-BT":"I Year B.Sc. Advanced Zoology &amp; Biotechnology",
+  "II B.Sc. AZ-BT":"II Year B.Sc. Advanced Zoology &amp; Biotechnology",
+  "III B.Sc. AZ-BT":"III Year B.Sc. Advanced Zoology &amp; Biotechnology",
   "I M.Sc. Zoo":"I Year M.Sc. Zoology",
   "II M.Sc. Zoo":"II Year M.Sc. Zoology",
 };
+const DESIG_PRESETS=["Assistant Professor","Associate Professor","Professor","Staff Advisor","President","Vice President","Treasurer","Joint Secretary","Other"];
 
-// Max students on letter page (inline). Beyond this → annexure.
-const MAX_INLINE_STUDENTS = 5;
-// Rows per annexure page
-const ROWS_PER_ANNEXURE_PAGE = 20;
-
-const DESIG_PRESETS = [
-  "Assistant Professor",
-  "Associate Professor",
-  "Professor",
-  "Staff Advisor",
-  "President",
-  "Vice President",
-  "Treasurer",
-  "Joint Secretary",
-  "Other"
-];
+// How many student rows we allow inline before forcing annexure.
+// This is a design constant — keeps signatures on letter page.
+const MAX_INLINE_STUDENTS = 8;
+const ROWS_PER_ANNEXURE = 22;
 
 let selectedHours=[0,1,2];
 let selectedGender='female';
 let selectedLocation='inside';
 let selectedReason='sports_practice';
-let students=[{name:'',deptno:'',cls:'I B.Sc. AZ-BT'},{name:'',deptno:'',cls:'I B.Sc. AZ-BT'},{name:'',deptno:'',cls:'I B.Sc. AZ-BT'}];
+let students=[{name:'',deptno:'',cls:'I B.Sc. AZ-BT'},{name:'',deptno:'',cls:'I B.Sc. AZ-BT'}];
 let staffList=[];
 
-// Init date
+/* Init today's date */
 const today=new Date();
-const todayStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+const pad=n=>String(n).padStart(2,'0');
+const todayStr=`${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
 const dInput=document.getElementById('l-date');
 dInput.value=todayStr;
-const minD=new Date(today);minD.setDate(today.getDate()-7);
-const maxD=new Date(today);maxD.setDate(today.getDate()+7);
+const minD=new Date(today);minD.setDate(today.getDate()-30);
+const maxD=new Date(today);maxD.setDate(today.getDate()+30);
 dInput.min=minD.toISOString().split('T')[0];
 dInput.max=maxD.toISOString().split('T')[0];
 
-// Build hour checkboxes
+/* Build hour checkboxes */
 (function(){
   const c=document.getElementById('hours-container');
   HOURS.forEach((h,i)=>{
@@ -435,95 +423,35 @@ dInput.max=maxD.toISOString().split('T')[0];
     el.className='check-opt'+(selectedHours.includes(i)?' selected':'');
     el.id='hour-'+i;
     el.innerHTML=`<div class="check-top"><input type="checkbox" ${selectedHours.includes(i)?'checked':''} style="accent-color:var(--gold)"/> <strong>${h.label}</strong></div><div class="hour-time">${h.time}</div>`;
-    el.onclick=()=>toggleHour(i,el);
+    el.addEventListener('click',()=>toggleHour(i,el));
     c.appendChild(el);
   });
 })();
 
 function toggleHour(i,el){
-  if(selectedHours.includes(i)){selectedHours=selectedHours.filter(h=>h!==i);}
-  else{selectedHours=[...selectedHours,i].sort((a,b)=>a-b);}
+  if(selectedHours.includes(i))selectedHours=selectedHours.filter(h=>h!==i);
+  else selectedHours=[...selectedHours,i].sort((a,b)=>a-b);
   el.classList.toggle('selected',selectedHours.includes(i));
   el.querySelector('input').checked=selectedHours.includes(i);
   syncPreview();
 }
 
-function renderStudents(){
-  const tb=document.getElementById('students-body');
-  tb.innerHTML='';
-  students.forEach((s,i)=>{
-    const CLASS_OPTS=['I B.Sc. AZ-BT','II B.Sc. AZ-BT','III B.Sc. AZ-BT','I M.Sc. Zoo','II M.Sc. Zoo'];
-    const opts=CLASS_OPTS.map(c=>`<option value="${c}" ${s.cls===c?'selected':''}>${c}</option>`).join('');
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td>
-      <td><input style="width:100%;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-family:'Georgia',serif;font-size:13px;" value="${s.name}" placeholder="Full name" oninput="students[${i}].name=this.value;syncPreview()"/></td>
-      <td><input style="width:120px;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-family:'Georgia',serif;font-size:13px;" value="${s.deptno}" placeholder="25-UAZ-016" oninput="students[${i}].deptno=this.value;syncPreview()"/></td>
-      <td><select style="padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-family:'Georgia',serif;font-size:13px;" onchange="students[${i}].cls=this.value;syncPreview()">${opts}</select></td>
-      <td><button class="btn btn-danger" onclick="removeStudent(${i})"><i class="fa-solid fa-xmark"></i></button></td>`;
-    tb.appendChild(tr);
-  });
+/* ============================================================
+   FORM HELPERS
+   ============================================================ */
+function formatDate(val){
+  if(!val)return '—';
+  const d=new Date(val+'T00:00:00');
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
 }
-function addStudent(){students.push({name:'',deptno:'',cls:'I B.Sc. AZ-BT'});renderStudents();syncPreview();}
-function removeStudent(i){students.splice(i,1);renderStudents();syncPreview();}
-renderStudents();
-
-function renderStaff(){
-  const c=document.getElementById('staff-list');
-  c.innerHTML='';
-  staffList.forEach((sf,i)=>{
-    const desigOpts=DESIG_PRESETS.map(d=>`<option value="${d}" ${sf.desig===d?'selected':''}>${d}</option>`).join('');
-    const row=document.createElement('div');
-    row.className='staff-row';
-    row.innerHTML=`
-      <div class="field">
-        <label>Staff Name</label>
-        <input type="text" value="${sf.name||''}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/>
-      </div>
-      <div class="field">
-        <label>Designation</label>
-        <select onchange="handleStaffDesig(${i},this.value)">
-          ${desigOpts}
-        </select>
-      </div>
-      <div class="field" id="staff-desig-custom-wrap-${i}" style="${sf.desig==='Other'?'':'display:none'}">
-        <label>Custom Designation</label>
-        <input type="text" value="${sf.desigCustom||''}" placeholder="Enter designation" oninput="staffList[${i}].desigCustom=this.value;syncPreview()"/>
-      </div>
-      <div class="field">
-        <label>Association / Role</label>
-        <input type="text" value="${sf.association||''}" placeholder="e.g. Staff-in-Charge, Dept. Association" oninput="staffList[${i}].association=this.value;syncPreview()"/>
-      </div>
-      <div class="field">
-        <label>Department</label>
-        <input type="text" value="${sf.dept||'PG & Research Dept. of AZ & BT'}" oninput="staffList[${i}].dept=this.value;syncPreview()"/>
-      </div>
-      <div class="field">
-        <label>College</label>
-        <input type="text" value="${sf.college||'Loyola College (Autonomous)'}" oninput="staffList[${i}].college=this.value;syncPreview()"/>
-      </div>
-      <div class="field" style="align-self:end;">
-        <label>&nbsp;</label>
-        <button class="btn btn-danger" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button>
-      </div>`;
-    // Override staff-row grid for more columns
-    row.style.gridTemplateColumns='1fr 1fr 1fr 1fr 1fr 1fr auto';
-    c.appendChild(row);
-  });
+function getSenderRole(){
+  const sel=document.getElementById('s-role-select').value;
+  return sel==='custom'?(document.getElementById('s-role-custom').value||'[Role]'):sel;
 }
-
-function handleStaffDesig(i, val){
-  staffList[i].desig = val;
-  const wrap = document.getElementById(`staff-desig-custom-wrap-${i}`);
-  if(wrap) wrap.style.display = val==='Other' ? 'block' : 'none';
-  syncPreview();
+function getReasonText(){
+  const map={sports_practice:'Sports Practice',sports_event:'Sports Event / Tournament',cultural_practice:'Cultural Program Practice',cultural_event:'Cultural Program / Event',technical_event:'Technical Event / Symposium',other:document.getElementById('reason-custom').value||'[Reason]'};
+  return map[selectedReason]||'[Reason]';
 }
-
-function addStaff(){
-  staffList.push({name:'',desig:'Assistant Professor',desigCustom:'',association:'',dept:'PG & Research Dept. of AZ & BT',college:'Loyola College (Autonomous)'});
-  renderStaff();syncPreview();
-}
-function removeStaff(i){staffList.splice(i,1);renderStaff();syncPreview();}
-
 function selectGender(g){
   selectedGender=g;
   document.getElementById('gen-m').classList.toggle('selected',g==='male');
@@ -545,42 +473,18 @@ function selectReason(r){
   forceAutoUpdateText();syncPreview();
 }
 function handleRoleSelect(){
-  document.getElementById('role-custom-wrap').style.display=document.getElementById('s-role-select').value==='custom'?'flex':'none';
+  document.getElementById('role-custom-wrap').style.display=document.getElementById('s-role-select').value==='custom'?'grid':'none';
   syncPreview();
 }
-
-function formatDate(val){
-  if(!val)return '—';
-  const d=new Date(val+'T00:00:00');
-  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
-}
-function getReasonText(){
-  const map={sports_practice:'Sports Practice',sports_event:'Sports Event / Tournament',cultural_practice:'Cultural Program Practice',cultural_event:'Cultural Program / Event',technical_event:'Technical Event / Symposium',other:document.getElementById('reason-custom').value||'[Reason]'};
-  return map[selectedReason]||'[Reason]';
-}
-function getSenderRole(){
-  const sel=document.getElementById('s-role-select').value;
-  return sel==='custom'?(document.getElementById('s-role-custom').value||'[Role]'):sel;
-}
-
-function getHoursDisplay(){
-  if(selectedHours.length===0) return 'No hours selected';
-  if(selectedHours.length===HOURS.length){
-    // All hours selected
-    return `Full Day (${HOURS[0].label} – ${HOURS[HOURS.length-1].label}, ${HOURS[0].time.split('–')[0].trim()} – ${HOURS[HOURS.length-1].time.split('–')[1].trim()})`;
-  }
-  return selectedHours.map(i=>HOURS[i].label).join(', ');
-}
-
 function triggerAutoUpdate(){forceAutoUpdateText();syncPreview();}
 function generateAutoText(){
   const eName=document.getElementById('e-name').value||'[Event Name]';
   const eDate=formatDate(document.getElementById('e-date').value);
   const eVenue=document.getElementById('e-venue').value||'[Venue]';
   const rt=getReasonText();
-  const locTxt=selectedLocation==='inside'?'within the college campus':`outside the college, at ${eVenue}`;
   const subj=`Request for Attendance Permission for ${rt} — ${selectedLocation==='inside'?'Within College':'Outside College'} — Reg.`;
-  const body=`We, the students of the PG & Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, respectfully wish to bring to your kind notice that we are scheduled to participate in the ${eName}${eDate!=='—'?` on ${eDate}`:''}${selectedLocation==='outside'?`, to be held at ${eVenue}`:` to be held ${locTxt}`}.\n\nThe purpose of our participation is ${rt}. In this regard, we humbly request you to kindly grant attendance permission for the following hours:`;
+  const locText=selectedLocation==='outside'?`, to be held at ${eVenue}`:', to be held within the college campus';
+  const body=`We, the students of the PG & Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, respectfully wish to bring to your kind notice that we are scheduled to participate in the ${eName}${eDate!=='—'?` on ${eDate}`:''}${locText}.\n\nThe purpose of our participation is ${rt}. In this regard, we humbly request you to kindly grant attendance permission for the following hours:`;
   return{subj,body};
 }
 function forceAutoUpdateText(){
@@ -590,130 +494,198 @@ function forceAutoUpdateText(){
 }
 
 /* ============================================================
-   SIGNATURE ROW builder
-   left = student/sender, center = staff (optional), right = HOD
+   STUDENTS FORM
    ============================================================ */
-function buildSignRow(container, sName, sRole, showStaff, hodName){
-  container.innerHTML='';
-
-  // LEFT — sender/student
-  const left=document.createElement('div');
-  left.className='sign-left';
-  left.innerHTML=`<div class="sign-name">${sName}</div><div class="sign-role">${sRole}</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div>`;
-  container.appendChild(left);
-
-  // CENTER — staff (only if valid entries exist and showStaff=true)
-  const validStaff=staffList.filter(sf=>sf.name||sf.desig);
-  if(showStaff && validStaff.length>0){
-    const ctr=document.createElement('div');
-    ctr.className='sign-center';
-    let html='';
-    validStaff.forEach(sf=>{
-      const desigLabel = sf.desig==='Other' ? (sf.desigCustom||'—') : (sf.desig||'—');
-      const assoc = sf.association ? `<div class="sign-role">${sf.association}</div>` : '';
-      html+=`<div class="sign-block">
-        <div class="sign-name">${sf.name||'—'}</div>
-        <div class="sign-role">${desigLabel}</div>
-        ${assoc}
-        <div class="sign-dept">${sf.dept||'Loyola College (Autonomous)'}</div>
-        <div class="sign-dept">${sf.college||''}</div>
-      </div>`;
-    });
-    ctr.innerHTML=html;
-    container.appendChild(ctr);
-  }
-
-  // RIGHT — HOD (text-align:right, all content right-aligned)
-  const right=document.createElement('div');
-  right.className='sign-right';
-  right.innerHTML=`
-    <div style="text-align:right;">
-      <div class="sign-name" style="text-align:right;">${hodName}</div>
-      <div class="sign-role" style="text-align:right;">Head of the Department</div>
-      <div class="sign-dept" style="text-align:right;">PG &amp; Research Dept. of AZ &amp; BT</div>
-      <div class="sign-dept" style="text-align:right;">Loyola College (Autonomous)</div>
-      <div class="sign-date-line" style="text-align:right;">Date: <span class="date-ph">__ / __ / ____</span></div>
-    </div>`;
-  container.appendChild(right);
-}
-
-/* ============================================================
-   STUDENTS TABLE HTML builder
-   ============================================================ */
-function buildStudentTableHTML(rows, offset){
-  offset = offset||0;
-  let html=`<table class="compact-table"><thead><tr><th style="width:36px;">S.No</th><th style="text-align:left;">Name of the Student</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
-  rows.forEach((s,i)=>{
-    html+=`<tr><td>${offset+i+1}</td><td class="txt-left">${s.name||'—'}</td><td>${s.deptno||'—'}</td><td>${s.cls}</td></tr>`;
+function renderStudents(){
+  const tb=document.getElementById('students-body');
+  tb.innerHTML='';
+  const CLS=['I B.Sc. AZ-BT','II B.Sc. AZ-BT','III B.Sc. AZ-BT','I M.Sc. Zoo','II M.Sc. Zoo'];
+  students.forEach((s,i)=>{
+    const opts=CLS.map(c=>`<option value="${c}"${s.cls===c?' selected':''}>${c}</option>`).join('');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td>
+      <td><input style="width:100%;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${escHtml(s.name)}" placeholder="Full name" oninput="students[${i}].name=this.value;syncPreview()"/></td>
+      <td><input style="width:110px;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${escHtml(s.deptno)}" placeholder="25-UAZ-016" oninput="students[${i}].deptno=this.value;syncPreview()"/></td>
+      <td><select style="padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" onchange="students[${i}].cls=this.value;syncPreview()">${opts}</select></td>
+      <td><button class="btn btn-danger" onclick="removeStudent(${i})"><i class="fa-solid fa-xmark"></i></button></td>`;
+    tb.appendChild(tr);
   });
-  html+=`</tbody></table>`;
-  return html;
 }
+function addStudent(){students.push({name:'',deptno:'',cls:'I B.Sc. AZ-BT'});renderStudents();syncPreview();}
+function removeStudent(i){students.splice(i,1);renderStudents();syncPreview();}
+renderStudents();
 
 /* ============================================================
-   HOURS TABLE HTML builder
-   If all hours selected → single "Full Day" row
+   STAFF FORM
+   ============================================================ */
+function renderStaff(){
+  const c=document.getElementById('staff-list');
+  c.innerHTML='';
+  staffList.forEach((sf,i)=>{
+    const desigOpts=DESIG_PRESETS.map(d=>`<option value="${d}"${sf.desig===d?' selected':''}>${d}</option>`).join('');
+    const row=document.createElement('div');
+    row.className='staff-row';
+    row.style.gridTemplateColumns='1fr 1fr 1fr';
+    row.innerHTML=`
+      <div class="field"><label>Staff Name</label><input type="text" value="${escHtml(sf.name||'')}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/></div>
+      <div class="field"><label>Designation</label><select onchange="handleStaffDesig(${i},this.value)">${desigOpts}</select></div>
+      <div class="field" id="sdc-${i}" style="${sf.desig==='Other'?'':'display:none'}"><label>Custom Designation</label><input type="text" value="${escHtml(sf.desigCustom||'')}" placeholder="Enter..." oninput="staffList[${i}].desigCustom=this.value;syncPreview()"/></div>
+      <div class="field"><label>Association / Role</label><input type="text" value="${escHtml(sf.association||'')}" placeholder="Staff-in-Charge, Dept. Association" oninput="staffList[${i}].association=this.value;syncPreview()"/></div>
+      <div class="field"><label>Department</label><input type="text" value="${escHtml(sf.dept||'PG &amp; Research Dept. of AZ &amp; BT')}" oninput="staffList[${i}].dept=this.value;syncPreview()"/></div>
+      <div class="field"><label>College</label><input type="text" value="${escHtml(sf.college||'Loyola College (Autonomous)')}" oninput="staffList[${i}].college=this.value;syncPreview()"/></div>
+      <div class="field" style="align-self:end;"><label>&nbsp;</label><button class="btn btn-danger" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button></div>`;
+    c.appendChild(row);
+  });
+}
+function handleStaffDesig(i,v){
+  staffList[i].desig=v;
+  const w=document.getElementById('sdc-'+i);
+  if(w)w.style.display=v==='Other'?'block':'none';
+  syncPreview();
+}
+function addStaff(){staffList.push({name:'',desig:'Assistant Professor',desigCustom:'',association:'',dept:'PG & Research Dept. of AZ & BT',college:'Loyola College (Autonomous)'});renderStaff();syncPreview();}
+function removeStaff(i){staffList.splice(i,1);renderStaff();syncPreview();}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ============================================================
+   HTML BUILDERS for the A4 pages
    ============================================================ */
 function buildHoursTableHTML(){
-  let html=`<table class="compact-table"><thead><tr><th>Hour</th><th>Time</th></tr></thead><tbody>`;
+  const allSelected=selectedHours.length===HOURS.length;
+  let rows='';
   if(selectedHours.length===0){
-    html+=`<tr><td colspan="2" style="text-align:center;color:#999;">No hours selected</td></tr>`;
-  } else if(selectedHours.length===HOURS.length){
-    const first=HOURS[0];const last=HOURS[HOURS.length-1];
-    const timeFrom=first.time.split('–')[0].trim();
-    const timeTo=last.time.split('–')[1].trim();
-    html+=`<tr><td><strong>Full Day</strong> (${first.label} – ${last.label})</td><td>${timeFrom} – ${timeTo}</td></tr>`;
+    rows=`<tr><td colspan="2" style="text-align:center;color:#999;font-size:9pt;">No hours selected</td></tr>`;
+  } else if(allSelected){
+    const t0=HOURS[0].time.split('–')[0].trim();
+    const t1=HOURS[HOURS.length-1].time.split('–')[1].trim();
+    rows=`<tr><td class="h-label">Full Day (1st – 5th Hour)</td><td class="h-time">${t0} – ${t1}</td></tr>`;
   } else {
     selectedHours.forEach(i=>{
-      html+=`<tr><td>${HOURS[i].label}</td><td>${HOURS[i].time}</td></tr>`;
+      rows+=`<tr><td class="h-label">${HOURS[i].label}</td><td class="h-time">${HOURS[i].time}</td></tr>`;
     });
   }
-  html+=`</tbody></table>`;
-  return html;
+  return `<table class="hours-compact-table"><thead><tr><th>Hour</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-/* ============================================================
-   ANNEXURE PAGES builder
-   ============================================================ */
-function buildAnnexurePages(filled, sName, sRole, hodName){
-  const container=document.getElementById('annexure-container');
-  container.innerHTML='';
-  if(!filled.length) return;
+function buildStudentTableHTML(rows, offset){
+  offset=offset||0;
+  let html=`<table class="compact-table"><thead><tr><th style="width:32px;">S.No</th><th style="text-align:left;">Name</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
+  rows.forEach((s,i)=>{
+    html+=`<tr><td>${offset+i+1}</td><td class="txt-left">${escHtml(s.name)||'—'}</td><td>${escHtml(s.deptno)||'—'}</td><td>${s.cls}</td></tr>`;
+  });
+  return html+`</tbody></table>`;
+}
 
-  const chunks=[];
-  for(let i=0;i<filled.length;i+=ROWS_PER_ANNEXURE_PAGE){
-    chunks.push(filled.slice(i,i+ROWS_PER_ANNEXURE_PAGE));
+function buildSignRowHTML(sName, sRole, hodName){
+  const validStaff=staffList.filter(sf=>sf.name||sf.desig);
+  let leftHTML=`<div class="sign-spacer"></div><div class="sign-name">${escHtml(sName)}</div><div class="sign-role">${escHtml(sRole)}</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div>`;
+
+  let centerHTML='';
+  if(validStaff.length>0){
+    centerHTML=validStaff.map(sf=>{
+      const dLabel=sf.desig==='Other'?(sf.desigCustom||'—'):(sf.desig||'—');
+      const assoc=sf.association?`<div class="sign-role">${escHtml(sf.association)}</div>`:'';
+      return `<div class="sign-spacer"></div><div class="sign-name">${escHtml(sf.name||'—')}</div><div class="sign-role">${escHtml(dLabel)}</div>${assoc}<div class="sign-dept">${escHtml(sf.dept||'')}</div><div class="sign-dept">${escHtml(sf.college||'')}</div>`;
+    }).join('<br/>');
   }
 
-  chunks.forEach((chunk, ci)=>{
-    const page=document.createElement('div');
-    page.className='a4-page';
-    const pageNum=ci+1;
-    const totalPages=chunks.length;
-    const offset=ci*ROWS_PER_ANNEXURE_PAGE;
+  let rightHTML=`<div class="sign-spacer"></div><div class="sign-name" style="text-align:right;">${escHtml(hodName)}</div><div class="sign-role" style="text-align:right;">Head of the Department</div><div class="sign-dept" style="text-align:right;">PG &amp; Research Dept. of AZ &amp; BT</div><div class="sign-dept" style="text-align:right;">Loyola College (Autonomous)</div><div class="sign-date-line" style="text-align:right;">Date: <span class="date-ph">__ / __ / ____</span></div>`;
 
-    let html=`<div class="letter-title">Annexure I — List of Participants (Page ${pageNum} of ${totalPages})</div>`;
-    html+=`<p style="font-size:11pt;margin-bottom:10px;text-indent:40px;">The following students of the PG &amp; Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, require attendance permission:</p>`;
-    html+=buildStudentTableHTML(chunk, offset);
-    html+=`<div style="font-size:11pt;margin-bottom:6px;">Yours faithfully,</div>`;
-    page.innerHTML=html;
-
-    const signRow=document.createElement('div');
-    signRow.className='sign-row';
-    buildSignRow(signRow, sName, sRole, true, hodName);
-    page.appendChild(signRow);
-
-    const pn=document.createElement('div');
-    pn.className='annexure-page-num';
-    pn.textContent=`— ${pageNum} —`;
-    page.appendChild(pn);
-
-    container.appendChild(page);
-  });
+  return `<div class="sign-row">
+    <div class="sign-left">${leftHTML}</div>
+    ${centerHTML?`<div class="sign-center">${centerHTML}</div>`:''}
+    <div class="sign-right">${rightHTML}</div>
+  </div>`;
 }
 
 /* ============================================================
-   MAIN syncPreview
+   PAGE BUILDER — creates the letter page DOM node
+   ============================================================ */
+function buildLetterPage(data){
+  const {sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure}=data;
+  const page=document.createElement('div');
+  page.className='a4-page';
+  page.id='letter-page';
+
+  const fromLines=[
+    `<strong>From,</strong>`,
+    escHtml(sName)+',',
+    sDeptNo?escHtml(sDeptNo):'',
+    FULL_CLASS[sCls]||escHtml(sCls),
+    escHtml(sRole)+',',
+    `PG &amp; Research Department of Advanced Zoology and Biotechnology,`,
+    `Loyola College (Autonomous), Chennai – 600 034.`
+  ].filter(Boolean).join('<br/>');
+
+  const toLines=`<strong>To</strong><br/>The Head of the Department,<br/>PG &amp; Research Department of Advanced Zoology and Biotechnology,<br/>Loyola College (Autonomous), Chennai – 600 034.`;
+
+  let studentSection='';
+  if(!useAnnexure && filled.length>0){
+    studentSection=`<p style="font-size:10pt;margin-bottom:6px;">The following students require attendance permission for the aforementioned hours:</p>${buildStudentTableHTML(filled)}`;
+  } else if(useAnnexure){
+    studentSection=`<p style="font-size:10pt;margin-bottom:6px;font-style:italic;">The list of participants who require attendance permission is attached as Annexure I.</p>`;
+  } else {
+    studentSection=`<p style="font-size:10pt;color:#999;margin-bottom:6px;">No students added.</p>`;
+  }
+
+  page.innerHTML=`
+    <div class="letter-content-area">
+      <div class="letter-title">${escHtml(lTitle)}</div>
+      <div class="letter-top-row">
+        <div class="letter-from-block">${fromLines}</div>
+        <div class="letter-date-place">
+          <table><tr><td>Date</td><td>:</td><td>${escHtml(lDate)}</td></tr><tr><td>Place</td><td>:</td><td>${escHtml(lPlace)}</td></tr></table>
+        </div>
+      </div>
+      <div class="letter-to">${toLines}</div>
+      <div class="letter-subject"><strong>Sub:</strong> ${escHtml(subject)}</div>
+      <div class="letter-salutation">Respected ${salutation},</div>
+      <div class="letter-body">${escHtml(body)}</div>
+      ${buildHoursTableHTML()}
+      <div id="lv-students-area">${studentSection}</div>
+      <div class="letter-closing">
+        <div>We assure you that the mentioned students will attend all remaining hours responsibly. We therefore earnestly request you to kindly grant the attendance permission.</div>
+        <div style="margin-top:8px;">Thanking you,</div>
+        <div>Yours faithfully,</div>
+      </div>
+    </div>
+    <div class="letter-sig-area">${buildSignRowHTML(sName,sRole,hodName)}</div>
+  `;
+  return page;
+}
+
+/* ============================================================
+   ANNEXURE PAGES BUILDER
+   Signature pinned to bottom of each page using flex
+   ============================================================ */
+function buildAnnexurePages(filled, sName, sRole, hodName){
+  const pages=[];
+  const chunks=[];
+  for(let i=0;i<filled.length;i+=ROWS_PER_ANNEXURE){
+    chunks.push(filled.slice(i,i+ROWS_PER_ANNEXURE));
+  }
+  chunks.forEach((chunk,ci)=>{
+    const page=document.createElement('div');
+    page.className='a4-page';
+    const pNum=ci+1, total=chunks.length;
+    const offset=ci*ROWS_PER_ANNEXURE;
+    page.innerHTML=`
+      <div class="letter-content-area">
+        <div class="letter-title">Annexure I — List of Participants (Page ${pNum} of ${total})</div>
+        <p style="font-size:10pt;margin-bottom:8px;text-indent:36px;">The following students of the PG &amp; Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, require attendance permission:</p>
+        ${buildStudentTableHTML(chunk,offset)}
+        <div style="font-size:10.5pt;margin-top:6px;">Yours faithfully,</div>
+      </div>
+      <div class="letter-sig-area">${buildSignRowHTML(sName,sRole,hodName)}</div>
+      <div class="annexure-page-num">— ${pNum} of ${total} —</div>
+    `;
+    pages.push(page);
+  });
+  return pages;
+}
+
+/* ============================================================
+   MAIN syncPreview — fully rebuilds the pages container
    ============================================================ */
 function syncPreview(){
   const sName=document.getElementById('s-name').value||'[Name]';
@@ -725,66 +697,33 @@ function syncPreview(){
   const lTitle=document.getElementById('l-title').value;
   const hodName=document.getElementById('hod-name').value||'Dr. V. Pushpa Rani';
   const salutation=selectedGender==='male'?'Sir':"Ma'am";
-
-  document.getElementById('lv-title').textContent=lTitle;
-  document.getElementById('lv-date').textContent=lDate;
-  document.getElementById('lv-place').textContent=lPlace;
-  document.getElementById('lv-sname').textContent=sName+',';
-  document.getElementById('lv-sdeptno').textContent=sDeptNo||'';
-  document.getElementById('lv-sclass').textContent=FULL_CLASS[sCls]||sCls;
-  document.getElementById('lv-srole').textContent=sRole+',';
-  document.getElementById('lv-salutation').textContent=salutation;
-  document.getElementById('lv-subject').textContent=document.getElementById('l-subject').value;
-  document.getElementById('lv-body').textContent=document.getElementById('l-body').value;
-
-  // Hours table
-  document.getElementById('lv-hours-wrap').innerHTML=buildHoursTableHTML();
+  const subject=document.getElementById('l-subject').value;
+  const body=document.getElementById('l-body').value;
 
   const filled=students.filter(s=>s.name||s.deptno);
-  const stdSection=document.getElementById('lv-students-section');
-  document.getElementById('annexure-container').innerHTML='';
-  document.getElementById('overflow-notice').style.display='none';
+  const useAnnexure=filled.length>MAX_INLINE_STUDENTS;
 
-  if(filled.length>MAX_INLINE_STUDENTS){
-    // Too many students → go to annexure immediately
-    stdSection.innerHTML=`<div style="font-size:11pt;margin-bottom:10px;font-style:italic;">The list of participants who require attendance permission is attached to this document as Annexure I.</div>`;
-    buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
-    buildAnnexurePages(filled, sName, sRole, hodName);
-    document.getElementById('overflow-notice').style.display='block';
-    document.getElementById('overflow-notice').innerHTML=`<i class="fa-solid fa-circle-info"></i> ${filled.length} students — list moved to Annexure I (max ${MAX_INLINE_STUDENTS} inline).`;
+  const container=document.getElementById('pages-container');
+  container.innerHTML='';
+
+  const data={sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure};
+  const letterPage=buildLetterPage(data);
+  container.appendChild(letterPage);
+
+  const notice=document.getElementById('overflow-notice');
+  if(useAnnexure && filled.length>0){
+    const annexPages=buildAnnexurePages(filled,sName,sRole,hodName);
+    annexPages.forEach(p=>container.appendChild(p));
+    notice.style.display='block';
+    notice.innerHTML=`<i class="fa-solid fa-circle-info"></i> ${filled.length} students — moved to Annexure I (inline max: ${MAX_INLINE_STUDENTS}).`;
   } else {
-    // Try inline
-    if(filled.length>0){
-      const intro=document.createElement('p');
-      intro.style.cssText='font-size:11pt;margin-bottom:8px;';
-      intro.textContent='The following students require attendance permission for the aforementioned hours:';
-      stdSection.innerHTML='';
-      stdSection.appendChild(intro);
-      const tblDiv=document.createElement('div');
-      tblDiv.innerHTML=buildStudentTableHTML(filled);
-      stdSection.appendChild(tblDiv);
-    } else {
-      stdSection.innerHTML='<p style="font-size:11pt;color:#999;margin-bottom:8px;">No students added.</p>';
-    }
-    buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
-
-    // Check overflow after paint
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        const page=document.getElementById('letter-page');
-        const overflows=page.scrollHeight > page.offsetHeight + 4;
-        if(overflows && filled.length>0){
-          stdSection.innerHTML=`<div style="font-size:11pt;margin-bottom:10px;font-style:italic;">The list of participants who require attendance permission is attached to this document as Annexure I.</div>`;
-          buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
-          buildAnnexurePages(filled, sName, sRole, hodName);
-          document.getElementById('overflow-notice').style.display='block';
-          document.getElementById('overflow-notice').innerHTML=`<i class="fa-solid fa-circle-info"></i> Content overflow — students moved to Annexure I.`;
-        }
-      });
-    });
+    notice.style.display='none';
   }
 }
 
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
 function switchTab(id,btn){
   document.getElementById('pane-form').style.display=id==='form'?'block':'none';
   document.getElementById('pane-preview').style.display=id==='preview'?'block':'none';
@@ -793,35 +732,76 @@ function switchTab(id,btn){
   if(id==='preview') syncPreview();
 }
 
+/* ============================================================
+   PRINT
+   ============================================================ */
 function showPrintModal(){
   syncPreview();
   document.getElementById('modal-mobile-note').style.display=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'block':'none';
   document.getElementById('print-modal').style.display='flex';
 }
-function closePrintModal(){
+function doPrint(){
   document.getElementById('print-modal').style.display='none';
-  setTimeout(()=>{ window.print(); }, 100);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
 }
 
+/* ============================================================
+   DOWNLOAD PDF — uses native print-to-PDF via iframe
+   Falls back to html2pdf if available
+   ============================================================ */
 function downloadPDF(){
   syncPreview();
-  setTimeout(()=>{
-    const container=document.getElementById('print-root');
-    const opt={
-      margin:0,
-      filename:'Loyola_Attendance_Permission_Letter.pdf',
-      image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,windowWidth:794,letterRendering:true},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css'],before:'.a4-page'}
-    };
-    html2pdf().set(opt).from(container).save().catch(err=>{
-      alert('PDF generation failed. Please use the Print button and choose "Save as PDF".');
-    });
-  }, 400);
+  // Build a minimal self-contained HTML for printing
+  const pages=document.getElementById('pages-container');
+  const styles=Array.from(document.querySelectorAll('style')).map(s=>s.outerHTML).join('\n');
+  const faLink=`<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/>${faLink}${styles}<style>body{margin:0;padding:0;background:#fff;}@page{size:A4;margin:0;}.a4-page{page-break-after:always;page-break-inside:avoid;}.a4-page:last-child{page-break-after:avoid;}</style></head><body>${pages.innerHTML}</body></html>`;
+
+  // Try html2pdf first
+  if(typeof html2pdf!=='undefined'){
+    try{
+      const wrapper=document.createElement('div');
+      wrapper.innerHTML=pages.innerHTML;
+      document.body.appendChild(wrapper);
+      wrapper.style.cssText='position:absolute;left:-9999px;top:0;width:210mm;';
+      html2pdf().set({
+        margin:0,
+        filename:'Loyola_Letter.pdf',
+        image:{type:'jpeg',quality:0.97},
+        html2canvas:{scale:2,useCORS:true,width:794,windowWidth:794},
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+        pagebreak:{mode:'avoid-all',before:'.a4-page'}
+      }).from(wrapper).save().then(()=>{
+        document.body.removeChild(wrapper);
+      }).catch(()=>{
+        document.body.removeChild(wrapper);
+        printFallback(html);
+      });
+    }catch(e){printFallback(html);}
+  } else {
+    printFallback(html);
+  }
 }
 
-// Init
+function printFallback(html){
+  const iframe=document.createElement('iframe');
+  iframe.style.cssText='position:fixed;left:-9999px;top:0;width:210mm;height:297mm;border:none;';
+  document.body.appendChild(iframe);
+  iframe.contentDocument.open();
+  iframe.contentDocument.write(html);
+  iframe.contentDocument.close();
+  iframe.onload=()=>{
+    try{
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }catch(e){}
+    setTimeout(()=>document.body.removeChild(iframe),3000);
+  };
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
 forceAutoUpdateText();
 syncPreview();
 </script>
