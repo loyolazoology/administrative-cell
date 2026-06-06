@@ -27,6 +27,7 @@ body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);min-h
 .form-section-body{padding:20px;}
 .row{display:grid;gap:16px;margin-bottom:16px;}
 .row-2{grid-template-columns:1fr 1fr;}
+.row-3{grid-template-columns:1fr 1fr 1fr;}
 .field label{display:block;font-size:11px;font-weight:bold;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
 .field label i{margin-right:5px;color:var(--gold);}
 .field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Georgia',serif;outline:none;background:#fff;color:var(--dark);transition:border-color .2s;}
@@ -35,7 +36,7 @@ body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);min-h
 .radio-group{display:flex;gap:12px;flex-wrap:wrap;}
 .radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;padding:7px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;transition:all .15s;}
 .radio-opt.selected{border-color:var(--maroon);background:var(--light-gold);font-weight:bold;}
-.check-opt{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:#fff;transition:all .15s;flex-direction:column;min-width:130px;}
+.check-opt{display:flex;align-items:center;cursor:pointer;padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:#fff;transition:all .15s;flex-direction:column;min-width:130px;}
 .check-opt.selected{border-color:var(--maroon);background:var(--maroon);color:#fff;}
 .check-opt .hour-time{font-size:10px;opacity:.75;margin-top:2px;}
 .check-top{display:flex;align-items:center;gap:8px;}
@@ -52,7 +53,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 .btn-outline:hover{background:var(--light-gold);}
 .btn-danger{background:#fee;border:1px solid #fcc;color:#c00;padding:4px 10px;}
 .btn-add{background:#fff;border:1.5px dashed var(--maroon);color:var(--maroon);}
-.staff-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:end;}
+.staff-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:end;}
 
 /* PREVIEW WRAP */
 .preview-wrap{padding:24px 16px;}
@@ -105,6 +106,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 .sign-left{text-align:left;flex:1;}
 .sign-center{text-align:center;flex:1;}
 .sign-right{text-align:right;flex:1;}
+.sign-block{margin-bottom:14px;}
 .sign-name{font-weight:bold;font-size:10.5pt;margin-top:44px;}
 .sign-role{font-size:9.5pt;color:#222;}
 .sign-dept{font-size:9.5pt;color:#444;}
@@ -126,22 +128,28 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 .modal-box .step-num{background:var(--maroon);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
 .modal-box .close-btn{margin-top:16px;width:100%;}
 
-/* Overflow indicator in preview */
 .overflow-notice{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:8px 14px;font-size:12px;color:#856404;margin-bottom:10px;display:none;}
 
+/* ===== PRINT STYLES ===== */
 @media print{
-  body>*{display:none!important;}
-  #print-root{display:block!important;margin:0;padding:0;}
-  .a4-page{
-    box-shadow:none!important;
-    margin:0!important;
-    padding:1.4cm 2cm 1.8cm 2cm!important;
-    width:210mm!important;
-    min-height:0!important;
-    page-break-after:always;
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { margin: 0; padding: 0; background: white !important; }
+  .app-header, .tabs, #pane-form, .preview-actions, .overflow-notice, .modal-overlay { display: none !important; }
+  #pane-preview { display: block !important; }
+  .preview-wrap { padding: 0 !important; }
+  #pages-container { max-width: none !important; margin: 0 !important; }
+  .a4-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 1.4cm 2cm 1.8cm 2cm !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    overflow: visible !important;
   }
-  .a4-page:last-child{page-break-after:avoid;}
-  @page{size:A4;margin:0;}
+  .a4-page:last-child { page-break-after: avoid; }
+  @page { size: A4; margin: 0; }
 }
 </style>
 </head>
@@ -152,10 +160,11 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
     <h3><i class="fa-solid fa-print"></i> Printing Your Letter</h3>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div>Select <strong>"Save as PDF"</strong> or your printer.</div></div>
-      <div class="step"><div class="step-num">2</div><div>Ensure margins are set to <strong>None / 0</strong> for best results.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Set margins to <strong>None / 0</strong> for best output.</div></div>
+      <div class="step"><div class="step-num">3</div><div>Disable <strong>"Headers and footers"</strong> in print settings.</div></div>
     </div>
     <p id="modal-mobile-note" style="display:none;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:10px 12px;font-size:12px;"><strong>On mobile:</strong> Tap <em>Share → Print</em>, pinch-zoom thumbnail → tap PDF icon.</p>
-    <button class="btn btn-primary close-btn" onclick="closePrintModal()">Got it — continue</button>
+    <button class="btn btn-primary close-btn" onclick="closePrintModal()"><i class="fa-solid fa-print"></i> Print Now</button>
   </div>
 </div>
 
@@ -304,16 +313,14 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 <div id="pane-preview" style="display:none;">
   <div class="preview-wrap">
     <div class="preview-actions">
-      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Download as PDF or Print. Set margins to None for best output.</span>
+      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Download PDF or Print. Set margins to None for best output.</span>
       <button class="btn btn-outline" onclick="switchTab('form',document.getElementById('tab-form'))"><i class="fa-solid fa-arrow-left"></i> Edit</button>
       <button class="btn btn-gold" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
       <button class="btn btn-primary" onclick="showPrintModal()"><i class="fa-solid fa-print"></i> Print</button>
     </div>
-    <div class="overflow-notice" id="overflow-notice"><i class="fa-solid fa-circle-info"></i> Students list moved to Annexure page — letter fits on one page.</div>
+    <div class="overflow-notice" id="overflow-notice"><i class="fa-solid fa-circle-info"></i> Students list moved to Annexure — letter fits on one page.</div>
 
-    <!-- All pages rendered here -->
     <div id="pages-container">
-      <!-- Print-only wrapper -->
       <div id="print-root" style="display:contents;">
         <!-- Page 1: Letter -->
         <div class="a4-page" id="letter-page">
@@ -359,11 +366,11 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
             <div>Yours faithfully,</div>
           </div>
 
-          <!-- Signatures: student left, staff center, HOD right -->
+          <!-- Signatures -->
           <div class="sign-row" id="lv-sign-row"></div>
-        </div><!-- end letter-page -->
+        </div>
 
-        <!-- Annexure pages rendered dynamically here -->
+        <!-- Annexure pages rendered dynamically -->
         <div id="annexure-container"></div>
       </div>
     </div>
@@ -385,8 +392,23 @@ const FULL_CLASS={
   "I M.Sc. Zoo":"I Year M.Sc. Zoology",
   "II M.Sc. Zoo":"II Year M.Sc. Zoology",
 };
-// Approx rows per annexure page (excluding header/sig space ~120px)
-const ROWS_PER_ANNEXURE_PAGE = 18;
+
+// Max students on letter page (inline). Beyond this → annexure.
+const MAX_INLINE_STUDENTS = 5;
+// Rows per annexure page
+const ROWS_PER_ANNEXURE_PAGE = 20;
+
+const DESIG_PRESETS = [
+  "Assistant Professor",
+  "Associate Professor",
+  "Professor",
+  "Staff Advisor",
+  "President",
+  "Vice President",
+  "Treasurer",
+  "Joint Secretary",
+  "Other"
+];
 
 let selectedHours=[0,1,2];
 let selectedGender='female';
@@ -449,16 +471,57 @@ function renderStaff(){
   const c=document.getElementById('staff-list');
   c.innerHTML='';
   staffList.forEach((sf,i)=>{
+    const desigOpts=DESIG_PRESETS.map(d=>`<option value="${d}" ${sf.desig===d?'selected':''}>${d}</option>`).join('');
     const row=document.createElement('div');
     row.className='staff-row';
     row.innerHTML=`
-      <div class="field"><label>Staff Name</label><input type="text" value="${sf.name}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/></div>
-      <div class="field"><label>Designation</label><input type="text" value="${sf.role}" placeholder="Staff Advisor" oninput="staffList[${i}].role=this.value;syncPreview()"/></div>
-      <div class="field"><label>&nbsp;</label><button class="btn btn-danger" style="margin-top:22px;" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button></div>`;
+      <div class="field">
+        <label>Staff Name</label>
+        <input type="text" value="${sf.name||''}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/>
+      </div>
+      <div class="field">
+        <label>Designation</label>
+        <select onchange="handleStaffDesig(${i},this.value)">
+          ${desigOpts}
+        </select>
+      </div>
+      <div class="field" id="staff-desig-custom-wrap-${i}" style="${sf.desig==='Other'?'':'display:none'}">
+        <label>Custom Designation</label>
+        <input type="text" value="${sf.desigCustom||''}" placeholder="Enter designation" oninput="staffList[${i}].desigCustom=this.value;syncPreview()"/>
+      </div>
+      <div class="field">
+        <label>Association / Role</label>
+        <input type="text" value="${sf.association||''}" placeholder="e.g. Staff-in-Charge, Dept. Association" oninput="staffList[${i}].association=this.value;syncPreview()"/>
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <input type="text" value="${sf.dept||'PG & Research Dept. of AZ & BT'}" oninput="staffList[${i}].dept=this.value;syncPreview()"/>
+      </div>
+      <div class="field">
+        <label>College</label>
+        <input type="text" value="${sf.college||'Loyola College (Autonomous)'}" oninput="staffList[${i}].college=this.value;syncPreview()"/>
+      </div>
+      <div class="field" style="align-self:end;">
+        <label>&nbsp;</label>
+        <button class="btn btn-danger" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button>
+      </div>`;
+    // Override staff-row grid for more columns
+    row.style.gridTemplateColumns='1fr 1fr 1fr 1fr 1fr 1fr auto';
     c.appendChild(row);
   });
 }
-function addStaff(){staffList.push({name:'',role:''});renderStaff();syncPreview();}
+
+function handleStaffDesig(i, val){
+  staffList[i].desig = val;
+  const wrap = document.getElementById(`staff-desig-custom-wrap-${i}`);
+  if(wrap) wrap.style.display = val==='Other' ? 'block' : 'none';
+  syncPreview();
+}
+
+function addStaff(){
+  staffList.push({name:'',desig:'Assistant Professor',desigCustom:'',association:'',dept:'PG & Research Dept. of AZ & BT',college:'Loyola College (Autonomous)'});
+  renderStaff();syncPreview();
+}
 function removeStaff(i){staffList.splice(i,1);renderStaff();syncPreview();}
 
 function selectGender(g){
@@ -500,6 +563,15 @@ function getSenderRole(){
   return sel==='custom'?(document.getElementById('s-role-custom').value||'[Role]'):sel;
 }
 
+function getHoursDisplay(){
+  if(selectedHours.length===0) return 'No hours selected';
+  if(selectedHours.length===HOURS.length){
+    // All hours selected
+    return `Full Day (${HOURS[0].label} – ${HOURS[HOURS.length-1].label}, ${HOURS[0].time.split('–')[0].trim()} – ${HOURS[HOURS.length-1].time.split('–')[1].trim()})`;
+  }
+  return selectedHours.map(i=>HOURS[i].label).join(', ');
+}
+
 function triggerAutoUpdate(){forceAutoUpdateText();syncPreview();}
 function generateAutoText(){
   const eName=document.getElementById('e-name').value||'[Event Name]';
@@ -521,7 +593,7 @@ function forceAutoUpdateText(){
    SIGNATURE ROW builder
    left = student/sender, center = staff (optional), right = HOD
    ============================================================ */
-function buildSignRow(container, sName, sRole, hasStaff, hodName){
+function buildSignRow(container, sName, sRole, showStaff, hodName){
   container.innerHTML='';
 
   // LEFT — sender/student
@@ -530,55 +602,78 @@ function buildSignRow(container, sName, sRole, hasStaff, hodName){
   left.innerHTML=`<div class="sign-name">${sName}</div><div class="sign-role">${sRole}</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div>`;
   container.appendChild(left);
 
-  // CENTER — staff (only if exists)
-  const validStaff=staffList.filter(sf=>sf.name||sf.role);
-  if(hasStaff && validStaff.length>0){
+  // CENTER — staff (only if valid entries exist and showStaff=true)
+  const validStaff=staffList.filter(sf=>sf.name||sf.desig);
+  if(showStaff && validStaff.length>0){
     const ctr=document.createElement('div');
     ctr.className='sign-center';
     let html='';
     validStaff.forEach(sf=>{
-      html+=`<div class="sign-name">${sf.name||'—'}</div><div class="sign-role">${sf.role||'—'}</div><div class="sign-dept">Loyola College (Autonomous)</div>`;
+      const desigLabel = sf.desig==='Other' ? (sf.desigCustom||'—') : (sf.desig||'—');
+      const assoc = sf.association ? `<div class="sign-role">${sf.association}</div>` : '';
+      html+=`<div class="sign-block">
+        <div class="sign-name">${sf.name||'—'}</div>
+        <div class="sign-role">${desigLabel}</div>
+        ${assoc}
+        <div class="sign-dept">${sf.dept||'Loyola College (Autonomous)'}</div>
+        <div class="sign-dept">${sf.college||''}</div>
+      </div>`;
     });
     ctr.innerHTML=html;
     container.appendChild(ctr);
   }
 
-  // RIGHT — HOD
+  // RIGHT — HOD (text-align:right, all content right-aligned)
   const right=document.createElement('div');
   right.className='sign-right';
-  right.innerHTML=`<div class="sign-name">${hodName}</div><div class="sign-role">Head of the Department</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT<br>Loyola College (Autonomous)</div><div class="sign-date-line">Date: <span class="date-ph">__ / __ / ____</span></div>`;
+  right.innerHTML=`
+    <div style="text-align:right;">
+      <div class="sign-name" style="text-align:right;">${hodName}</div>
+      <div class="sign-role" style="text-align:right;">Head of the Department</div>
+      <div class="sign-dept" style="text-align:right;">PG &amp; Research Dept. of AZ &amp; BT</div>
+      <div class="sign-dept" style="text-align:right;">Loyola College (Autonomous)</div>
+      <div class="sign-date-line" style="text-align:right;">Date: <span class="date-ph">__ / __ / ____</span></div>
+    </div>`;
   container.appendChild(right);
-}
-
-/* ============================================================
-   DYNAMIC FIT LOGIC
-   A4 usable height ~ 297mm - 1.4cm top - 1.8cm bottom = ~269mm
-   At 96dpi, 1mm ≈ 3.7795px  → 269mm ≈ 1017px
-   We measure the letter-page content dynamically after render.
-   ============================================================ */
-const A4_CONTENT_HEIGHT_PX = 269 * 3.7795; // ~1017px
-
-function checkOverflow(){
-  // After rendering inline students, measure if content overflows
-  const page=document.getElementById('letter-page');
-  return page.scrollHeight > page.clientHeight + 2;
 }
 
 /* ============================================================
    STUDENTS TABLE HTML builder
    ============================================================ */
-function buildStudentTableHTML(rows){
+function buildStudentTableHTML(rows, offset){
+  offset = offset||0;
   let html=`<table class="compact-table"><thead><tr><th style="width:36px;">S.No</th><th style="text-align:left;">Name of the Student</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
   rows.forEach((s,i)=>{
-    html+=`<tr><td>${i+1}</td><td class="txt-left">${s.name||'—'}</td><td>${s.deptno||'—'}</td><td>${s.cls}</td></tr>`;
+    html+=`<tr><td>${offset+i+1}</td><td class="txt-left">${s.name||'—'}</td><td>${s.deptno||'—'}</td><td>${s.cls}</td></tr>`;
   });
   html+=`</tbody></table>`;
   return html;
 }
 
 /* ============================================================
+   HOURS TABLE HTML builder
+   If all hours selected → single "Full Day" row
+   ============================================================ */
+function buildHoursTableHTML(){
+  let html=`<table class="compact-table"><thead><tr><th>Hour</th><th>Time</th></tr></thead><tbody>`;
+  if(selectedHours.length===0){
+    html+=`<tr><td colspan="2" style="text-align:center;color:#999;">No hours selected</td></tr>`;
+  } else if(selectedHours.length===HOURS.length){
+    const first=HOURS[0];const last=HOURS[HOURS.length-1];
+    const timeFrom=first.time.split('–')[0].trim();
+    const timeTo=last.time.split('–')[1].trim();
+    html+=`<tr><td><strong>Full Day</strong> (${first.label} – ${last.label})</td><td>${timeFrom} – ${timeTo}</td></tr>`;
+  } else {
+    selectedHours.forEach(i=>{
+      html+=`<tr><td>${HOURS[i].label}</td><td>${HOURS[i].time}</td></tr>`;
+    });
+  }
+  html+=`</tbody></table>`;
+  return html;
+}
+
+/* ============================================================
    ANNEXURE PAGES builder
-   Splits students across pages, each page signed.
    ============================================================ */
 function buildAnnexurePages(filled, sName, sRole, hodName){
   const container=document.getElementById('annexure-container');
@@ -593,32 +688,21 @@ function buildAnnexurePages(filled, sName, sRole, hodName){
   chunks.forEach((chunk, ci)=>{
     const page=document.createElement('div');
     page.className='a4-page';
-
     const pageNum=ci+1;
     const totalPages=chunks.length;
+    const offset=ci*ROWS_PER_ANNEXURE_PAGE;
 
     let html=`<div class="letter-title">Annexure I — List of Participants (Page ${pageNum} of ${totalPages})</div>`;
     html+=`<p style="font-size:11pt;margin-bottom:10px;text-indent:40px;">The following students of the PG &amp; Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, require attendance permission:</p>`;
-
-    // Build table for this chunk (continuous numbering)
-    const offset=ci*ROWS_PER_ANNEXURE_PAGE;
-    html+=`<table class="compact-table" style="margin-bottom:12px;"><thead><tr><th style="width:36px;">S.No</th><th style="text-align:left;">Name of the Student</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
-    chunk.forEach((s,i)=>{
-      html+=`<tr><td>${offset+i+1}</td><td class="txt-left">${s.name||'—'}</td><td>${s.deptno||'—'}</td><td>${s.cls}</td></tr>`;
-    });
-    html+=`</tbody></table>`;
-
+    html+=buildStudentTableHTML(chunk, offset);
     html+=`<div style="font-size:11pt;margin-bottom:6px;">Yours faithfully,</div>`;
-
     page.innerHTML=html;
 
-    // Add signature row
     const signRow=document.createElement('div');
     signRow.className='sign-row';
     buildSignRow(signRow, sName, sRole, true, hodName);
     page.appendChild(signRow);
 
-    // Page number
     const pn=document.createElement('div');
     pn.className='annexure-page-num';
     pn.textContent=`— ${pageNum} —`;
@@ -642,7 +726,6 @@ function syncPreview(){
   const hodName=document.getElementById('hod-name').value||'Dr. V. Pushpa Rani';
   const salutation=selectedGender==='male'?'Sir':"Ma'am";
 
-  // Fill letter fields
   document.getElementById('lv-title').textContent=lTitle;
   document.getElementById('lv-date').textContent=lDate;
   document.getElementById('lv-place').textContent=lPlace;
@@ -654,65 +737,52 @@ function syncPreview(){
   document.getElementById('lv-subject').textContent=document.getElementById('l-subject').value;
   document.getElementById('lv-body').textContent=document.getElementById('l-body').value;
 
-  // Hours
-  const hb=document.getElementById('lv-hours-body');
-  hb.innerHTML='';
-  if(selectedHours.length===0){
-    hb.innerHTML='<tr><td colspan="2" style="text-align:center;color:#999;">No hours selected</td></tr>';
-  } else {
-    selectedHours.forEach(i=>{
-      hb.innerHTML+=`<tr><td>${HOURS[i].label}</td><td>${HOURS[i].time}</td></tr>`;
-    });
-  }
+  // Hours table
+  document.getElementById('lv-hours-wrap').innerHTML=buildHoursTableHTML();
 
   const filled=students.filter(s=>s.name||s.deptno);
   const stdSection=document.getElementById('lv-students-section');
-
-  // STEP 1: Try rendering inline first
-  stdSection.innerHTML='';
-  if(filled.length>0){
-    const intro=document.createElement('p');
-    intro.style.cssText='font-size:11pt;margin-bottom:8px;';
-    intro.textContent='The following students require attendance permission for the aforementioned hours:';
-    stdSection.appendChild(intro);
-    const tblDiv=document.createElement('div');
-    tblDiv.innerHTML=buildStudentTableHTML(filled);
-    stdSection.appendChild(tblDiv);
-  } else {
-    stdSection.innerHTML='<p style="font-size:11pt;color:#999;margin-bottom:8px;">No students added.</p>';
-  }
-
-  // Build signature for letter page
-  const signRow=document.getElementById('lv-sign-row');
-  buildSignRow(signRow, sName, sRole, true, hodName);
-
-  // Clear old annexures first
   document.getElementById('annexure-container').innerHTML='';
   document.getElementById('overflow-notice').style.display='none';
 
-  // STEP 2: Detect overflow after paint
-  requestAnimationFrame(()=>{
+  if(filled.length>MAX_INLINE_STUDENTS){
+    // Too many students → go to annexure immediately
+    stdSection.innerHTML=`<div style="font-size:11pt;margin-bottom:10px;font-style:italic;">The list of participants who require attendance permission is attached to this document as Annexure I.</div>`;
+    buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
+    buildAnnexurePages(filled, sName, sRole, hodName);
+    document.getElementById('overflow-notice').style.display='block';
+    document.getElementById('overflow-notice').innerHTML=`<i class="fa-solid fa-circle-info"></i> ${filled.length} students — list moved to Annexure I (max ${MAX_INLINE_STUDENTS} inline).`;
+  } else {
+    // Try inline
+    if(filled.length>0){
+      const intro=document.createElement('p');
+      intro.style.cssText='font-size:11pt;margin-bottom:8px;';
+      intro.textContent='The following students require attendance permission for the aforementioned hours:';
+      stdSection.innerHTML='';
+      stdSection.appendChild(intro);
+      const tblDiv=document.createElement('div');
+      tblDiv.innerHTML=buildStudentTableHTML(filled);
+      stdSection.appendChild(tblDiv);
+    } else {
+      stdSection.innerHTML='<p style="font-size:11pt;color:#999;margin-bottom:8px;">No students added.</p>';
+    }
+    buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
+
+    // Check overflow after paint
     requestAnimationFrame(()=>{
-      const page=document.getElementById('letter-page');
-      const overflows=page.scrollHeight > page.offsetHeight + 4;
-
-      if(overflows && filled.length>0){
-        // Move students to annexure
-        stdSection.innerHTML='';
-        const refDiv=document.createElement('div');
-        refDiv.style.cssText='font-size:11pt;margin-bottom:10px;font-style:italic;';
-        refDiv.textContent='The list of participants who require attendance permission is attached to this document as Annexure I.';
-        stdSection.appendChild(refDiv);
-
-        // Rebuild signature
-        buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
-
-        // Build annexure pages
-        buildAnnexurePages(filled, sName, sRole, hodName);
-        document.getElementById('overflow-notice').style.display='block';
-      }
+      requestAnimationFrame(()=>{
+        const page=document.getElementById('letter-page');
+        const overflows=page.scrollHeight > page.offsetHeight + 4;
+        if(overflows && filled.length>0){
+          stdSection.innerHTML=`<div style="font-size:11pt;margin-bottom:10px;font-style:italic;">The list of participants who require attendance permission is attached to this document as Annexure I.</div>`;
+          buildSignRow(document.getElementById('lv-sign-row'), sName, sRole, true, hodName);
+          buildAnnexurePages(filled, sName, sRole, hodName);
+          document.getElementById('overflow-notice').style.display='block';
+          document.getElementById('overflow-notice').innerHTML=`<i class="fa-solid fa-circle-info"></i> Content overflow — students moved to Annexure I.`;
+        }
+      });
     });
-  });
+  }
 }
 
 function switchTab(id,btn){
@@ -724,29 +794,31 @@ function switchTab(id,btn){
 }
 
 function showPrintModal(){
+  syncPreview();
   document.getElementById('modal-mobile-note').style.display=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'block':'none';
   document.getElementById('print-modal').style.display='flex';
 }
 function closePrintModal(){
   document.getElementById('print-modal').style.display='none';
-  window.print();
+  setTimeout(()=>{ window.print(); }, 100);
 }
 
 function downloadPDF(){
   syncPreview();
-  // Wait for double-rAF layout check to complete
   setTimeout(()=>{
     const container=document.getElementById('print-root');
     const opt={
       margin:0,
       filename:'Loyola_Attendance_Permission_Letter.pdf',
       image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,windowWidth:794},
+      html2canvas:{scale:2,useCORS:true,windowWidth:794,letterRendering:true},
       jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['css','legacy'],before:'.a4-page'}
+      pagebreak:{mode:['avoid-all','css'],before:'.a4-page'}
     };
-    html2pdf().set(opt).from(container).save();
-  }, 300);
+    html2pdf().set(opt).from(container).save().catch(err=>{
+      alert('PDF generation failed. Please use the Print button and choose "Save as PDF".');
+    });
+  }, 400);
 }
 
 // Init
