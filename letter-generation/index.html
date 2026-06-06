@@ -6,29 +6,21 @@
 <title>Letter Generator — Loyola College</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-:root{
-  --maroon:#6b0f1a;--gold:#b8952a;--light-gold:#f5e9c8;--cream:#fdf8f0;
-  --dark:#1a0a0f;--gray:#6b6b6b;--border:#d4c09a;
-}
+:root{--maroon:#6b0f1a;--gold:#b8952a;--light-gold:#f5e9c8;--cream:#fdf8f0;--dark:#1a0a0f;--gray:#6b6b6b;--border:#d4c09a;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);min-height:100vh;}
-
-/* APP SHELL */
-.app-header{background:var(--maroon);padding:12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px #0004;}
-.header-title h1{font-size:16px;font-weight:bold;color:#fff;letter-spacing:.4px;}
+.app-header{background:var(--maroon);padding:12px 20px;display:flex;align-items:center;gap:14px;}
+.header-title h1{font-size:16px;font-weight:bold;color:#fff;}
 .header-title p{font-size:10px;color:#e8c98a;margin-top:2px;}
 .tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;}
-.tab-btn{padding:12px 22px;border:none;background:none;font-family:'Georgia',serif;font-size:13px;color:var(--gray);border-bottom:3px solid transparent;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:color .2s;}
+.tab-btn{padding:12px 22px;border:none;background:none;font-family:'Georgia',serif;font-size:13px;color:var(--gray);border-bottom:3px solid transparent;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;}
 .tab-btn.active{color:var(--maroon);border-bottom-color:var(--gold);font-weight:bold;}
-
-/* FORM */
 .form-wrap{max-width:860px;margin:0 auto;padding:20px 14px;}
 .form-section{background:#fff;border-radius:10px;border:1px solid var(--border);margin-bottom:18px;overflow:hidden;}
 .form-section-head{background:var(--maroon);padding:11px 18px;color:#f5e9c8;font-size:12px;font-weight:bold;display:flex;align-items:center;gap:8px;}
 .form-section-body{padding:16px;}
 .row{display:grid;gap:14px;margin-bottom:14px;}
 .row-2{grid-template-columns:1fr 1fr;}
-.row-3{grid-template-columns:1fr 1fr 1fr;}
 .field label{display:block;font-size:10px;font-weight:bold;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
 .field label i{margin-right:4px;color:var(--gold);}
 .field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Georgia',serif;outline:none;background:#fff;color:var(--dark);}
@@ -37,7 +29,7 @@ html,body{font-family:'Georgia',serif;background:var(--cream);color:var(--dark);
 .radio-group{display:flex;gap:10px;flex-wrap:wrap;}
 .radio-opt{display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;}
 .radio-opt.selected{border-color:var(--maroon);background:var(--light-gold);font-weight:bold;}
-.check-opt{display:flex;align-items:center;cursor:pointer;padding:7px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:#fff;flex-direction:column;min-width:120px;}
+.check-opt{display:flex;align-items:center;cursor:pointer;padding:7px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:#fff;flex-direction:column;min-width:110px;}
 .check-opt.selected{border-color:var(--maroon);background:var(--maroon);color:#fff;}
 .check-opt .hour-time{font-size:9px;opacity:.8;margin-top:2px;}
 .check-top{display:flex;align-items:center;gap:7px;}
@@ -47,46 +39,30 @@ table.students-table td{padding:5px 7px;border-bottom:1px solid #eee;}
 table.students-table tr:nth-child(even){background:#faf6ee;}
 .btn{padding:8px 18px;border-radius:7px;border:none;cursor:pointer;font-family:'Georgia',serif;font-size:13px;display:inline-flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--maroon);color:#fff;font-weight:bold;}
-.btn-primary:hover{background:#8b1523;}
 .btn-gold{background:var(--gold);color:#fff;font-weight:bold;}
-.btn-gold:hover{background:#9a7a1e;}
 .btn-outline{background:#fff;border:1.5px solid var(--maroon);color:var(--maroon);}
 .btn-danger{background:#fee;border:1px solid #fcc;color:#c00;padding:4px 9px;font-size:12px;}
 .btn-add{background:#fff;border:1.5px dashed var(--maroon);color:var(--maroon);}
-.staff-row{display:grid;gap:10px;margin-bottom:12px;align-items:end;padding:12px;background:#fdf8f0;border-radius:8px;border:1px solid var(--border);}
-
-/* PREVIEW */
+.staff-card{padding:14px;background:#fdf8f0;border-radius:8px;border:1px solid var(--border);margin-bottom:12px;}
+.staff-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;}
 .preview-wrap{padding:20px 14px;}
 .preview-actions{max-width:900px;margin:0 auto 14px;display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap;}
 .print-tip{font-size:11px;color:var(--gray);font-style:italic;margin-right:auto;}
 .overflow-notice{max-width:900px;margin:0 auto 10px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:7px 12px;font-size:12px;color:#856404;display:none;}
 #pages-container{max-width:900px;margin:0 auto;}
 
-/* ========== A4 LETTER PAGE ========== */
-/* 
-  A4 = 297mm tall. Padding top 1.2cm + bottom 1.5cm = 2.7cm used.
-  Content area = ~294.3mm - we target ~1040px at 96dpi screen.
-  Font 10.5pt, line-height 1.4 → ~20px per line → ~52 lines fit.
-  We budget:
-    Title:        1 line  = 20px
-    Meta row:     1 line  = 20px  (date/place inline)
-    From block:   6 lines = 120px
-    To block:     4 lines = 80px
-    Subject:      1 line  = 20px
-    Salutation:   1 line  = 20px
-    Body:         ~4 lines= 80px
-    Hours table:  (1+n) × 20px  (compact)
-    Students:     header+n rows
-    Closing:      3 lines = 60px
-    Signatures:   ~80px
-  Total fixed overhead (no students, 3 hours): ~500px
-  Remaining for students at ~18px/row: ~540px → ~30 rows possible
-  We cap inline at 8 to be safe and keep signatures on same page.
+/* ======= A4 LETTER =======
+   A4 = 297mm. Padding: top 1.2cm + bottom 1.5cm.
+   At 96dpi, 1mm = 3.7795px → content ≈ 269.3mm ≈ 1018px.
+   Font 10.5pt ≈ 14px, lineHeight 1.5 → line = 21px.
+   Safe lines per page ≈ floor(1018/21) = 48 lines.
+   We reserve ~10 lines for signatures block.
+   So usable content lines = 38.
 */
 .a4-page{
   font-family:'Times New Roman',Times,serif;
   font-size:10.5pt;
-  line-height:1.4;
+  line-height:1.5;
   color:#000;
   background:#fff;
   padding:1.2cm 1.8cm 1.5cm 1.8cm;
@@ -99,95 +75,75 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
   display:flex;
   flex-direction:column;
 }
-.letter-content-area{flex:1;}
-.letter-sig-area{margin-top:auto;padding-top:6px;}
+.ltr-content{flex:1;}
+.ltr-sig{margin-top:auto;padding-top:8px;}
 
-/* TOP META ROW: From-block left, Date/Place right on same line */
-.letter-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
-.letter-from-block{font-size:10.5pt;line-height:1.45;}
-.letter-date-place{text-align:right;font-size:10.5pt;line-height:1.6;}
-.letter-date-place table{border-collapse:collapse;margin-left:auto;}
-.letter-date-place td{padding:0 2px;font-size:10.5pt;}
-.letter-date-place td:first-child{font-weight:bold;text-align:right;}
-.letter-date-place td:nth-child(2){padding:0 5px;text-align:center;}
+/* Title with blank line after */
+.ltr-title{text-align:center;font-size:11pt;font-weight:bold;text-decoration:underline;text-transform:uppercase;letter-spacing:.3px;margin-bottom:0;}
+.ltr-title-gap{height:1.5em;} /* blank line after title */
 
-.letter-title{text-align:center;font-size:11pt;font-weight:bold;text-decoration:underline;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
-.letter-to{margin-bottom:9px;font-size:10.5pt;line-height:1.45;}
-.letter-subject{margin-bottom:8px;font-size:10.5pt;}
-.letter-salutation{margin-bottom:7px;font-size:10.5pt;}
-.letter-body{text-align:justify;font-size:10.5pt;margin-bottom:8px;text-indent:36px;white-space:pre-wrap;line-height:1.45;}
-.letter-closing{font-size:10.5pt;margin-bottom:4px;}
+/* Top row: From left, Date/Place right */
+.ltr-top-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.ltr-from{font-size:10.5pt;line-height:1.5;}
+.ltr-dateplace{text-align:right;font-size:10.5pt;line-height:1.6;white-space:nowrap;}
+.ltr-dateplace-row{display:flex;justify-content:flex-end;gap:4px;}
+.ltr-dateplace-label{font-weight:bold;}
 
-/* HOURS — compact single-row table */
-.hours-compact-table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:8px;}
-.hours-compact-table th{background:#222;color:#fff;padding:3px 6px;border:1px solid #444;}
-.hours-compact-table td{border:1px solid #aaa;padding:2px 6px;}
-.hours-compact-table td.h-label{font-weight:bold;width:120px;}
-.hours-compact-table td.h-time{color:#333;}
+.ltr-to{margin-bottom:8px;font-size:10.5pt;line-height:1.5;}
+.ltr-subject{margin-bottom:8px;font-size:10.5pt;}
+.ltr-body{text-align:justify;font-size:10.5pt;margin-bottom:8px;text-indent:36px;white-space:pre-wrap;line-height:1.5;}
+.ltr-closing{font-size:10.5pt;margin-bottom:4px;}
 
-/* STUDENTS table in letter */
-.compact-table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:8px;}
-.compact-table th,.compact-table td{border:1px solid #888;padding:2px 5px;text-align:center;}
-.compact-table td.txt-left{text-align:left;}
-.compact-table th{background:#444;color:#fff;}
+/* Hours — bold inline text, no table */
+.ltr-hours{font-size:10.5pt;margin-bottom:8px;line-height:1.6;}
+.ltr-hours-item{font-weight:bold;}
 
-/* SIGNATURES */
-.sign-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-.sign-left{text-align:left;flex:1;}
-.sign-center{text-align:center;flex:1;}
-.sign-right{text-align:right;flex:1;}
-.sign-spacer{height:38px;}
+/* Students table */
+.std-table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-bottom:8px;}
+.std-table th,.std-table td{border:1px solid #888;padding:2px 5px;text-align:center;}
+.std-table td.tl{text-align:left;}
+.std-table th{background:#444;color:#fff;}
+
+/* Signatures */
+.sign-row{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;}
+.sign-spacer{height:36px;}
 .sign-name{font-weight:bold;font-size:10pt;}
-.sign-role{font-size:9pt;}
+.sign-sub{font-size:9pt;color:#222;}
 .sign-dept{font-size:9pt;color:#333;}
-.sign-date-line{font-size:9.5pt;margin-top:3px;}
-.date-ph{letter-spacing:1px;color:#999;}
+.sign-date{font-size:9.5pt;margin-top:3px;}
+.date-blank{color:#999;letter-spacing:1px;}
+.sign-left{flex:1;text-align:left;}
+.sign-center{flex:1;text-align:center;}
+.sign-right{flex:1;text-align:center;} /* center-aligned inside right cell */
 
-/* Annexure */
-.annexure-page-num{text-align:center;font-size:8pt;color:#888;position:absolute;bottom:0.7cm;left:1.8cm;right:1.8cm;}
+.annex-pgnum{text-align:center;font-size:8pt;color:#888;position:absolute;bottom:0.6cm;left:1.8cm;right:1.8cm;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:#0009;z-index:9999;display:flex;align-items:center;justify-content:center;}
 .modal-box{background:#fff;border-radius:12px;padding:24px 28px;max-width:420px;width:92%;box-shadow:0 8px 40px #0005;}
 .modal-box h3{font-size:15px;color:var(--maroon);margin-bottom:12px;}
 .modal-step{display:flex;align-items:flex-start;gap:9px;margin-bottom:7px;font-size:13px;}
-.modal-step-num{background:var(--maroon);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.step-num{background:var(--maroon);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
 
-/* MOBILE */
 @media(max-width:640px){
   .row-2{grid-template-columns:1fr;}
-  .row-3{grid-template-columns:1fr 1fr;}
-  .a4-page{width:100%;min-height:auto;padding:12px 10px 16px 10px;box-shadow:0 2px 12px #0002;}
-  .letter-top-row{flex-direction:column;gap:8px;}
-  .letter-date-place{text-align:left;}
-  .letter-date-place table{margin-left:0;}
-  .sign-row{flex-direction:column;gap:16px;}
+  .staff-grid{grid-template-columns:1fr 1fr;}
+  .a4-page{width:100%;min-height:auto;padding:12px 10px 16px 10px;}
+  .ltr-top-row{flex-direction:column;gap:6px;}
+  .ltr-dateplace{text-align:left;}
+  .sign-row{flex-direction:column;gap:14px;}
   .sign-left,.sign-center,.sign-right{text-align:left!important;flex:unset;width:100%;}
   .preview-actions{flex-direction:column;align-items:stretch;}
-  .preview-actions .btn{justify-content:center;}
   .print-tip{margin-right:0;}
-  #pages-container{overflow-x:auto;}
-  .hours-compact-table{font-size:9pt;}
-  .compact-table{font-size:9pt;}
 }
-
-/* ====== PRINT ====== */
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  body>*{display:none!important;}
+  body>*:not(#pane-preview){display:none!important;}
   #pane-preview{display:block!important;}
   .preview-wrap{padding:0!important;}
   .preview-actions,.overflow-notice{display:none!important;}
   #pages-container{max-width:none!important;margin:0!important;}
-  .a4-page{
-    box-shadow:none!important;
-    margin:0!important;
-    padding:1.2cm 1.8cm 1.5cm 1.8cm!important;
-    width:210mm!important;
-    min-height:297mm!important;
-    page-break-after:always;
-    page-break-inside:avoid;
-  }
+  .a4-page{box-shadow:none!important;margin:0!important;padding:1.2cm 1.8cm 1.5cm 1.8cm!important;width:210mm!important;min-height:297mm!important;page-break-after:always;page-break-inside:avoid;}
   .a4-page:last-child{page-break-after:avoid;}
   @page{size:A4;margin:0;}
 }
@@ -200,14 +156,14 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
   <div class="modal-box">
     <h3><i class="fa-solid fa-print"></i> Print / Save as PDF</h3>
     <div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;">
-      <div class="modal-step"><div class="modal-step-num">1</div><div>In the print dialog, set <strong>Destination</strong> to "Save as PDF" or choose your printer.</div></div>
-      <div class="modal-step"><div class="modal-step-num">2</div><div>Set <strong>Margins</strong> to <strong>None</strong>.</div></div>
-      <div class="modal-step"><div class="modal-step-num">3</div><div>Uncheck <strong>Headers and footers</strong>.</div></div>
+      <div class="modal-step"><div class="step-num">1</div><div>Set <strong>Destination</strong> → "Save as PDF" or your printer.</div></div>
+      <div class="modal-step"><div class="step-num">2</div><div>Set <strong>Margins</strong> → <strong>None</strong>.</div></div>
+      <div class="modal-step"><div class="step-num">3</div><div>Uncheck <strong>Headers and footers</strong>.</div></div>
     </div>
-    <div id="modal-mobile-note" style="display:none;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:9px 11px;font-size:12px;margin-bottom:10px;"><strong>Mobile:</strong> Tap Share → Print, pinch thumbnail → tap PDF icon.</div>
+    <div id="modal-mob" style="display:none;background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:9px 11px;font-size:12px;margin-bottom:10px;"><strong>Mobile:</strong> Share → Print → pinch thumbnail → tap PDF.</div>
     <div style="display:flex;gap:8px;margin-top:12px;">
       <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('print-modal').style.display='none'">Cancel</button>
-      <button class="btn btn-primary" style="flex:2;" onclick="doPrint()"><i class="fa-solid fa-print"></i> Open Print Dialog</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="doPrint()"><i class="fa-solid fa-print"></i> Print Now</button>
     </div>
   </div>
 </div>
@@ -215,7 +171,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
 <!-- HEADER -->
 <div class="app-header">
   <div class="header-title">
-    <h1><i class="fa-solid fa-file-lines" style="margin-right:8px;opacity:.8;"></i>Department Letter Generator</h1>
+    <h1><i class="fa-solid fa-file-lines" style="margin-right:7px;opacity:.8;"></i>Department Letter Generator</h1>
     <p>PG &amp; Research Dept. of Advanced Zoology and Biotechnology, Loyola College</p>
   </div>
 </div>
@@ -226,7 +182,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
   <button class="tab-btn" onclick="switchTab('preview',this)" id="tab-preview"><i class="fa-regular fa-file-lines"></i> Preview &amp; Download</button>
 </div>
 
-<!-- ===== FORM PANE ===== -->
+<!-- FORM PANE -->
 <div id="pane-form" class="form-wrap">
 
   <div class="form-section">
@@ -253,7 +209,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
         </div>
       </div>
       <div id="role-custom-wrap" style="display:none;" class="row">
-        <div class="field"><label><i class="fa-solid fa-keyboard"></i>Custom Role</label><input id="s-role-custom" type="text" placeholder="Enter designation" oninput="syncPreview()"/></div>
+        <div class="field"><label>Custom Role</label><input id="s-role-custom" type="text" placeholder="Enter designation" oninput="syncPreview()"/></div>
       </div>
     </div>
   </div>
@@ -265,8 +221,8 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
         <div class="field"><label><i class="fa-solid fa-heading"></i>Letter Title</label><input id="l-title" type="text" value="Letter for Request for Physical Attendance" oninput="syncPreview()"/></div>
         <div class="field"><label><i class="fa-solid fa-venus-mars"></i>Salutation</label>
           <div class="radio-group">
-            <label class="radio-opt" id="gen-m" onclick="selectGender('male')"><i class="fa-solid fa-mars"></i> Male (Sir)</label>
-            <label class="radio-opt selected" id="gen-f" onclick="selectGender('female')"><i class="fa-solid fa-venus"></i> Female (Ma'am)</label>
+            <label class="radio-opt" id="gen-m" onclick="selectGender('male')"><i class="fa-solid fa-mars"></i> Sir</label>
+            <label class="radio-opt selected" id="gen-f" onclick="selectGender('female')"><i class="fa-solid fa-venus"></i> Ma'am</label>
           </div>
         </div>
       </div>
@@ -344,7 +300,7 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
       <div id="staff-list"></div>
       <button class="btn btn-add" onclick="addStaff()"><i class="fa-solid fa-plus"></i> Add Staff</button>
       <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
-        <div class="field" style="max-width:380px;"><label><i class="fa-solid fa-person-chalkboard"></i>Head of the Department Name</label>
+        <div class="field" style="max-width:340px;"><label><i class="fa-solid fa-person-chalkboard"></i>Head of the Department</label>
           <input id="hod-name" type="text" value="Dr. V. Pushpa Rani" oninput="syncPreview()"/>
         </div>
       </div>
@@ -356,46 +312,76 @@ table.students-table tr:nth-child(even){background:#faf6ee;}
   </div>
 </div>
 
-<!-- ===== PREVIEW PANE ===== -->
+<!-- PREVIEW PANE -->
 <div id="pane-preview" style="display:none;">
   <div class="preview-wrap">
     <div class="preview-actions">
-      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Set margins to None when printing/saving PDF.</span>
+      <span class="print-tip"><i class="fa-solid fa-circle-info"></i> Set margins to None when printing.</span>
       <button class="btn btn-outline" onclick="switchTab('form',document.getElementById('tab-form'))"><i class="fa-solid fa-arrow-left"></i> Edit</button>
       <button class="btn btn-gold" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
       <button class="btn btn-primary" onclick="showPrintModal()"><i class="fa-solid fa-print"></i> Print</button>
     </div>
     <div class="overflow-notice" id="overflow-notice"></div>
-    <div id="pages-container">
-      <!-- Pages injected by JS -->
-    </div>
+    <div id="pages-container"></div>
   </div>
 </div>
 
 <script>
-/* ============================================================
-   DATA & CONSTANTS
-   ============================================================ */
+/* ================================================================
+   CONSTANTS & DATA
+   ================================================================ */
 const HOURS=[
-  {label:"1st Hour",time:"08:15–09:10 AM"},
-  {label:"2nd Hour",time:"09:10–10:05 AM"},
-  {label:"3rd Hour",time:"10:05–11:00 AM"},
-  {label:"4th Hour",time:"11:25 AM–12:20 PM"},
-  {label:"5th Hour",time:"12:20–01:15 PM"},
+  {label:"1st Hour",time:"08:15 AM – 09:10 AM"},
+  {label:"2nd Hour",time:"09:10 AM – 10:05 AM"},
+  {label:"3rd Hour",time:"10:05 AM – 11:00 AM"},
+  {label:"4th Hour",time:"11:25 AM – 12:20 PM"},
+  {label:"5th Hour",time:"12:20 PM – 01:15 PM"},
 ];
 const FULL_CLASS={
-  "I B.Sc. AZ-BT":"I Year B.Sc. Advanced Zoology &amp; Biotechnology",
-  "II B.Sc. AZ-BT":"II Year B.Sc. Advanced Zoology &amp; Biotechnology",
-  "III B.Sc. AZ-BT":"III Year B.Sc. Advanced Zoology &amp; Biotechnology",
+  "I B.Sc. AZ-BT":"I Year B.Sc. Advanced Zoology and Biotechnology",
+  "II B.Sc. AZ-BT":"II Year B.Sc. Advanced Zoology and Biotechnology",
+  "III B.Sc. AZ-BT":"III Year B.Sc. Advanced Zoology and Biotechnology",
   "I M.Sc. Zoo":"I Year M.Sc. Zoology",
   "II M.Sc. Zoo":"II Year M.Sc. Zoology",
 };
 const DESIG_PRESETS=["Assistant Professor","Associate Professor","Professor","Staff Advisor","President","Vice President","Treasurer","Joint Secretary","Other"];
 
-// How many student rows we allow inline before forcing annexure.
-// This is a design constant — keeps signatures on letter page.
-const MAX_INLINE_STUDENTS = 8;
-const ROWS_PER_ANNEXURE = 22;
+/*
+  LINE COUNT LOGIC:
+  A4 content height ≈ 269mm ≈ 1018px at 96dpi.
+  Font 10.5pt, line-height 1.5 → 1 line ≈ 21px.
+  Total lines available ≈ 48.
+  Reserve for signatures: ~10 lines.
+  Usable content lines: 38.
+
+  We count each block's line contribution:
+    - Title: 2 (title + blank line after)
+    - Top row (from + date/place): max(from_lines, 2) — from block is ~7 lines
+    - To block: 4 lines
+    - Subject: 1
+    - Salutation: 1
+    - Body: count paragraphs (split \n) + word-wrap estimate
+    - Hours: 1 line per hour (bold inline)
+    - "following students..." intro: 1
+    - Student table: header(1) + n rows
+    - Closing: 3 lines
+    Total fixed (no students, 3 hours) ≈ 7+4+1+1+4(body)+3(hours)+1+3 + title(2) = ~26
+    Remaining for students: 38-26 = 12 rows before overflow.
+    We cap at 8 to be safe.
+*/
+const USABLE_LINES = 38;
+const LINES_SIGNATURE = 8;  // reserved at bottom
+const LINES_TITLE = 2;
+const LINES_FROM = 7;
+const LINES_DATE_PLACE = 2;
+const LINES_TO = 4;
+const LINES_SUBJECT = 1;
+const LINES_SALUTATION = 1;
+const LINES_CLOSING = 3;
+const LINES_STD_INTRO = 1;
+const LINES_STD_HEADER = 1;
+const ROWS_PER_ANNEXURE = 25;
+const CHARS_PER_LINE = 85; // approx chars that fit in 10.5pt Times on A4
 
 let selectedHours=[0,1,2];
 let selectedGender='female';
@@ -404,30 +390,28 @@ let selectedReason='sports_practice';
 let students=[{name:'',deptno:'',cls:'I B.Sc. AZ-BT'},{name:'',deptno:'',cls:'I B.Sc. AZ-BT'}];
 let staffList=[];
 
-/* Init today's date */
+/* Init date */
 const today=new Date();
 const pad=n=>String(n).padStart(2,'0');
 const todayStr=`${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
-const dInput=document.getElementById('l-date');
-dInput.value=todayStr;
-const minD=new Date(today);minD.setDate(today.getDate()-30);
-const maxD=new Date(today);maxD.setDate(today.getDate()+30);
-dInput.min=minD.toISOString().split('T')[0];
-dInput.max=maxD.toISOString().split('T')[0];
+document.getElementById('l-date').value=todayStr;
+const minD=new Date(today); minD.setDate(today.getDate()-90);
+const maxD=new Date(today); maxD.setDate(today.getDate()+90);
+document.getElementById('l-date').min=minD.toISOString().split('T')[0];
+document.getElementById('l-date').max=maxD.toISOString().split('T')[0];
 
-/* Build hour checkboxes */
+/* Hour checkboxes */
 (function(){
   const c=document.getElementById('hours-container');
   HOURS.forEach((h,i)=>{
     const el=document.createElement('label');
     el.className='check-opt'+(selectedHours.includes(i)?' selected':'');
     el.id='hour-'+i;
-    el.innerHTML=`<div class="check-top"><input type="checkbox" ${selectedHours.includes(i)?'checked':''} style="accent-color:var(--gold)"/> <strong>${h.label}</strong></div><div class="hour-time">${h.time}</div>`;
+    el.innerHTML=`<div class="check-top"><input type="checkbox" ${selectedHours.includes(i)?'checked':''} style="accent-color:var(--gold)"/><strong>${h.label}</strong></div><div class="hour-time">${h.time}</div>`;
     el.addEventListener('click',()=>toggleHour(i,el));
     c.appendChild(el);
   });
 })();
-
 function toggleHour(i,el){
   if(selectedHours.includes(i))selectedHours=selectedHours.filter(h=>h!==i);
   else selectedHours=[...selectedHours,i].sort((a,b)=>a-b);
@@ -436,13 +420,52 @@ function toggleHour(i,el){
   syncPreview();
 }
 
-/* ============================================================
-   FORM HELPERS
-   ============================================================ */
+/* ================================================================
+   LINE COUNTING
+   ================================================================ */
+function countBodyLines(text){
+  // Split by newlines, then estimate wrapping for each line
+  if(!text)return 2;
+  const paras=text.split('\n');
+  let total=0;
+  paras.forEach(p=>{
+    if(!p.trim()){total+=1;return;}
+    // text-indent adds ~36px ≈ 4 chars effectively
+    total+=Math.max(1,Math.ceil((p.length+4)/CHARS_PER_LINE));
+  });
+  return Math.max(2,total);
+}
+function countHoursLines(){
+  if(selectedHours.length===0)return 1;
+  if(selectedHours.length===HOURS.length)return 1; // Full day = 1 line
+  return selectedHours.length;
+}
+function calcLetterLines(bodyText){
+  return (
+    LINES_TITLE +
+    Math.max(LINES_FROM, LINES_DATE_PLACE) +
+    LINES_TO +
+    LINES_SUBJECT +
+    LINES_SALUTATION +
+    countBodyLines(bodyText) +
+    countHoursLines() +
+    LINES_CLOSING
+  );
+}
+function maxInlineStudents(){
+  const body=document.getElementById('l-body').value;
+  const fixedLines=calcLetterLines(body);
+  const available=USABLE_LINES - fixedLines - LINES_STD_INTRO - LINES_STD_HEADER;
+  return Math.max(0,Math.floor(available));
+}
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function formatDate(val){
   if(!val)return '—';
-  const d=new Date(val+'T00:00:00');
-  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  return new Date(val+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
 }
 function getSenderRole(){
   const sel=document.getElementById('s-role-select').value;
@@ -462,7 +485,7 @@ function selectLocation(l){
   selectedLocation=l;
   document.getElementById('loc-in').classList.toggle('selected',l==='inside');
   document.getElementById('loc-out').classList.toggle('selected',l==='outside');
-  forceAutoUpdateText();syncPreview();
+  forceAutoUpdateText(); syncPreview();
 }
 function selectReason(r){
   selectedReason=r;
@@ -470,14 +493,14 @@ function selectReason(r){
   const map={sports_practice:'sp',sports_event:'se',cultural_practice:'cp',cultural_event:'ce',technical_event:'te',other:'ot'};
   document.getElementById('r-'+map[r]).classList.add('selected');
   document.getElementById('reason-custom-wrap').style.display=r==='other'?'block':'none';
-  forceAutoUpdateText();syncPreview();
+  forceAutoUpdateText(); syncPreview();
 }
 function handleRoleSelect(){
   document.getElementById('role-custom-wrap').style.display=document.getElementById('s-role-select').value==='custom'?'grid':'none';
   syncPreview();
 }
 function triggerAutoUpdate(){forceAutoUpdateText();syncPreview();}
-function generateAutoText(){
+function forceAutoUpdateText(){
   const eName=document.getElementById('e-name').value||'[Event Name]';
   const eDate=formatDate(document.getElementById('e-date').value);
   const eVenue=document.getElementById('e-venue').value||'[Venue]';
@@ -485,17 +508,13 @@ function generateAutoText(){
   const subj=`Request for Attendance Permission for ${rt} — ${selectedLocation==='inside'?'Within College':'Outside College'} — Reg.`;
   const locText=selectedLocation==='outside'?`, to be held at ${eVenue}`:', to be held within the college campus';
   const body=`We, the students of the PG & Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, respectfully wish to bring to your kind notice that we are scheduled to participate in the ${eName}${eDate!=='—'?` on ${eDate}`:''}${locText}.\n\nThe purpose of our participation is ${rt}. In this regard, we humbly request you to kindly grant attendance permission for the following hours:`;
-  return{subj,body};
-}
-function forceAutoUpdateText(){
-  const{subj,body}=generateAutoText();
   document.getElementById('l-subject').value=subj;
   document.getElementById('l-body').value=body;
 }
 
-/* ============================================================
+/* ================================================================
    STUDENTS FORM
-   ============================================================ */
+   ================================================================ */
 function renderStudents(){
   const tb=document.getElementById('students-body');
   tb.innerHTML='';
@@ -504,8 +523,8 @@ function renderStudents(){
     const opts=CLS.map(c=>`<option value="${c}"${s.cls===c?' selected':''}>${c}</option>`).join('');
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${i+1}</td>
-      <td><input style="width:100%;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${escHtml(s.name)}" placeholder="Full name" oninput="students[${i}].name=this.value;syncPreview()"/></td>
-      <td><input style="width:110px;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${escHtml(s.deptno)}" placeholder="25-UAZ-016" oninput="students[${i}].deptno=this.value;syncPreview()"/></td>
+      <td><input style="width:100%;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${esc(s.name)}" placeholder="Full name" oninput="students[${i}].name=this.value;syncPreview()"/></td>
+      <td><input style="width:110px;padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" value="${esc(s.deptno)}" placeholder="25-UAZ-016" oninput="students[${i}].deptno=this.value;syncPreview()"/></td>
       <td><select style="padding:4px 7px;border:1px solid #ddd;border-radius:4px;font-family:Georgia,serif;font-size:12px;" onchange="students[${i}].cls=this.value;syncPreview()">${opts}</select></td>
       <td><button class="btn btn-danger" onclick="removeStudent(${i})"><i class="fa-solid fa-xmark"></i></button></td>`;
     tb.appendChild(tr);
@@ -515,26 +534,30 @@ function addStudent(){students.push({name:'',deptno:'',cls:'I B.Sc. AZ-BT'});ren
 function removeStudent(i){students.splice(i,1);renderStudents();syncPreview();}
 renderStudents();
 
-/* ============================================================
+/* ================================================================
    STAFF FORM
-   ============================================================ */
+   ================================================================ */
 function renderStaff(){
   const c=document.getElementById('staff-list');
   c.innerHTML='';
   staffList.forEach((sf,i)=>{
     const desigOpts=DESIG_PRESETS.map(d=>`<option value="${d}"${sf.desig===d?' selected':''}>${d}</option>`).join('');
-    const row=document.createElement('div');
-    row.className='staff-row';
-    row.style.gridTemplateColumns='1fr 1fr 1fr';
-    row.innerHTML=`
-      <div class="field"><label>Staff Name</label><input type="text" value="${escHtml(sf.name||'')}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/></div>
-      <div class="field"><label>Designation</label><select onchange="handleStaffDesig(${i},this.value)">${desigOpts}</select></div>
-      <div class="field" id="sdc-${i}" style="${sf.desig==='Other'?'':'display:none'}"><label>Custom Designation</label><input type="text" value="${escHtml(sf.desigCustom||'')}" placeholder="Enter..." oninput="staffList[${i}].desigCustom=this.value;syncPreview()"/></div>
-      <div class="field"><label>Association / Role</label><input type="text" value="${escHtml(sf.association||'')}" placeholder="Staff-in-Charge, Dept. Association" oninput="staffList[${i}].association=this.value;syncPreview()"/></div>
-      <div class="field"><label>Department</label><input type="text" value="${escHtml(sf.dept||'PG &amp; Research Dept. of AZ &amp; BT')}" oninput="staffList[${i}].dept=this.value;syncPreview()"/></div>
-      <div class="field"><label>College</label><input type="text" value="${escHtml(sf.college||'Loyola College (Autonomous)')}" oninput="staffList[${i}].college=this.value;syncPreview()"/></div>
-      <div class="field" style="align-self:end;"><label>&nbsp;</label><button class="btn btn-danger" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button></div>`;
-    c.appendChild(row);
+    const card=document.createElement('div');
+    card.className='staff-card';
+    card.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong style="font-size:12px;color:var(--maroon);">Staff ${i+1}</strong>
+        <button class="btn btn-danger" onclick="removeStaff(${i})"><i class="fa-solid fa-xmark"></i> Remove</button>
+      </div>
+      <div class="staff-grid">
+        <div class="field"><label>Staff Name</label><input type="text" value="${esc(sf.name||'')}" placeholder="Dr. K. Selvam" oninput="staffList[${i}].name=this.value;syncPreview()"/></div>
+        <div class="field"><label>Designation</label><select onchange="handleStaffDesig(${i},this.value)">${desigOpts}</select></div>
+        <div class="field" id="sdc-${i}" style="${sf.desig==='Other'?'':'display:none'}"><label>Custom Designation</label><input type="text" value="${esc(sf.desigCustom||'')}" placeholder="Enter..." oninput="staffList[${i}].desigCustom=this.value;syncPreview()"/></div>
+        <div class="field"><label>Association / Role in Event</label><input type="text" value="${esc(sf.association||'')}" placeholder="Staff-in-Charge, Dept. Association" oninput="staffList[${i}].association=this.value;syncPreview()"/></div>
+        <div class="field"><label>Department</label><input type="text" value="${esc(sf.dept||'PG & Research Dept. of AZ & BT')}" oninput="staffList[${i}].dept=this.value;syncPreview()"/></div>
+        <div class="field"><label>College</label><input type="text" value="${esc(sf.college||'Loyola College (Autonomous)')}" oninput="staffList[${i}].college=this.value;syncPreview()"/></div>
+      </div>`;
+    c.appendChild(card);
   });
 }
 function handleStaffDesig(i,v){
@@ -545,148 +568,134 @@ function handleStaffDesig(i,v){
 }
 function addStaff(){staffList.push({name:'',desig:'Assistant Professor',desigCustom:'',association:'',dept:'PG & Research Dept. of AZ & BT',college:'Loyola College (Autonomous)'});renderStaff();syncPreview();}
 function removeStaff(i){staffList.splice(i,1);renderStaff();syncPreview();}
-function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* ============================================================
-   HTML BUILDERS for the A4 pages
-   ============================================================ */
-function buildHoursTableHTML(){
-  const allSelected=selectedHours.length===HOURS.length;
-  let rows='';
-  if(selectedHours.length===0){
-    rows=`<tr><td colspan="2" style="text-align:center;color:#999;font-size:9pt;">No hours selected</td></tr>`;
-  } else if(allSelected){
+/* ================================================================
+   HTML BUILDERS
+   ================================================================ */
+function buildHoursHTML(){
+  if(selectedHours.length===0)return `<div class="ltr-hours"><span style="color:#999;">No hours selected.</span></div>`;
+  if(selectedHours.length===HOURS.length){
     const t0=HOURS[0].time.split('–')[0].trim();
     const t1=HOURS[HOURS.length-1].time.split('–')[1].trim();
-    rows=`<tr><td class="h-label">Full Day (1st – 5th Hour)</td><td class="h-time">${t0} – ${t1}</td></tr>`;
-  } else {
-    selectedHours.forEach(i=>{
-      rows+=`<tr><td class="h-label">${HOURS[i].label}</td><td class="h-time">${HOURS[i].time}</td></tr>`;
-    });
+    return `<div class="ltr-hours"><span class="ltr-hours-item">Full Day (1st Hour – 5th Hour): ${t0} – ${t1}</span></div>`;
   }
-  return `<table class="hours-compact-table"><thead><tr><th>Hour</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const lines=selectedHours.map(i=>`<span class="ltr-hours-item">${HOURS[i].label}: ${HOURS[i].time}</span>`).join('<br/>');
+  return `<div class="ltr-hours">${lines}</div>`;
 }
 
 function buildStudentTableHTML(rows, offset){
   offset=offset||0;
-  let html=`<table class="compact-table"><thead><tr><th style="width:32px;">S.No</th><th style="text-align:left;">Name</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
+  let html=`<table class="std-table"><thead><tr><th style="width:32px;">S.No</th><th style="text-align:left;">Name of the Student</th><th>Dept. No.</th><th>Class</th></tr></thead><tbody>`;
   rows.forEach((s,i)=>{
-    html+=`<tr><td>${offset+i+1}</td><td class="txt-left">${escHtml(s.name)||'—'}</td><td>${escHtml(s.deptno)||'—'}</td><td>${s.cls}</td></tr>`;
+    html+=`<tr><td>${offset+i+1}</td><td class="tl">${esc(s.name)||'—'}</td><td>${esc(s.deptno)||'—'}</td><td>${s.cls}</td></tr>`;
   });
   return html+`</tbody></table>`;
 }
 
-function buildSignRowHTML(sName, sRole, hodName){
+function buildSignHTML(sName,sRole,hodName){
   const validStaff=staffList.filter(sf=>sf.name||sf.desig);
-  let leftHTML=`<div class="sign-spacer"></div><div class="sign-name">${escHtml(sName)}</div><div class="sign-role">${escHtml(sRole)}</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div>`;
-
-  let centerHTML='';
+  const left=`<div class="sign-spacer"></div><div class="sign-name">${esc(sName)}</div><div class="sign-sub">${esc(sRole)}</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div>`;
+  let center='';
   if(validStaff.length>0){
-    centerHTML=validStaff.map(sf=>{
+    center=validStaff.map(sf=>{
       const dLabel=sf.desig==='Other'?(sf.desigCustom||'—'):(sf.desig||'—');
-      const assoc=sf.association?`<div class="sign-role">${escHtml(sf.association)}</div>`:'';
-      return `<div class="sign-spacer"></div><div class="sign-name">${escHtml(sf.name||'—')}</div><div class="sign-role">${escHtml(dLabel)}</div>${assoc}<div class="sign-dept">${escHtml(sf.dept||'')}</div><div class="sign-dept">${escHtml(sf.college||'')}</div>`;
+      const assoc=sf.association?`<div class="sign-sub">${esc(sf.association)}</div>`:'';
+      return `<div class="sign-spacer"></div><div class="sign-name">${esc(sf.name||'—')}</div><div class="sign-sub">${esc(dLabel)}</div>${assoc}<div class="sign-dept">${esc(sf.dept||'')}</div><div class="sign-dept">${esc(sf.college||'')}</div>`;
     }).join('<br/>');
   }
-
-  let rightHTML=`<div class="sign-spacer"></div><div class="sign-name" style="text-align:right;">${escHtml(hodName)}</div><div class="sign-role" style="text-align:right;">Head of the Department</div><div class="sign-dept" style="text-align:right;">PG &amp; Research Dept. of AZ &amp; BT</div><div class="sign-dept" style="text-align:right;">Loyola College (Autonomous)</div><div class="sign-date-line" style="text-align:right;">Date: <span class="date-ph">__ / __ / ____</span></div>`;
-
+  // Right block: center-aligned within its cell
+  const right=`<div class="sign-spacer"></div><div class="sign-name">${esc(hodName)}</div><div class="sign-sub">Head of the Department</div><div class="sign-dept">PG &amp; Research Dept. of AZ &amp; BT</div><div class="sign-dept">Loyola College (Autonomous)</div><div class="sign-date">Date: <span class="date-blank">__ / __ / ____</span></div>`;
   return `<div class="sign-row">
-    <div class="sign-left">${leftHTML}</div>
-    ${centerHTML?`<div class="sign-center">${centerHTML}</div>`:''}
-    <div class="sign-right">${rightHTML}</div>
+    <div class="sign-left">${left}</div>
+    ${validStaff.length>0?`<div class="sign-center">${center}</div>`:''}
+    <div class="sign-right">${right}</div>
   </div>`;
 }
 
-/* ============================================================
-   PAGE BUILDER — creates the letter page DOM node
-   ============================================================ */
-function buildLetterPage(data){
-  const {sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure}=data;
-  const page=document.createElement('div');
-  page.className='a4-page';
-  page.id='letter-page';
-
+/* ================================================================
+   BUILD LETTER PAGE
+   ================================================================ */
+function buildLetterPage(d){
+  const {sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure}=d;
   const fromLines=[
     `<strong>From,</strong>`,
-    escHtml(sName)+',',
-    sDeptNo?escHtml(sDeptNo):'',
-    FULL_CLASS[sCls]||escHtml(sCls),
-    escHtml(sRole)+',',
+    esc(sName)+',',
+    sDeptNo?esc(sDeptNo):'',
+    FULL_CLASS[sCls]||esc(sCls),
+    esc(sRole)+',',
     `PG &amp; Research Department of Advanced Zoology and Biotechnology,`,
     `Loyola College (Autonomous), Chennai – 600 034.`
   ].filter(Boolean).join('<br/>');
 
-  const toLines=`<strong>To</strong><br/>The Head of the Department,<br/>PG &amp; Research Department of Advanced Zoology and Biotechnology,<br/>Loyola College (Autonomous), Chennai – 600 034.`;
-
-  let studentSection='';
-  if(!useAnnexure && filled.length>0){
-    studentSection=`<p style="font-size:10pt;margin-bottom:6px;">The following students require attendance permission for the aforementioned hours:</p>${buildStudentTableHTML(filled)}`;
-  } else if(useAnnexure){
-    studentSection=`<p style="font-size:10pt;margin-bottom:6px;font-style:italic;">The list of participants who require attendance permission is attached as Annexure I.</p>`;
-  } else {
-    studentSection=`<p style="font-size:10pt;color:#999;margin-bottom:6px;">No students added.</p>`;
+  let stdSection='';
+  if(!useAnnexure&&filled.length>0){
+    stdSection=`<p style="font-size:10.5pt;margin-bottom:6px;">The following students require attendance permission for the aforementioned hours:</p>${buildStudentTableHTML(filled)}`;
+  }else if(useAnnexure){
+    stdSection=`<p style="font-size:10.5pt;margin-bottom:6px;font-style:italic;">The list of participants who require attendance permission is attached as Annexure I.</p>`;
+  }else{
+    stdSection=`<p style="font-size:10.5pt;color:#999;margin-bottom:6px;">No students added.</p>`;
   }
 
+  const page=document.createElement('div');
+  page.className='a4-page';
+  page.id='letter-page';
   page.innerHTML=`
-    <div class="letter-content-area">
-      <div class="letter-title">${escHtml(lTitle)}</div>
-      <div class="letter-top-row">
-        <div class="letter-from-block">${fromLines}</div>
-        <div class="letter-date-place">
-          <table><tr><td>Date</td><td>:</td><td>${escHtml(lDate)}</td></tr><tr><td>Place</td><td>:</td><td>${escHtml(lPlace)}</td></tr></table>
+    <div class="ltr-content">
+      <div class="ltr-title">${esc(lTitle)}</div>
+      <div class="ltr-title-gap"></div>
+      <div class="ltr-top-row">
+        <div class="ltr-from">${fromLines}</div>
+        <div class="ltr-dateplace">
+          <div class="ltr-dateplace-row"><span class="ltr-dateplace-label">Date&nbsp;:</span>&nbsp;${esc(lDate)}</div>
+          <div class="ltr-dateplace-row"><span class="ltr-dateplace-label">Place&nbsp;:</span>&nbsp;${esc(lPlace)}</div>
         </div>
       </div>
-      <div class="letter-to">${toLines}</div>
-      <div class="letter-subject"><strong>Sub:</strong> ${escHtml(subject)}</div>
-      <div class="letter-salutation">Respected ${salutation},</div>
-      <div class="letter-body">${escHtml(body)}</div>
-      ${buildHoursTableHTML()}
-      <div id="lv-students-area">${studentSection}</div>
-      <div class="letter-closing">
-        <div>We assure you that the mentioned students will attend all remaining hours responsibly. We therefore earnestly request you to kindly grant the attendance permission.</div>
-        <div style="margin-top:8px;">Thanking you,</div>
+      <div class="ltr-to"><strong>To</strong><br/>The Head of the Department,<br/>PG &amp; Research Department of Advanced Zoology and Biotechnology,<br/>Loyola College (Autonomous), Chennai – 600 034.</div>
+      <div class="ltr-subject"><strong>Sub:</strong> ${esc(subject)}</div>
+      <div style="margin-bottom:7px;font-size:10.5pt;">Respected ${salutation},</div>
+      <div class="ltr-body">${esc(body)}</div>
+      ${buildHoursHTML()}
+      <div>${stdSection}</div>
+      <div class="ltr-closing">
+        We assure you that the mentioned students will attend all remaining hours responsibly. We therefore earnestly request you to kindly grant the attendance permission.
+        <div style="margin-top:7px;">Thanking you,</div>
         <div>Yours faithfully,</div>
       </div>
     </div>
-    <div class="letter-sig-area">${buildSignRowHTML(sName,sRole,hodName)}</div>
-  `;
+    <div class="ltr-sig">${buildSignHTML(sName,sRole,hodName)}</div>`;
   return page;
 }
 
-/* ============================================================
-   ANNEXURE PAGES BUILDER
-   Signature pinned to bottom of each page using flex
-   ============================================================ */
-function buildAnnexurePages(filled, sName, sRole, hodName){
+/* ================================================================
+   BUILD ANNEXURE PAGES
+   No "Yours faithfully" — signature at bottom via flex
+   ================================================================ */
+function buildAnnexurePages(filled,sName,sRole,hodName){
   const pages=[];
   const chunks=[];
-  for(let i=0;i<filled.length;i+=ROWS_PER_ANNEXURE){
-    chunks.push(filled.slice(i,i+ROWS_PER_ANNEXURE));
-  }
+  for(let i=0;i<filled.length;i+=ROWS_PER_ANNEXURE)chunks.push(filled.slice(i,i+ROWS_PER_ANNEXURE));
   chunks.forEach((chunk,ci)=>{
-    const page=document.createElement('div');
-    page.className='a4-page';
     const pNum=ci+1, total=chunks.length;
     const offset=ci*ROWS_PER_ANNEXURE;
+    const page=document.createElement('div');
+    page.className='a4-page';
     page.innerHTML=`
-      <div class="letter-content-area">
-        <div class="letter-title">Annexure I — List of Participants (Page ${pNum} of ${total})</div>
-        <p style="font-size:10pt;margin-bottom:8px;text-indent:36px;">The following students of the PG &amp; Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, require attendance permission:</p>
+      <div class="ltr-content">
+        <div class="ltr-title">Annexure I — List of Participants (Page ${pNum} of ${total})</div>
+        <div class="ltr-title-gap"></div>
+        <p style="font-size:10.5pt;margin-bottom:8px;text-indent:36px;">The following students of the PG &amp; Research Department of Advanced Zoology and Biotechnology, Loyola College (Autonomous), Chennai, require attendance permission:</p>
         ${buildStudentTableHTML(chunk,offset)}
-        <div style="font-size:10.5pt;margin-top:6px;">Yours faithfully,</div>
       </div>
-      <div class="letter-sig-area">${buildSignRowHTML(sName,sRole,hodName)}</div>
-      <div class="annexure-page-num">— ${pNum} of ${total} —</div>
-    `;
+      <div class="ltr-sig">${buildSignHTML(sName,sRole,hodName)}</div>
+      <div class="annex-pgnum">— Page ${pNum} of ${total} —</div>`;
     pages.push(page);
   });
   return pages;
 }
 
-/* ============================================================
-   MAIN syncPreview — fully rebuilds the pages container
-   ============================================================ */
+/* ================================================================
+   SYNC PREVIEW — main render function
+   ================================================================ */
 function syncPreview(){
   const sName=document.getElementById('s-name').value||'[Name]';
   const sDeptNo=document.getElementById('s-deptno').value;
@@ -699,109 +708,112 @@ function syncPreview(){
   const salutation=selectedGender==='male'?'Sir':"Ma'am";
   const subject=document.getElementById('l-subject').value;
   const body=document.getElementById('l-body').value;
-
   const filled=students.filter(s=>s.name||s.deptno);
-  const useAnnexure=filled.length>MAX_INLINE_STUDENTS;
+
+  // Determine if students exceed safe inline count
+  const maxInline=maxInlineStudents();
+  const useAnnexure=filled.length>maxInline;
 
   const container=document.getElementById('pages-container');
   container.innerHTML='';
 
-  const data={sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure};
-  const letterPage=buildLetterPage(data);
-  container.appendChild(letterPage);
+  const d={sName,sDeptNo,sCls,sRole,lDate,lPlace,lTitle,hodName,salutation,subject,body,filled,useAnnexure};
+  container.appendChild(buildLetterPage(d));
 
   const notice=document.getElementById('overflow-notice');
-  if(useAnnexure && filled.length>0){
-    const annexPages=buildAnnexurePages(filled,sName,sRole,hodName);
-    annexPages.forEach(p=>container.appendChild(p));
+  if(useAnnexure&&filled.length>0){
+    buildAnnexurePages(filled,sName,sRole,hodName).forEach(p=>container.appendChild(p));
     notice.style.display='block';
-    notice.innerHTML=`<i class="fa-solid fa-circle-info"></i> ${filled.length} students — moved to Annexure I (inline max: ${MAX_INLINE_STUDENTS}).`;
-  } else {
+    notice.innerHTML=`<i class="fa-solid fa-circle-info"></i> ${filled.length} students exceed the safe limit of ${maxInline} for this letter — moved to Annexure I.`;
+  }else{
     notice.style.display='none';
   }
 }
 
-/* ============================================================
-   TAB SWITCHING
-   ============================================================ */
+/* ================================================================
+   TAB SWITCH
+   ================================================================ */
 function switchTab(id,btn){
   document.getElementById('pane-form').style.display=id==='form'?'block':'none';
   document.getElementById('pane-preview').style.display=id==='preview'?'block':'none';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(id==='preview') syncPreview();
+  if(id==='preview')syncPreview();
 }
 
-/* ============================================================
+/* ================================================================
    PRINT
-   ============================================================ */
+   ================================================================ */
 function showPrintModal(){
   syncPreview();
-  document.getElementById('modal-mobile-note').style.display=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'block':'none';
+  document.getElementById('modal-mob').style.display=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'block':'none';
   document.getElementById('print-modal').style.display='flex';
 }
 function doPrint(){
   document.getElementById('print-modal').style.display='none';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+  setTimeout(()=>window.print(),150);
 }
 
-/* ============================================================
-   DOWNLOAD PDF — uses native print-to-PDF via iframe
-   Falls back to html2pdf if available
-   ============================================================ */
+/* ================================================================
+   DOWNLOAD PDF
+   Uses Blob + iframe so the user gets an actual download prompt
+   that triggers the browser's "Save as PDF" print dialog.
+   ================================================================ */
 function downloadPDF(){
   syncPreview();
-  // Build a minimal self-contained HTML for printing
-  const pages=document.getElementById('pages-container');
-  const styles=Array.from(document.querySelectorAll('style')).map(s=>s.outerHTML).join('\n');
-  const faLink=`<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>`;
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/>${faLink}${styles}<style>body{margin:0;padding:0;background:#fff;}@page{size:A4;margin:0;}.a4-page{page-break-after:always;page-break-inside:avoid;}.a4-page:last-child{page-break-after:avoid;}</style></head><body>${pages.innerHTML}</body></html>`;
+  // Collect page HTML
+  const pagesHTML=document.getElementById('pages-container').innerHTML;
+  // Collect all <style> tags from head
+  const allStyles=Array.from(document.querySelectorAll('style')).map(s=>s.textContent).join('\n');
+  const faURL='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css';
 
-  // Try html2pdf first
-  if(typeof html2pdf!=='undefined'){
-    try{
-      const wrapper=document.createElement('div');
-      wrapper.innerHTML=pages.innerHTML;
-      document.body.appendChild(wrapper);
-      wrapper.style.cssText='position:absolute;left:-9999px;top:0;width:210mm;';
-      html2pdf().set({
-        margin:0,
-        filename:'Loyola_Letter.pdf',
-        image:{type:'jpeg',quality:0.97},
-        html2canvas:{scale:2,useCORS:true,width:794,windowWidth:794},
-        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-        pagebreak:{mode:'avoid-all',before:'.a4-page'}
-      }).from(wrapper).save().then(()=>{
-        document.body.removeChild(wrapper);
-      }).catch(()=>{
-        document.body.removeChild(wrapper);
-        printFallback(html);
-      });
-    }catch(e){printFallback(html);}
-  } else {
-    printFallback(html);
+  const fullHTML=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" href="${faURL}"/>
+<style>
+${allStyles}
+/* PDF-specific overrides */
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+body{margin:0;padding:0;background:#fff;}
+.a4-page{
+  box-shadow:none!important;
+  margin:0!important;
+  width:210mm!important;
+  min-height:297mm!important;
+  page-break-after:always;
+  page-break-inside:avoid;
+}
+.a4-page:last-child{page-break-after:avoid;}
+@page{size:A4;margin:0;}
+</style>
+</head>
+<body onload="window.print()">
+${pagesHTML}
+</body>
+</html>`;
+
+  // Create blob and open in new window/tab — browser shows print dialog
+  const blob=new Blob([fullHTML],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const win=window.open(url,'_blank');
+  if(!win){
+    // Popup blocked fallback — download as .html
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='Loyola_Letter.html';
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+    alert('Popup blocked. The letter has been downloaded as an HTML file. Open it in your browser and press Ctrl+P (or Cmd+P) to print/save as PDF.');
+  }else{
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
   }
 }
 
-function printFallback(html){
-  const iframe=document.createElement('iframe');
-  iframe.style.cssText='position:fixed;left:-9999px;top:0;width:210mm;height:297mm;border:none;';
-  document.body.appendChild(iframe);
-  iframe.contentDocument.open();
-  iframe.contentDocument.write(html);
-  iframe.contentDocument.close();
-  iframe.onload=()=>{
-    try{
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    }catch(e){}
-    setTimeout(()=>document.body.removeChild(iframe),3000);
-  };
-}
-
-/* ============================================================
+/* ================================================================
    INIT
-   ============================================================ */
+   ================================================================ */
 forceAutoUpdateText();
 syncPreview();
 </script>
