@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Physical Attendance Generator</title>
+<title>Letter Generator — Loyola College</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
 :root{--maroon:#6b0f1a;--gold:#b8952a;--light-gold:#f5e9c8;--cream:#fdf8f0;--dark:#1a0a0f;--gray:#00000;--border:#d4c09a;}
@@ -759,58 +760,25 @@ function doPrint(){
    Uses Blob + iframe so the user gets an actual download prompt
    that triggers the browser's "Save as PDF" print dialog.
    ================================================================ */
-function downloadPDF(){
+function downloadPDF() {
+  // 1. Ensure the preview is updated
   syncPreview();
-  // Collect page HTML
-  const pagesHTML=document.getElementById('pages-container').innerHTML;
-  // Collect all <style> tags from head
-  const allStyles=Array.from(document.querySelectorAll('style')).map(s=>s.textContent).join('\n');
-  const faURL='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css';
 
-  const fullHTML=`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<link rel="stylesheet" href="${faURL}"/>
-<style>
-${allStyles}
-/* PDF-specific overrides */
-*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-body{margin:0;padding:0;background:#fff;}
-.a4-page{
-  box-shadow:none!important;
-  margin:0!important;
-  width:210mm!important;
-  min-height:297mm!important;
-  page-break-after:always;
-  page-break-inside:avoid;
+  // 2. Select the container to print
+  const element = document.getElementById('pages-container');
+
+  // 3. Define professional PDF options
+  const opt = {
+    margin:       0,
+    filename:     'Loyola_Letter.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // 4. Generate the PDF
+  html2pdf().set(opt).from(element).save();
 }
-.a4-page:last-child{page-break-after:avoid;}
-@page{size:A4;margin:0;}
-</style>
-</head>
-<body onload="window.print()">
-${pagesHTML}
-</body>
-</html>`;
-
-  // Create blob and open in new window/tab — browser shows print dialog
-  const blob=new Blob([fullHTML],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  const win=window.open(url,'_blank');
-  if(!win){
-    // Popup blocked fallback — download as .html
-    const a=document.createElement('a');
-    a.href=url;
-    a.download='Loyola_Letter.html';
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),5000);
-    alert('Popup blocked. The letter has been downloaded as an HTML file. Open it in your browser and press Ctrl+P (or Cmd+P) to print/save as PDF.');
-  }else{
-    setTimeout(()=>URL.revokeObjectURL(url),10000);
-  }
-}
-
 /* ================================================================
    INIT
    ================================================================ */
