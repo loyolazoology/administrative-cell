@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loyola College – Timetable Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   SCREEN STYLES  (admin UI)
+   ══════════════════════════════════════════════ */
+:root{
+  --bg:#eeebe5; --card:#fff; --bdr:#c8c3bb;
+  --txt:#111;   --muted:#666;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+}
+
+/* loading */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;
+    align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#fff;}
+.ov.on{display:flex;}
+.spin{width:34px;height:34px;border:3px solid rgba(255,255,255,.25);
+      border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.ov p{font-size:13px;}
+
+/* shell */
+.wrap{max-width:900px;margin:0 auto;padding:28px 18px 70px;}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:14px;margin-bottom:24px;
+     padding-bottom:14px;border-bottom:2px solid #111;}
+.top img{height:50px;width:50px;object-fit:contain;}
+.top h1{font-family:'EB Garamond',serif;font-size:1.4rem;color:#111;line-height:1.2;}
+.top p{font-size:11px;color:var(--muted);margin-top:3px;}
+
+/* cards */
+.card{background:#fff;border:1px solid var(--bdr);border-radius:8px;
+      padding:18px 20px;margin-bottom:14px;}
+.ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+        color:var(--muted);margin-bottom:14px;padding-bottom:8px;
+        border-bottom:1px solid #e2ddd6;}
+
+/* form grid */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;}
+.fl label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;
+          letter-spacing:.5px;color:var(--muted);margin-bottom:5px;}
+.fl select,.fl input[type=text]{
+  width:100%;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:6px;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;color:#111;background:#fff;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23777' d='M5 7L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  transition:border-color .2s;cursor:pointer;}
+.fl input[type=text]{background-image:none;}
+.fl select:focus,.fl input:focus{outline:none;border-color:#111;}
+
+/* sem matrix */
+.smx{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:6px;}
+.sc{background:#f5f2ee;border:1px solid var(--bdr);border-radius:6px;padding:10px 12px;}
+.sc .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+         color:#111;margin-bottom:6px;}
+.sc select{width:100%;padding:6px 8px;border:1.5px solid var(--bdr);border-radius:5px;
+           font-size:12px;font-family:'DM Sans',sans-serif;appearance:none;-webkit-appearance:none;
+           background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23777' d='M5 7L0 0h10z'/%3E%3C/svg%3E") no-repeat right 8px center;
+           cursor:pointer;}
+.sc select:focus{outline:none;border-color:#111;}
+
+/* toggles */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+.ti{display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;user-select:none;}
+.ti input{width:14px;height:14px;accent-color:#111;cursor:pointer;flex-shrink:0;}
+
+/* buttons */
+.brow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center;}
+.btn{padding:9px 22px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12.5px;
+     font-weight:600;cursor:pointer;border:none;transition:all .18s;
+     display:inline-flex;align-items:center;gap:7px;}
+.bd{background:#111;color:#fff;}.bd:hover{background:#2a2a2a;}
+.bo{background:transparent;color:#111;border:1.5px solid #111;}
+.bo:hover{background:#111;color:#fff;}
+.btn:disabled{opacity:.38;cursor:not-allowed;}
+.hint{font-size:11px;color:var(--muted);}
+
+/* status */
+.st{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px;}
+.st.err{color:#990000;}.st.ok{color:#1a6b1a;}
+
+/* preview */
+#pw{display:none;margin-top:18px;}
+.pb{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+.ps{background:#888;border-radius:8px;padding:16px;overflow:auto;max-height:80vh;}
+
+/* ══════════════════════════════════════════════════════
+   PAGE STYLES  —  used BOTH in preview and print
+   Target: A4 landscape  297 × 210 mm
+   Safe print area with 10mm margin each side:
+     width  = 277mm
+     height = 190mm
+   ══════════════════════════════════════════════════════ */
+.ttp{
+  width:277mm;
+  height:190mm;
+  background:#fff !important;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+  margin:0 auto 14px;
+  padding:8mm 9mm 7mm 9mm;
+  box-sizing:border-box;
+  font-family:'DM Sans',sans-serif;
+  font-size:7pt;
+  color:#000 !important;
+  border:2pt solid #000;
+  position:relative;
+  overflow:hidden;
+  page-break-after:always;
+  page-break-inside:avoid;
+}
+.ttp:last-child{margin-bottom:0;}
+
+/* inner decorative border */
+.ifr{
+  position:absolute;
+  inset:3.5mm;
+  border:.4pt solid #888;
+  pointer-events:none;
+  z-index:0;
+}
+.ttp>*:not(.ifr){position:relative;z-index:1;}
+
+/* ── HEADER ─── */
+.ph{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding-bottom:4.5pt;
+  border-bottom:1.2pt solid #000;
+  margin-bottom:4pt;
+}
+.plogo{
+  height:60pt;
+  width:60pt;
+  object-fit:contain;
+  flex-shrink:0;
+}
+.ptxt{text-align:center;line-height:1.3;}
+.pcol{
+  font-family:'EB Garamond',serif;
+  font-size:14pt;
+  font-weight:700;
+  letter-spacing:.3px;
+  line-height:1.15;
+}
+.paddr{font-size:6.5pt;color:#222;margin-top:1pt;}
+.pgrade{font-size:6.5pt;color:#222;}
+.pdept{
+  font-size:9pt;font-weight:700;
+  text-decoration:underline;
+  text-underline-offset:2px;
+  margin-top:2.5pt;
+}
+.pexam{
+  font-size:9pt;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+  margin-top:2pt;
+}
+.ptt{font-size:7.5pt;margin-top:1.5pt;letter-spacing:.2px;color:#111;}
+
+/* ── CLASS HEADING ─── */
+.ch{
+  font-family:'EB Garamond',serif;
+  font-size:8pt;
+  font-weight:700;
+  text-transform:uppercase;
+  text-align:center;
+  letter-spacing:.5px;
+  padding:2pt 0;
+  border-top:1pt solid #000;
+  border-bottom:1pt solid #000;
+  margin-top:4pt;
+  margin-bottom:0;
+}
+
+/* ── TABLE ─── */
+.tt{
+  width:100%;
+  border-collapse:collapse;
+}
+.tt th{
+  border:1pt solid #000;
+  padding:3pt 2.5pt;
+  text-align:center;
+  font-weight:700;
+  font-size:6.5pt;
+  text-transform:uppercase;
+  letter-spacing:.15px;
+  background:#fff !important;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+  line-height:1.2;
+}
+.tt td{
+  border:1pt solid #000;
+  padding:2.5pt 2.5pt;
+  text-align:center;
+  vertical-align:middle;
+  line-height:1.2;
+  background:#fff !important;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+.tt td.L{text-align:left;padding-left:4pt;}
+
+/* column widths */
+.tt .wdt{width:15mm;}
+.tt .wtm{width:24mm;}
+.tt .wcl{width:10mm;}
+.tt .wcd{width:17mm;}
+.tt .wtp{width:9mm;}
+.tt .wst{width:11mm;}
+.tt .wcp{width:14mm;}
+.tt .wvn{width:14mm;}
+.tt .wsg{width:16mm;}
+/* subject column: flex remainder */
+
+/* ── HOD BLOCK ─── */
+.hb{
+  display:flex;
+  justify-content:flex-end;
+  align-items:flex-end;
+  margin-top:auto;
+  padding-top:5pt;
+  border-top:1pt solid #000;
+  position:absolute;
+  bottom:9mm;
+  right:9mm;
+  left:9mm;
+}
+.hbox{text-align:center;}
+.hsp{height:28pt;}/* blank signature space */
+.hl{border-top:1pt solid #000;width:110pt;margin:0 auto 3pt;}
+.htitle{font-weight:700;font-size:6.5pt;text-transform:uppercase;letter-spacing:.3px;color:#111;}
+.hname{font-size:7.5pt;font-weight:600;margin-top:1.5pt;}
+.hdesig{font-size:6.5pt;color:#333;margin-top:1pt;}
+
+/* ══════════════════════════════════════════════
+   PRINT MEDIA  —  clean white only
+   ══════════════════════════════════════════════ */
+@media print{
+  @page{
+    size:A4 landscape;
+    margin:0mm;
+  }
+
+  /* hide everything except the print zone */
+  html,body{
+    background:#fff !important;
+    margin:0;padding:0;
+  }
+  body>*{display:none !important;}
+  #pz{
+    display:block !important;
+    background:#fff !important;
+    margin:0;padding:0;
+  }
+
+  #pz .ttp{
+    width:297mm;
+    height:210mm;
+    margin:0;
+    padding:10mm 10mm 10mm 10mm;
+    border:2pt solid #000;
+    box-shadow:none !important;
+    page-break-after:always;
+    page-break-inside:avoid;
+    overflow:hidden;
+    background:#fff !important;
+  }
+
+  /* make sure hod block repositions for full-height page */
+  #pz .ttp .hb{
+    bottom:10mm;
+    right:10mm;
+    left:10mm;
+  }
+}
+
+#pz{display:none;}
+</style>
+</head>
+<body>
+
+<!-- loading overlay -->
+<div class="ov" id="ov">
+  <div class="spin"></div>
+  <p>Loading sheet data…</p>
+</div>
+
+<!-- hidden print target -->
+<div id="pz"></div>
+
+<!-- ══ ADMIN UI ══════════════════════════════════════ -->
+<div class="wrap">
+
+  <div class="top">
+    <img src="https://static.wixstatic.com/media/81ba89_81dcdb9d1e384b618fdc78760c61c426~mv2.png" alt="Loyola">
+    <div>
+      <h1>Timetable Generator</h1>
+      <p>LOYOLA COLLEGE · DEPT. OF ADVANCED ZOOLOGY AND BIOTECHNOLOGY</p>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="card">
+    <div class="ctitle">Step 1 — Select Exam Details</div>
+
+    <div class="fg">
+      <div class="fl">
+        <label>Academic Year</label>
+        <select id="sel-yr" onchange="onYrChange()">
+          <option value="">— Loading sheets… —</option>
+        </select>
+      </div>
+      <div class="fl">
+        <label>Exam Type</label>
+        <select id="sel-ex">
+          <option value="0">FIRST CIA</option>
+          <option value="1">SECOND CIA</option>
+          <option value="2">PRACTICAL EXAM</option>
+          <option value="3">SEMESTER EXAM</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="ctitle">Semester Selection per Class</div>
+      <div class="smx" id="smx">
+        <p style="font-size:12px;color:var(--muted);grid-column:1/-1;">Select an academic year to see classes.</p>
+      </div>
+    </div>
+
+    <div class="brow">
+      <button class="btn bd" id="lbtn" onclick="loadData()" disabled>Load &amp; Preview</button>
+    </div>
+    <div class="st" id="st"></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="card">
+    <div class="ctitle">Step 2 — Customise Output</div>
+    <div class="fg" style="margin-bottom:14px;">
+      <div class="fl">
+        <label>HOD Name</label>
+        <input type="text" id="hname" value="Dr. V. Pushpa Rani">
+      </div>
+      <div class="fl">
+        <label>HOD Designation</label>
+        <input type="text" id="hdesig" value="Head of the Department">
+      </div>
+      <div class="fl">
+        <label>Department</label>
+        <input type="text" id="dept" value="Advanced Zoology and Biotechnology">
+      </div>
+      <div class="fl">
+        <label>UG Programme</label>
+        <input type="text" id="ugp" value="B.Sc. Advanced Zoology and Biotechnology">
+      </div>
+      <div class="fl">
+        <label>PG Programme</label>
+        <input type="text" id="pgp" value="M.Sc. Zoology">
+      </div>
+      <div class="fl">
+        <label>Table Font Size</label>
+        <select id="fs">
+          <option value="6">6 pt — Very Compact</option>
+          <option value="6.5" selected>6.5 pt — Compact</option>
+          <option value="7">7 pt — Default</option>
+          <option value="7.5">7.5 pt — Comfortable</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="ctitle">Show / Hide Columns</div>
+    <div class="tg">
+      <label class="ti"><input type="checkbox" id="ct" checked> Time</label>
+      <label class="ti"><input type="checkbox" id="cc" checked> Subject Code</label>
+      <label class="ti"><input type="checkbox" id="cy" checked> Subject Type</label>
+      <label class="ti"><input type="checkbox" id="cs" checked> Strength</label>
+      <label class="ti"><input type="checkbox" id="cq" checked> QP Copies</label>
+      <label class="ti"><input type="checkbox" id="ci" checked> Invigilator</label>
+      <label class="ti"><input type="checkbox" id="cv" checked> Venue</label>
+      <label class="ti"><input type="checkbox" id="cn" checked> Sign Column</label>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div id="pw">
+    <div class="pb">
+      <button class="btn bd" onclick="doPrint()">🖨&nbsp; Print / Save as PDF</button>
+      <button class="btn bo" onclick="loadData()">↺ Refresh</button>
+      <span class="hint">In print dialog → Paper: A4 · Orientation: Landscape · Margins: None · Background graphics: OFF</span>
+    </div>
+    <div class="ps" id="pvw"></div>
+  </div>
+
+</div>
+
+<!-- ══ SCRIPT ════════════════════════════════════════ -->
+<script>
+/* ── SHEET LINKS (update gid values to match your tabs) ── */
+const SHEETS=[
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKO806MhVhEPBP-7pXEOnfc5z0zfTujty-OJTZpewK12xgvJVrM0Zzf_kvghM758yIe8OQeh9ZS0aG/pub?gid=15408967&single=true&output=csv",
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKO806MhVhEPBP-7pXEOnfc5z0zfTujty-OJTZpewK12xgvJVrM0Zzf_kvghM758yIe8OQeh9ZS0aG/pub?gid=489603286&single=true&output=csv",
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKO806MhVhEPBP-7pXEOnfc5z0zfTujty-OJTZpewK12xgvJVrM0Zzf_kvghM758yIe8OQeh9ZS0aG/pub?gid=942019491&single=true&output=csv",
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKO806MhVhEPBP-7pXEOnfc5z0zfTujty-OJTZpewK12xgvJVrM0Zzf_kvghM758yIe8OQeh9ZS0aG/pub?gid=1057150601&single=true&output=csv"
+];
+
+const EXAM_FULL=[
+  "FIRST CONTINUOUS INTERNAL ASSESSMENT",
+  "SECOND CONTINUOUS INTERNAL ASSESSMENT",
+  "PRACTICAL EXAMINATION",
+  "SEMESTER END EXAMINATION"
+];
+
+const CLASS_SEMS={"1st UG":["I","II"],"2nd UG":["III","IV"],"3rd UG":["V","VI"],"1st PG":["I","II"],"2nd PG":["III","IV"]};
+const UGK=["1st UG","2nd UG","3rd UG"];
+const PGK=["1st PG","2nd PG"];
+const ROM={"1st UG":"I UG","2nd UG":"II UG","3rd UG":"III UG","1st PG":"I PG","2nd PG":"II PG"};
+const SNORM={"1":"I","2":"II","3":"III","4":"IV","5":"V","6":"VI","I":"I","II":"II","III":"III","IV":"IV","V":"V","VI":"VI"};
+const LOGO="https://static.wixstatic.com/media/81ba89_81dcdb9d1e384b618fdc78760c61c426~mv2.png";
+
+let AR={};       // allRows  sheetIdx→rows
+let YM={};       // yearsMeta year→cls→Set<sem>
+let hasData=false;
+
+/* ── CSV PARSER ── */
+function splitL(line){
+  const c=[];let cur="",q=false;
+  for(const ch of line){
+    if(ch==='"'){q=!q;}
+    else if(ch===','&&!q){c.push(cur);cur="";}
+    else{cur+=ch;}
+  }
+  c.push(cur);
+  return c.map(x=>x.replace(/^"|"$/g,"").trim());
+}
+function parseCSV(txt){
+  const ls=txt.trim().split("\n");
+  if(!ls.length)return[];
+  const hdr=splitL(ls[0]);
+  return ls.slice(1).map(l=>{
+    const cs=splitL(l);
+    const o={};
+    hdr.forEach((h,i)=>{o[h.trim()]=(cs[i]||"").trim();});
+    return o;
+  }).filter(r=>Object.values(r).some(v=>v));
+}
+async function csv(url){
+  const r=await fetch(url+"&t="+Date.now());
+  if(!r.ok)throw new Error("Cannot fetch sheet. Make sure it is published to web (File → Publish to web → CSV).");
+  return parseCSV(await r.text());
+}
+
+/* ── FIELD ACCESSOR ── */
+function gc(row,...keys){
+  for(const k of keys){const v=row[k];if(v!==undefined&&v!=="")return v;}
+  const lk=keys.map(k=>k.toLowerCase());
+  for(const[k,v]of Object.entries(row)){if(lk.includes(k.toLowerCase())&&v!=="")return v;}
+  return "";
+}
+const dsh=v=>(v&&v.trim())?v.trim():"—";
+
+function fmtD(raw){
+  if(!raw||raw==="—")return"—";
+  raw=raw.trim();
+  if(/^\d{2}-\d{2}-\d{4}$/.test(raw))return raw;
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(raw))return raw.replace(/\//g,"-");
+  if(/^\d{4}-\d{2}-\d{2}$/.test(raw)){const[y,m,d]=raw.split("-");return`${d}-${m}-${y}`;}
+  const p=raw.split(/[-\/]/);
+  if(p.length===3){
+    if(p[2].length===4)return`${p[0].padStart(2,"0")}-${p[1].padStart(2,"0")}-${p[2]}`;
+    if(p[0].length===4)return`${p[2].padStart(2,"0")}-${p[1].padStart(2,"0")}-${p[0]}`;
+  }
+  return raw;
+}
+function normS(r){if(!r)return"";return SNORM[r.trim()]||r.trim().toUpperCase();}
+function dts(s){const p=s.split("-");return p.length===3?new Date(p[2],p[1]-1,p[0]).getTime():0;}
+
+function setS(m,t=""){const e=document.getElementById("st");e.textContent=m;e.className="st"+(t?" "+t:"");}
+function ld(on){document.getElementById("ov").classList.toggle("on",on);}
+
+/* ── INIT: load all sheets ── */
+window.addEventListener("DOMContentLoaded",async()=>{
+  ld(true);
+  setS("Fetching all sheet data…");
+  try{
+    const res=await Promise.all(SHEETS.map((u,i)=>csv(u).then(rows=>[i,rows])));
+    res.forEach(([i,rows])=>{AR[i]=rows;});
+
+    // build year meta
+    Object.values(AR).flat().forEach(r=>{
+      const yr=dsh(gc(r,"Year","Academic Year","AcademicYear"));
+      const cls=gc(r,"Class","CLASS").trim();
+      const sem=normS(gc(r,"Semester","Sem","SEM"));
+      if(!yr||yr==="—"||!cls||!sem)return;
+      if(!YM[yr])YM[yr]={};
+      if(!YM[yr][cls])YM[yr][cls]=new Set();
+      YM[yr][cls].add(sem);
+    });
+
+    const yrs=Object.keys(YM).sort((a,b)=>b.localeCompare(a));
+    const sel=document.getElementById("sel-yr");
+    sel.innerHTML="";
+    if(!yrs.length){sel.innerHTML='<option value="">— No data found —</option>';ld(false);return;}
+    yrs.forEach(y=>{const o=document.createElement("option");o.value=y;o.textContent=y;sel.appendChild(o);});
+    onYrChange();
+    setS("Ready. Select filters and click Load & Preview.","ok");
+    hasData=true;
+  }catch(e){
+    setS("⚠ "+e.message,"err");
+    console.error(e);
+  }
+  ld(false);
+});
+
+/* ── YEAR CHANGE ── */
+function onYrChange(){
+  const yr=document.getElementById("sel-yr").value;
+  const mx=document.getElementById("smx");
+  const lb=document.getElementById("lbtn");
+  if(!yr||!YM[yr]){
+    mx.innerHTML='<p style="font-size:12px;color:var(--muted);grid-column:1/-1;">No class data for this year.</p>';
+    lb.disabled=true;return;
+  }
+  const cls=[...UGK,...PGK].filter(c=>YM[yr][c]);
+  if(!cls.length){
+    mx.innerHTML='<p style="font-size:12px;color:var(--muted);grid-column:1/-1;">No class data found.</p>';
+    lb.disabled=true;return;
+  }
+  mx.innerHTML=cls.map(c=>{
+    const inSheet=[...YM[yr][c]].sort();
+    const allowed=CLASS_SEMS[c]||inSheet;
+    const valid=allowed.filter(s=>inSheet.includes(s));
+    if(!valid.length)return"";
+    const opts=valid.map(s=>`<option value="${s}">SEMESTER ${s}</option>`).join("");
+    return`<div class="sc"><div class="lbl">${ROM[c]||c}</div>
+      <select id="sm-${c.replace(/\s/g,"-")}">
+        <option value="">— Skip —</option>${opts}
+      </select></div>`;
+  }).join("");
+  lb.disabled=false;
+}
+
+/* ── LOAD DATA ── */
+async function loadData(){
+  const yr=document.getElementById("sel-yr").value;
+  const ei=parseInt(document.getElementById("sel-ex").value);
+  if(!yr){setS("Select an academic year.","err");return;}
+  ld(true);setS("Filtering…");
+  try{
+    const rows=AR[ei]||[];
+    const semSel={};
+    [...UGK,...PGK].forEach(c=>{
+      const el=document.getElementById("sm-"+c.replace(/\s/g,"-"));
+      if(el&&el.value)semSel[c]=el.value;
+    });
+    if(!Object.keys(semSel).length){setS("Select at least one semester.","err");ld(false);return;}
+
+    const byC={};
+    rows.forEach(r=>{
+      const ry=dsh(gc(r,"Year","Academic Year","AcademicYear"));
+      const cls=gc(r,"Class","CLASS").trim();
+      const sem=normS(gc(r,"Semester","Sem","SEM"));
+      if(ry!==yr||!semSel[cls]||semSel[cls]!==sem)return;
+      if(!byC[cls])byC[cls]=[];
+      byC[cls].push(r);
+    });
+    Object.values(byC).forEach(a=>a.sort((x,y)=>dts(fmtD(gc(x,"Date","DATE")))-dts(fmtD(gc(y,"Date","DATE")))));
+
+    if(!Object.keys(byC).length){setS("No records for selected filters.","err");ld(false);return;}
+
+    const cfg=getCfg();
+    const html=buildPages(byC,yr,ei,cfg,semSel);
+    document.getElementById("pvw").innerHTML=html;
+    document.getElementById("pw").style.display="block";
+    const tot=Object.values(byC).reduce((s,a)=>s+a.length,0);
+    setS(`✓ ${tot} records across ${Object.keys(byC).length} class(es).`,"ok");
+  }catch(e){setS("Error: "+e.message,"err");console.error(e);}
+  ld(false);
+}
+
+/* ── CONFIG ── */
+function getCfg(){
+  return{
+    hn:document.getElementById("hname").value||"HOD",
+    hd:document.getElementById("hdesig").value||"Head of the Department",
+    dp:document.getElementById("dept").value||"Advanced Zoology and Biotechnology",
+    ug:document.getElementById("ugp").value,
+    pg:document.getElementById("pgp").value,
+    fs:document.getElementById("fs").value+"pt",
+    cl:{
+      t:document.getElementById("ct").checked,
+      c:document.getElementById("cc").checked,
+      y:document.getElementById("cy").checked,
+      s:document.getElementById("cs").checked,
+      q:document.getElementById("cq").checked,
+      i:document.getElementById("ci").checked,
+      v:document.getElementById("cv").checked,
+      n:document.getElementById("cn").checked,
+    }
+  };
+}
+
+// live re-render
+["hname","hdesig","dept","ugp","pgp"].forEach(id=>
+  document.getElementById(id).addEventListener("input",rr));
+["fs","ct","cc","cy","cs","cq","ci","cv","cn"].forEach(id=>
+  document.getElementById(id).addEventListener("change",rr));
+
+function rr(){
+  const p=document.getElementById("pvw");
+  if(!p.innerHTML)return;
+  const yr=document.getElementById("sel-yr").value;
+  const ei=parseInt(document.getElementById("sel-ex").value);
+  if(!yr)return;
+  const rows=AR[ei]||[];
+  const semSel={};
+  [...UGK,...PGK].forEach(c=>{
+    const el=document.getElementById("sm-"+c.replace(/\s/g,"-"));
+    if(el&&el.value)semSel[c]=el.value;
+  });
+  const byC={};
+  rows.forEach(r=>{
+    const ry=dsh(gc(r,"Year","Academic Year","AcademicYear"));
+    const cls=gc(r,"Class","CLASS").trim();
+    const sem=normS(gc(r,"Semester","Sem","SEM"));
+    if(ry!==yr||!semSel[cls]||semSel[cls]!==sem)return;
+    if(!byC[cls])byC[cls]=[];
+    byC[cls].push(r);
+  });
+  Object.values(byC).forEach(a=>a.sort((x,y)=>dts(fmtD(gc(x,"Date","DATE")))-dts(fmtD(gc(y,"Date","DATE")))));
+  const html=buildPages(byC,yr,ei,getCfg(),semSel);
+  p.innerHTML=html;
+}
+
+/* ── PAGE BUILDER ── */
+function buildPages(byC,yr,ei,cfg,ss){
+  return buildPage(UGK,byC,yr,ei,cfg,ss,"UG")+buildPage(PGK,byC,yr,ei,cfg,ss,"PG");
+}
+
+function buildPage(keys,byC,yr,ei,cfg,ss,lvl){
+  const prog=(lvl==="UG"?cfg.ug:cfg.pg).toUpperCase();
+  const active=keys.filter(c=>byC[c]&&byC[c].length);
+  if(!active.length)return"";
+
+  const blocks=active.map(c=>{
+    const rows=byC[c];
+    return`
+    <div>
+      <div class="ch">${ROM[c]||c} — ${prog}</div>
+      <table class="tt" style="font-size:${cfg.fs};">
+        <thead><tr>${thdr(cfg.cl)}</tr></thead>
+        <tbody>${tbdy(rows,cfg.cl,c)}</tbody>
+      </table>
+    </div>`;
+  }).join("");
+
+  const semLbls=active.map(c=>ss[c]?`SEM ${ss[c]}`:"").filter(Boolean);
+  const semStr=semLbls.length?" · "+semLbls.join(" & "):"";
+
+  return`
+<div class="ttp">
+  <div class="ifr"></div>
+
+  <div class="ph">
+    <img class="plogo" src="${LOGO}" alt="Loyola" onerror="this.style.display='none'">
+    <div class="ptxt">
+      <div class="pcol">LOYOLA COLLEGE (AUTONOMOUS), CHENNAI – 600 034</div>
+      <div class="paddr">Affiliated to the University of Madras</div>
+      <div class="pgrade">Re-Accredited with 'A++' Grade by NAAC (4th Cycle)</div>
+      <div class="pdept">DEPARTMENT OF ${cfg.dp.toUpperCase()}</div>
+      <div class="pexam">${EXAM_FULL[ei]} – ${yr}</div>
+      <div class="ptt">TIME TABLE · ${prog}${semStr}</div>
+    </div>
+  </div>
+
+  ${blocks}
+
+  <div class="hb">
+    <div class="hbox">
+      <div class="hsp"></div>
+      <div class="hl"></div>
+      <div class="htitle">${cfg.hd.toUpperCase()}</div>
+      <div class="hname">${cfg.hn}</div>
+      <div class="hdesig">Dept. of ${cfg.dp}</div>
+    </div>
+  </div>
+</div>`;
+}
+
+/* ── TABLE HEADER ── */
+function thdr(cl){
+  let h=`<th class="wdt">DATE</th>`;
+  if(cl.t)h+=`<th class="wtm">TIME</th>`;
+  h+=`<th class="wcl">CLASS</th>`;
+  if(cl.c)h+=`<th class="wcd">SUB. CODE</th>`;
+  h+=`<th>SUBJECT</th>`;
+  if(cl.y)h+=`<th class="wtp">TYPE</th>`;
+  if(cl.s)h+=`<th class="wst">STR.</th>`;
+  if(cl.q)h+=`<th class="wcp">QP COPIES</th>`;
+  if(cl.i)h+=`<th>INVIGILATOR</th>`;
+  if(cl.v)h+=`<th class="wvn">VENUE</th>`;
+  if(cl.n)h+=`<th class="wsg">SIGN</th>`;
+  return h;
+}
+
+/* ── TABLE BODY ── */
+function tbdy(rows,cl,cls){
+  if(!rows||!rows.length)
+    return`<tr><td colspan="15" style="text-align:center;font-style:italic;color:#777;padding:4pt;">— No records —</td></tr>`;
+
+  return rows.map(r=>{
+    const date  =dsh(fmtD(gc(r,"Date","DATE")));
+    const time  =dsh(gc(r,"Time","TIME"));
+    const code  =dsh(gc(r,"Subject Code","SubjectCode","Sub Code","Code","CODE"));
+    const subj  =dsh(gc(r,"Subject","SUBJECT"));
+    const type  =dsh(gc(r,"Subject Type","SubjectType","Type","TYPE"));
+    const str   =dsh(gc(r,"Strength","STRENGTH"));
+    const copies=dsh(gc(r,"No. of Copies","No of Copies","NoOfCopies","Copies","COPIES"));
+    const invig =dsh(gc(r,"Invigilator","INVIGILATOR"));
+    const venue =dsh(gc(r,"Venue","VENUE"));
+
+    let td=`<td>${date}</td>`;
+    if(cl.t)td+=`<td>${time}</td>`;
+    td+=`<td>${ROM[cls]||cls}</td>`;
+    if(cl.c)td+=`<td>${code}</td>`;
+    td+=`<td class="L">${subj.toUpperCase()}</td>`;
+    if(cl.y)td+=`<td>${type.toUpperCase()}</td>`;
+    if(cl.s)td+=`<td>${str}</td>`;
+    if(cl.q)td+=`<td>${copies}</td>`;
+    if(cl.i)td+=`<td class="L">${invig}</td>`;
+    if(cl.v)td+=`<td>${venue}</td>`;
+    if(cl.n)td+=`<td></td>`;
+    return`<tr>${td}</tr>`;
+  }).join("");
+}
+
+/* ── PRINT ── */
+function doPrint(){
+  const pz=document.getElementById("pz");
+  pz.innerHTML=document.getElementById("pvw").innerHTML;
+  pz.style.display="block";
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{pz.style.display="none";pz.innerHTML="";},1500);
+  },400);
+}
+</script>
+</body>
+</html>
