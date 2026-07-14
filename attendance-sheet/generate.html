@@ -308,6 +308,7 @@ body{padding:0;margin:0;overflow-x:hidden}
 }
 
 /* PRINT */
+/* PRINT */
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body,html{margin:0!important;padding:0!important;background:#fff!important}
@@ -317,8 +318,8 @@ body{padding:0;margin:0;overflow-x:hidden}
   .a4-wrapper{max-width:none!important;gap:0!important;}
   .a4,.cover-page{box-shadow:none!important;page-break-after:always;break-after:page;transform:none!important;margin:0!important}
   .a4:last-child,.cover-page:last-child{page-break-after:avoid;break-after:avoid}
-  .a4.portrait,.cover-page.portrait{width:210mm!important;padding:10mm 12mm 12mm!important;min-height:0!important}
-  .a4.landscape,.cover-page.landscape{width:297mm!important;padding:9mm 11mm 11mm!important;min-height:0!important}
+  .a4.portrait,.cover-page.portrait{width:210mm!important;min-height:297mm!important}
+  .a4.landscape,.cover-page.landscape{width:297mm!important;min-height:210mm!important}
   @page{margin:0;size:A4}
 }
 </style>
