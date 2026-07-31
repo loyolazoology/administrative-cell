@@ -1076,7 +1076,7 @@ function buildLogoHTML(){
   if(document.getElementById('logo-dept')?.checked) logoList.push('https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png');
   const cu=v('logo-custom-url');if(cu) logoList.push(cu);
   if(!logoList.length) return '';
-  const imgTags=logoList.map(url=>`<img src="${esc(url)}" class="sh-logo ${sz}" onerror="this.style.display='none'">`).join('<span class="sh-logo-sep"></span>');
+  const imgTags=logoList.map(url=>`<img src="${esc(url)}" class="sh-logo ${sz}" crossorigin="anonymous" onerror="this.style.display='none'">`).join('<span class="sh-logo-sep"></span>');
   const align=pos==='left'?'flex-start':pos==='right'?'flex-end':'center';
   return `<div class="sh-logos" style="justify-content:${align}">${imgTags}</div>`;
 }
@@ -1211,7 +1211,7 @@ function buildPage(pd,gpn,total){
   const{chip,sn,cls,secFilter,sts,pageStudents,isFirst,isLast,pageNum,totalPg,ay,semester,shift,evName,evVenue,evDate,evDay,timeStr,enCols,custCols,sigs,mgn,border,logoHTML,subHTML,ruleClass,hdrFont,hdrSz,deptSz,evTitleSz,tblFontSz,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showPgNum,wmLoyola,wmDept,wmText,footerTxt,showCollege,sigVerified}=pd;
   const pad=rowPad();
 
-  const thead=`<tr>${enCols.map(c=>`<th class="${c.id==='sno'?'sno center':c.id==='deptno'?'center':''}" style="text-align:${c.align||'left'}">${esc(c.label)}</th>`).join('')}${custCols.map(s=>`<th class="sig-td center" style="text-align:center">${esc(s)}</th>`).join('')}</tr>`;
+  const thead=`<tr>${enCols.map(c=>`<th class="${c.id==='sno'?'sno center':c.id==='deptno'?'center':''}" style="text-align:${c.align||'left'}${c.id==='name'?';min-width:150px':''}">${esc(c.label)}</th>`).join('')}${custCols.map(s=>`<th class="sig-td center" style="text-align:center">${esc(s)}</th>`).join('')}</tr>`;
 
   const tbody=pageStudents.map((st,i)=>{
     const gi=((pageNum-1)*pd.rpp)+i;
@@ -1220,7 +1220,7 @@ function buildPage(pd,gpn,total){
       switch(c.id){
         case 'sno': return`<td class="sno" style="text-align:center;padding:${pad};font-size:${tblFontSz}">${gi+1}</td>`;
         case 'deptno': return`<td style="text-align:center;white-space:nowrap;width:1%;padding:${pad};font-size:${tblFontSz}">${esc(st.DeptNo||'')}</td>`;
-        case 'name': return`<td style="text-align:left;padding:${pad};font-size:${tblFontSz}">${esc(st.Name)}</td>`;
+        case 'name': return`<td style="text-align:left;padding:${pad};font-size:${tblFontSz};min-width:150px;white-space:nowrap">${esc(st.Name)}</td>`;
         case 'gender': val=st.Gender||'';break;
         case 'class': val=st.Class||'';break;
         case 'batch': val=st.Batch||'';break;
@@ -1250,8 +1250,8 @@ function buildPage(pd,gpn,total){
   const sigHTML=isLast?buildSigFooter(sigs,sigLineStyle,sigSpH,stampOpt,sigDateOpt,showCollege,sigVerified):'';
 
   let wmHTML='';
-  if(wmLoyola) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png"></div>`;
-  else if(wmDept) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png"></div>`;
+  if(wmLoyola) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png" crossorigin="anonymous"></div>`;
+  else if(wmDept) wmHTML+=`<div class="sh-watermark"><img src="https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png" crossorigin="anonymous"></div>`;
   else if(wmText) wmHTML+=`<div class="sh-watermark" style="font-size:60pt;font-weight:900;color:#000;letter-spacing:2px;white-space:nowrap;opacity:.04">${esc(wmText)}</div>`;
 
   const pgNumHTML=showPgNum?`<div class="sh-page-num">Page ${gpn} of ${total}  |  ${esc(sn)}</div>`:'';
@@ -1317,8 +1317,8 @@ function buildSigFooter(sigs,lineStyle,spH,stampOpt,dateOpt,showCollege,sigVerif
   const lineClass=`sh-sig-line-${lineStyle}`;
   
   let stampLeftHTML='',stampRightHTML='';
-  if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
-  if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;"></div>`;
+  if(stampOpt==='left') stampLeftHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;max-width:80px;"></div>`;
+  if(stampOpt==='right') stampRightHTML=`<div class="sh-sig-blk" style="flex:0 0 80px;max-width:80px;"></div>`;
 
   const sigBlks=sigs.map((sig,i)=>{
     const dateHTML=(dateOpt==='all'||(dateOpt==='hod'&&sig.isHod))?`<div class="sh-sig-date">Date: DD / MM / YYYY</div>`:'';
@@ -1430,7 +1430,8 @@ function doPrint(){
   } else {
     const html=buildAllSheets(sel);
     if(!html){toast('No students match the filters.','err');return}
-    pm('printOverlay',{html,count:sel.length,filename:'attendance.pdf'});
+    const cnt=document.querySelectorAll('#sheets-wrap .a4, #sheets-wrap .cover-page').length||sel.length;
+    pm('printOverlay',{html,count:cnt,filename:'attendance.pdf'});
   }
 }
 
