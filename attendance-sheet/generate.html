@@ -4,140 +4,205 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--m:#8B2635;--ml:#A63347;--mp:#F9EFF1;--bg:#F8F6F3;--bg2:#F1EDE8;--bd:#E2DAD4;--c:#1C1917;--c3:#78706A}
-body{font:13px 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--c);background:#5b4a4d}
-.app{display:grid;grid-template-columns:350px 1fr;height:100vh}
-aside{background:#fff;overflow-y:auto;border-right:1px solid var(--bd)}
-aside h1{font:700 18px Lora,serif;padding:14px 16px;border-bottom:1px solid var(--bd)}
+:root{--m:#8B2635;--ml:#A63347;--mp:#F9EFF1;--bg:#F8F6F3;--bd:#E2DAD4;--c:#1C1917;--c3:#78706A}
+html,body{height:100%}
+body{font:13px 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--c);background:#5b4a4d;overflow:hidden}
+.app{display:grid;grid-template-columns:380px 1fr;grid-template-rows:100vh;height:100vh}
+aside{background:#fff;overflow-y:auto;overflow-x:hidden;height:100vh;min-height:0;border-right:1px solid var(--bd);padding-bottom:120px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+aside h1{font:700 17px Lora,serif;padding:10px 14px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:#fff;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:6px}
+aside h1 span.hb{display:flex;gap:4px}aside h1 button{font-size:11px;padding:4px 7px}
 details{border-bottom:1px solid var(--bd)}summary{padding:10px 16px;font-weight:700;cursor:pointer;background:var(--bg)}
 .bd{padding:10px 16px 14px;display:flex;flex-direction:column;gap:8px}
-label{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--c3);display:block;margin-bottom:2px}
+label{font-size:10px;font-weight:700;letter-spacing:.4px;color:var(--c3);display:block;margin-bottom:2px}
 input[type=text],input[type=date],input[type=time],input[type=number],select{width:100%;padding:6px 8px;border:1.5px solid var(--bd);border-radius:6px;font:inherit;background:#fff}
-input:focus,select:focus{outline:none;border-color:var(--m)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ck{display:flex;align-items:center;gap:6px;font-size:12px;margin:0;letter-spacing:0;color:var(--c);font-weight:500}
-.ck input{accent-color:var(--m)}
+input:focus,select:focus{outline:none;border-color:var(--m)}input[readonly]{background:var(--bg)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ck{display:flex;align-items:center;gap:6px;font-size:12px;margin:0;letter-spacing:0;color:var(--c);font-weight:500}.ck input{accent-color:var(--m)}
 .it{border:1px solid var(--bd);border-radius:7px;padding:6px;background:var(--bg);display:flex;flex-direction:column;gap:5px}
-.r{display:flex;gap:5px;align-items:center}.r>*{flex:1}.r>button,.r>b{flex:0 0 auto}
-button{font:600 12px inherit;padding:6px 10px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;cursor:pointer}
-button:hover{border-color:var(--m);color:var(--m)}
-.pri{background:var(--m);color:#fff;border-color:var(--m)}.pri:hover{background:var(--ml);color:#fff}
-.cls{display:flex;flex-direction:column;gap:3px;max-height:170px;overflow:auto}
-main{overflow:auto;padding:14px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.bar{width:100%;display:flex;justify-content:space-between;align-items:center;color:#fff;gap:8px}
-.bar div{display:flex;gap:8px}
+.r{display:flex;gap:5px;align-items:center}.r>*{flex:1;min-width:0}.r>button,.r>b,.r>.f0{flex:0 0 auto}
+button{font:600 12px 'Plus Jakarta Sans',system-ui,sans-serif;padding:6px 10px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;cursor:pointer}
+button:hover{border-color:var(--m);color:var(--m)}.pri{background:var(--m);color:#fff;border-color:var(--m)}.pri:hover{background:var(--ml);color:#fff}
+.cls{display:flex;flex-direction:column;gap:3px;max-height:190px;overflow:auto;border:1px solid var(--bd);border-radius:6px;padding:6px}
+.nt{font-size:11px;color:var(--c3)}.warn{font-size:11.5px;background:#FDF7E8;border:1px solid #E8D090;color:#8B5E00;border-radius:6px;padding:6px 8px;display:none}
+.warn button{margin-top:5px;font-size:11px;padding:3px 8px}
+main{overflow:auto;height:100vh;padding:14px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.bar{width:100%;display:flex;justify-content:space-between;align-items:center;color:#fff;gap:8px;flex-wrap:wrap}.bar div{display:flex;gap:8px}
 #pv{display:flex;flex-direction:column;gap:16px;align-items:center}
 .pw{box-shadow:0 4px 22px rgba(0,0,0,.35)}.pw .pg{transform-origin:0 0}
 #empty{color:#fff;opacity:.8;padding:60px 0}
 #probe{position:absolute;left:-99999px;top:0;visibility:hidden}
 #toast{position:fixed;bottom:18px;right:18px;background:#1C1917;color:#fff;padding:9px 14px;border-radius:7px;display:none;z-index:9}
-/* ===== SHEET (shared by preview, print, PDF) ===== */
-.pg{box-sizing:border-box;width:var(--w);height:var(--h);padding:var(--mg);background:#fff;color:#111;font:var(--fs) 'Times New Roman',Times,serif;display:flex;flex-direction:column;overflow:hidden;page-break-after:always;break-after:page;position:relative}
-.pg:last-child{page-break-after:auto;break-after:auto}
-.pg *{box-sizing:border-box}
-.in{flex:1;min-height:0;display:flex;flex-direction:column;padding:var(--ip)}
+@media(max-width:900px){body{overflow:auto}.app{grid-template-columns:1fr;grid-template-rows:auto;height:auto}aside{height:auto;max-height:65vh}main{height:auto}}
+</style>
+<style id="sheetcss">
+.pg{box-sizing:border-box;width:var(--w);height:var(--h);padding:var(--mg);background:#fff;color:#111;font:var(--fs) var(--ff);display:flex;flex-direction:column;overflow:hidden;page-break-after:always;break-after:page;position:relative}
+.pg:last-child{page-break-after:auto;break-after:auto}.pg *{box-sizing:border-box}
+.in{flex:1;min-height:0;display:flex;flex-direction:column;padding:var(--ip);position:relative;z-index:1}
 .in.b1{border:1px solid #111}.in.b2{border:3px double #111}.in.b3{border:2px solid #111;outline:1px solid #111;outline-offset:2px}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;opacity:var(--wo)}
+.wm img{width:100mm;height:100mm;object-fit:contain}.wm span{font-size:54pt;font-weight:900;transform:rotate(-30deg);white-space:nowrap}
 .hd{text-align:center;flex:none}
-.lgs{display:flex;align-items:center;gap:4mm;justify-content:var(--lj)}
-.lgs img{height:var(--lh);width:auto;max-width:40mm;object-fit:contain}
+.lgs{display:flex;align-items:center;gap:4mm;justify-content:var(--lj)}.lgs img{height:var(--lh);width:auto;max-width:42mm;object-fit:contain}
 .fl{display:flex;align-items:center;gap:4mm}.fl .lgs{flex:1}.fl .tx{flex:4}
 .cn{font-weight:700;line-height:1.2;font-size:var(--cs)}.es{font-size:.8em;margin-top:.5mm}
-.dn{font-weight:700;font-size:calc(var(--cs) - 3pt);margin-top:1mm}.sb{font-style:italic;font-size:.9em;margin-top:.5mm}
+.dn{font-weight:700;font-size:var(--ds);margin-top:1mm}.sb{font-style:italic;font-size:.9em;margin-top:.5mm}
 .rl{border:0;margin:2mm 0;width:100%}.rl.t{border-top:1px solid #111}.rl.b{border-top:2.5px solid #111}.rl.d{border-top:3px double #111}
 .ev{text-align:center;margin-bottom:2mm;flex:none}
-.en{font-weight:700;text-transform:uppercase;font-size:calc(var(--fs) + 3pt);letter-spacing:.5px;border-bottom:1.5px solid #111;display:inline-block;padding-bottom:.5mm}
+.en{font-weight:700;font-size:var(--ts);letter-spacing:.4px;border-bottom:1.5px solid #111;display:inline-block;padding-bottom:.5mm;line-height:1.25}
+.en.nu{border-bottom:0}
 .et{font-style:italic;font-size:.95em;margin-top:1mm}.al{font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:.9em;margin-top:1mm}
+.dayb{display:inline-block;margin-top:1.2mm;border:1.5px solid #111;padding:.5mm 4mm;font-weight:700;letter-spacing:.5px}
 .mt{display:grid;grid-template-columns:1fr 1fr;border:1px solid #111;margin-bottom:2mm;flex:none}
 .mt div{padding:.8mm 2mm;border-right:1px solid #111;border-bottom:1px solid #111;display:flex;gap:2mm;line-height:1.3}
-.mt div:nth-child(2n){border-right:0}.mt div.fu{grid-column:1/-1;border-right:0}
-.mt div:nth-last-child(-n+2):not(.fu):nth-child(odd),.mt div:last-child{border-bottom:0}
-.mt b{white-space:nowrap}
-.ch{display:flex;justify-content:space-between;border-bottom:1.5px solid #111;padding-bottom:1mm;margin-bottom:2mm;flex:none}
-.ta{flex:1;min-height:0;overflow:hidden}
-.sh{width:100%;border-collapse:collapse;table-layout:fixed}
-.sh th,.sh td{border:1px solid #111;padding:0 1.2mm;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:center;font-size:var(--tf)}
+.mt div:nth-child(2n){border-right:0}.mt div.fu{grid-column:1/-1;border-right:0}.mt div.lr{border-bottom:0}.mt b{white-space:nowrap}
+.mt.one{grid-template-columns:1fr}.mt.one div{border-right:0}
+.ch{display:flex;justify-content:space-between;gap:4mm;border-bottom:1.5px solid #111;padding-bottom:1mm;margin-bottom:2mm;flex:none}
+.ta{flex:1;min-height:0;overflow:hidden;padding:2px}
+.sh{width:100%;border-collapse:collapse;table-layout:fixed;border:var(--gw) solid #111;margin:0}
+.sh th,.sh td{border:var(--gw) solid #111;padding:0 1.2mm;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:center;font-size:var(--tf)}
 .sh td{height:var(--rh)}.sh td.l{text-align:left}
-.sh th{background:#ececec;font-weight:700;white-space:normal;line-height:1.15;padding:1mm;font-size:calc(var(--tf) + .5pt)}
-.sh th small{font-weight:400;display:block}
+.sh th{background:var(--thbg);font-weight:700;white-space:normal;line-height:1.15;padding:1mm;height:var(--thh)}
+.sh.z tbody tr:nth-child(even) td{background:#f4f4f4}
 .ft{flex:none;padding-top:3mm}
-.tot{display:flex;justify-content:flex-end;gap:4mm;margin-bottom:4mm}
-.tot div{border:1px solid #111;min-width:34mm;text-align:center}
-.tot span{display:block;background:#ececec;font-size:.8em;font-weight:700;padding:.5mm;border-bottom:1px solid #111}
-.tot em{display:block;font-style:normal;font-weight:700;font-size:15pt;height:9mm;line-height:9mm}
-.sg{display:grid;column-gap:6mm;row-gap:4mm;align-items:start;border-top:1.5px solid #111;padding-top:3mm}
-.sg>div{text-align:center;min-width:0}
+.tot{display:flex;justify-content:flex-end;gap:4mm;margin-bottom:4mm}.tot div{border:1px solid #111;min-width:34mm;text-align:center}
+.tot span{display:block;background:#ececec;font-size:.8em;font-weight:700;padding:.5mm;border-bottom:1px solid #111}.tot em{display:block;font-style:normal;font-weight:700;font-size:15pt;height:9mm;line-height:9mm}
+.sg{display:grid;column-gap:6mm;row-gap:4mm;align-items:start;border-top:1.5px solid #111;padding-top:3mm}.sg>div{text-align:center;min-width:0}
 .sl{height:var(--sh);border-bottom:1.5px var(--ls) #111;margin-bottom:1.2mm}
-.sg b{display:block;font-size:.95em}.sg i{display:block;font-size:.85em}.sg small{display:block;font-size:.8em;color:#333}
-.sg .dt{margin-top:3mm;font-size:.85em;font-weight:700}
-.pn{flex:none;text-align:center;font-size:.8em;color:#444;border-top:1px dashed #999;margin-top:2mm;padding-top:1mm}
-.fx{flex:none;text-align:center;font-size:.75em;font-style:italic;color:#555;margin-top:.5mm}
-@media(max-width:900px){.app{grid-template-columns:1fr;height:auto}aside{max-height:60vh}}
+.sl.sealb{border:0;display:flex;justify-content:center;align-items:center}.sl.sealb span{height:100%;aspect-ratio:1;border:1.2px dashed #777;border-radius:50%}
+.sg b{display:block;font-size:.95em;line-height:1.2}.sg i{display:block;font-size:.85em}.sg b.ds{font-weight:600;font-size:.88em}.sg small{display:block;font-size:.78em;color:#333;line-height:1.2}.sg .dt{margin-top:3mm;font-size:.85em;font-weight:700}
+.vr{display:flex;gap:2mm;align-items:flex-end;margin-top:3mm;font-size:.8em;font-weight:700}.vr span{flex:1;border-bottom:1px solid #777;height:4mm}
+.pn{flex:none;text-align:center;font-size:.8em;color:#444;border-top:1px dashed #999;margin-top:2mm;padding-top:1mm}.fx{flex:none;text-align:center;font-size:.75em;font-style:italic;color:#555;margin-top:.5mm}
+.cvt{text-align:center;border:3px solid #111;padding:6mm 5mm;margin:6mm 0 5mm;flex:none}.cvt h1{font-size:22pt;letter-spacing:2px;text-transform:uppercase;margin-bottom:2mm}.cvt p{font-size:13pt;font-weight:700}.cvt em{display:block;font-size:10pt;margin-top:1mm}
+.cvb{border:1.5px solid #111;padding:3mm 4mm;margin-bottom:5mm;flex:none}.cvb h3{font-size:11pt;text-transform:uppercase;letter-spacing:.8px;border-bottom:1.5px solid #111;padding-bottom:1mm;margin-bottom:2mm}
+.cvg{display:grid;grid-template-columns:38mm 1fr;gap:1mm 4mm;line-height:1.4}.cvg b{font-weight:700}
+.cvx{width:100%;border-collapse:collapse;margin-bottom:5mm;font-size:.95em;table-layout:auto}.cvx th,.cvx td{border:1px solid #111;padding:1.2mm 2mm;text-align:center}.cvx th{background:#ececec}.cvx td.l{text-align:left}
+.cvn{text-align:center;font-style:italic;font-size:.95em;margin-bottom:4mm;flex:none}
+.cvh{font-size:10.5pt;text-transform:uppercase;letter-spacing:.6px;margin:0 0 1.5mm;text-align:left;flex:none}
+.cvf{flex:none;border-top:2px solid #111;padding-top:3mm;margin-top:4mm;text-align:center;font-size:.9em;font-weight:600;color:#333}
+.dh{cursor:grab;color:#999;font-size:15px;line-height:1;user-select:none;padding:0 2px}
+.cvs{margin-top:auto;display:flex;padding-top:4mm}.cvs div{width:42mm;height:42mm;border:1.5px dashed #777;border-radius:50%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5mm;font-size:9pt;color:#777}
 </style></head><body>
 <div class="app">
 <aside>
-<h1>Attendance Sheet Generator</h1>
+<h1>Sheet Generator <span class="hb"><button onclick="openAll(1)" title="Expand all sections">Open all</button><button onclick="openAll(0)" title="Collapse all sections">Close all</button><button onclick="resetAll()">Reset</button></span></h1>
 
-<details open><summary>1 · Event</summary><div class="bd">
+<details><summary>0 · Saved presets</summary><div class="bd">
+<div class="nt">A preset stores every setting on this page (header, logos, table, signatures, layout, event details).</div>
+<div class="r"><select id="preset-sel"></select><button onclick="loadPreset()">Load</button><button onclick="delPreset()">×</button></div>
+<div class="r"><input type="text" id="preset-name" placeholder="Preset name, e.g. Orientation format"><button onclick="savePreset()">Save</button></div>
+</div></details>
+
+<details open><summary>1 · Event &amp; dates</summary><div class="bd">
 <div><label>EVENT NAME *</label><input type="text" id="ev-name" placeholder="e.g. Orientation Programme"></div>
-<div class="g2"><div><label>EVENT TYPE</label><input type="text" id="ev-type" placeholder="Seminar / Workshop"></div><div><label>REF. NO.</label><input type="text" id="ev-ref"></div></div>
-<div><label>VENUE</label><input type="text" id="ev-venue"></div>
+<div class="warn" id="nmwarn">This event name is long. Give it a short name (used in continuation headers, page footer and file name); the title also shrinks to fit.<br><button onclick="askShort()">Enter short name</button></div>
+<div><label>SHORT NAME (continuation headers, page footer, file name)</label><input type="text" id="ev-short" placeholder="e.g. Orientation 2026"></div>
+<div class="g2"><div><label>EVENT TYPE</label><input type="text" id="ev-type" list="ev-types" placeholder="Pick or type your own"><datalist id="ev-types"><option>Workshop</option><option>Seminar</option><option>Guest Lecture</option><option>Conference</option><option>Field Trip</option><option>Exam</option><option>Internal Assessment</option><option>Cultural Event</option><option>Sports Event</option><option>Orientation</option><option>Other</option></datalist></div><div><label>REF. NO.</label><input type="text" id="ev-ref"></div></div>
 <div class="g2"><div><label>START DATE</label><input type="date" id="ev-d1"></div><div><label>END DATE (multi-day)</label><input type="date" id="ev-d2"></div></div>
-<div class="g2"><div><label>FROM</label><input type="time" id="ev-tf"></div><div><label>TO</label><input type="time" id="ev-tt"></div></div>
-<div><label>MULTI-DAY LAYOUT</label><select id="ev-mode"><option value="cols">One sheet · a signature column per day</option><option value="sep">Separate sheet for each day</option></select></div>
-<label class="ck"><input type="checkbox" id="ev-skip"> Skip Sundays in date range</label>
+<label class="ck"><input type="checkbox" id="ev-skip"> Skip Sundays</label>
+<div><label>SKIP HOLIDAYS (dates YYYY-MM-DD, comma separated)</label><input type="text" id="ev-hol" placeholder="2026-11-14, 2026-11-15"></div>
+<div class="g3"><div style="grid-column:1/-1"><label>DEFAULT VENUE</label><input type="text" id="ev-venue"></div><div><label>FROM</label><input type="time" id="ev-tf"></div><div><label>TO</label><input type="time" id="ev-tt"></div></div>
+<div id="dayx" style="display:flex;flex-direction:column;gap:6px"></div>
+<div class="g2"><div><label>DAY WORD</label><input type="text" id="day-word" value="Day" placeholder="Day / Session"></div>
+<div><label>DAY LABEL STYLE</label><select id="day-fmt"><option value="of">Day 1 of 3</option><option value="only">Day 1</option></select></div></div>
 <div><label>RESOURCE PERSON</label><input type="text" id="ev-rp"></div>
-<div><label>ORGANISED BY</label><input type="text" id="ev-org"></div>
+<div><label>ORGANISING COMMITTEE / ORGANISED BY</label><input type="text" id="ev-org"></div>
 </div></details>
 
 <details open><summary>2 · Students</summary><div class="bd">
 <div><label>ACADEMIC YEAR</label><select id="gen-ay"></select></div>
-<div><label>CLASSES (one sheet set each)</label><div class="cls" id="cls"></div></div>
-<div class="g2"><div><label>SEMESTER</label><input type="text" id="gen-sem" placeholder="all"></div><div><label>SHIFT</label><input type="text" id="gen-shift" placeholder="all"></div></div>
-<div class="g2"><div><label>GENDER</label><select id="gen-g"><option value="">All</option><option>Male</option><option>Female</option><option>Transgender</option></select></div>
-<div><label>SORT BY</label><select id="gen-sort"><option value="deptno">Dept. No.</option><option value="name">Name</option><option value="batch">Batch</option></select></div></div>
+<div class="r"><label style="flex:1;margin:0">CLASSES</label><button onclick="selCls(1)">All</button><button onclick="selCls(0)">None</button></div>
+<div class="cls" id="cls"></div>
+<div class="g3"><div><label>SEMESTER</label><select id="gen-sem"><option value="">All</option><option>Semester I</option><option>Semester II</option><option>Semester III</option><option>Semester IV</option><option>Semester V</option><option>Semester VI</option></select></div><div><label>SHIFT</label><select id="gen-shift"><option value="">All</option><option>Shift 1</option><option>Shift 2</option></select></div><div><label>SECTION</label><input type="text" id="gen-sec" placeholder="all"></div></div>
+<div><label>GENDER (none ticked = all)</label><div class="g3"><label class="ck"><input type="checkbox" id="gf-m"> Male</label><label class="ck"><input type="checkbox" id="gf-f"> Female</label><label class="ck"><input type="checkbox" id="gf-t"> Trans</label></div></div>
+<div class="g2"><div><label>SORT BY</label><select id="gen-sort"><option value="deptno">Dept. No.</option><option value="name">Name</option><option value="batch">Batch</option></select></div>
+<div><label>NAME STYLE</label><select id="nm-case"><option value="">As entered</option><option value="up">UPPERCASE</option><option value="title">Title Case</option></select></div></div>
 </div></details>
 
-<details><summary>3 · Print on sheet (show / hide)</summary><div class="bd" id="shows"></div></details>
+<details><summary>3 · Print inside the sheet (show / hide)</summary><div class="bd" id="shows"></div></details>
 
-<details><summary>4 · Header & logos</summary><div class="bd">
+<details><summary>4 · Cover page</summary><div class="bd">
+<div><label>COVER PAGE</label><select id="cv-mode"><option value="auto">Auto (only multi-day events)</option><option value="yes">Always</option><option value="no">Never</option></select></div>
+<div><label>TITLE</label><input type="text" id="cv-title" value="Attendance Register"></div>
+<label class="ck"><input type="checkbox" id="cv-hd" checked> College header &amp; logos on cover</label>
+<label class="ck"><input type="checkbox" id="cv-det" checked> Event details box</label>
+<label class="ck"><input type="checkbox" id="cv-idx" checked> Day-wise index (date, venue, time, pages)</label>
+<label class="ck"><input type="checkbox" id="cv-cls" checked> Class-wise enrolled table</label>
+<label class="ck"><input type="checkbox" id="cv-pd" checked> Blank "present" box for every day</label>
+<div><label>CLASS TABLE HEADING</label><input type="text" id="cv-tt" value="Participant Summary" placeholder="e.g. Participant Summary"></div>
+<label class="ck"><input type="checkbox" id="cv-sheets" checked> Show "Total Sheets" in details</label>
+<label class="ck"><input type="checkbox" id="cv-ft" checked> Footer line at bottom of cover</label>
+<div><label>NOTE / INSTRUCTION LINE (optional)</label><input type="text" id="cv-note" placeholder="e.g. Sign in the box against your name"></div>
+<div><label>SEAL SPACE</label><select id="cv-seal"><option value="">None</option><option value="flex-start">Bottom left</option><option value="center">Bottom center</option><option value="flex-end">Bottom right</option></select></div>
+</div></details>
+
+<details><summary>5 · Header &amp; logos</summary><div class="bd">
 <div><label>COLLEGE</label><input type="text" id="hdr-college"></div>
 <div><label>AFFILIATION LINE</label><input type="text" id="hdr-est"></div>
 <div><label>DEPARTMENT</label><input type="text" id="hdr-dept"></div>
 <div><label>SUBTITLE 1</label><input type="text" id="hdr-sub1"></div>
 <div><label>SUBTITLE 2</label><input type="text" id="hdr-sub2"></div>
-<div class="g2"><div><label>COLLEGE NAME SIZE</label><select id="hdr-sz"><option value="13">Small</option><option value="15" selected>Medium</option><option value="18">Large</option></select></div>
+<div><label>MOTTO / EXTRA LINE</label><input type="text" id="hdr-motto"></div>
+<div class="g2"><div><label>FONT</label><select id="hdr-ff"><option value="'Times New Roman',Times,serif">Times New Roman</option><option value="Arial,Helvetica,sans-serif">Arial</option><option value="Calibri,Carlito,sans-serif">Calibri</option><option value="Georgia,serif">Georgia</option></select></div>
 <div><label>HEADER LINE</label><select id="hdr-rule"><option value="b">Bold</option><option value="t">Thin</option><option value="d">Double</option><option value="">None</option></select></div></div>
+<div class="g3"><div><label>COLLEGE pt</label><input type="number" id="hdr-sz" value="15" min="10" max="24"></div><div><label>DEPT pt</label><input type="number" id="dept-sz" value="12" min="8" max="18"></div><div><label>TITLE pt</label><input type="number" id="ev-sz" value="13" min="9" max="20"></div></div>
+<div class="g2"><div><label>EVENT TITLE CASE</label><select id="ev-tc"><option value="uppercase">UPPERCASE</option><option value="none">As typed</option><option value="capitalize">Capitalize Each Word</option></select></div>
+<div><label>TITLE UNDERLINE</label><select id="ev-ul"><option value="1">Underlined</option><option value="">None</option></select></div></div>
+<div><label>SHEET LABEL TEXT</label><input type="text" id="lbl-text" value="Attendance Sheet"></div>
+<div><label>DETAILS BOX LAYOUT</label><select id="mt-cols"><option value="2">Two columns</option><option value="1">One column (full width rows)</option></select></div>
 <div class="g2"><div><label>LOGO LAYOUT</label><select id="logo-lay"><option value="above">Above the name</option><option value="flank">Left &amp; right of name</option></select></div>
 <div><label>LOGO ALIGN</label><select id="logo-pos"><option value="center">Center</option><option value="flex-start">Left</option><option value="flex-end">Right</option></select></div></div>
-<div><label>LOGO HEIGHT (mm)</label><input type="number" id="logo-h" value="16" min="8" max="35"></div>
-<label>LOGOS · tick to show · arrows set order</label><div id="logos" class="bd" style="padding:0"></div>
-<div class="r"><input type="text" id="logo-new" placeholder="Paste image URL"><button onclick="addLogo()">Add</button></div>
+<div><label>LOGO HEIGHT (mm)</label><input type="number" id="logo-h" value="16" min="8" max="40"></div>
+<label>LOGOS · tick to show · arrows set the order</label><div id="logos" style="display:flex;flex-direction:column;gap:5px"></div>
+<div class="r"><input type="text" id="logo-new" placeholder="Paste an image URL"><button onclick="addLogo()">Add</button></div>
+<div class="g2"><div><label>WATERMARK</label><select id="wm-type"><option value="">None</option><option value="logo">Logo (choose below)</option><option value="text">Text</option></select></div><div><label>OPACITY %</label><input type="number" id="wm-op" value="8" min="2" max="30"></div></div>
+<div><label>WATERMARK LOGO</label><select id="wm-logo"></select></div>
+<div><label>WATERMARK TEXT</label><input type="text" id="wm-text"></div>
 </div></details>
 
-<details><summary>5 · Table columns</summary><div class="bd">
-<div id="cols" style="display:flex;flex-direction:column;gap:5px"></div>
-<div><label>SIGNATURE COLUMN NAMES (comma separated)</label><input type="text" id="sig-cols" value="Signature"></div>
+<details><summary>6 · Table, rows &amp; columns</summary><div class="bd">
+<div class="g2"><div><label>ROW SIZE</label><select id="lay-rh"><option value="5.5">Compact</option><option value="7" selected>Normal</option><option value="9">Spacious</option><option value="12">Signature (tall)</option></select></div>
+<div><label>OR CUSTOM ROW mm</label><input type="number" id="lay-rhc" step=".5" min="4" max="30" placeholder="e.g. 8.5"></div></div>
+<div><label>ROWS PER PAGE</label><select id="lay-rpp"><option value="0">Auto — as many as fit</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option></select></div>
+<label class="ck"><input type="checkbox" id="lay-fit" checked> Shrink rows so each class fits one page (min 4.6 mm)</label>
+<label class="ck"><input type="checkbox" id="lay-str"> Stretch rows so the table fills the page</label>
+<div class="g2"><div><label>MIN ROWS PER CLASS (pad with blanks)</label><input type="number" id="lay-min" min="0" max="200" placeholder="0"></div>
+<div><label>EXTRA BLANK ROWS AT END</label><input type="number" id="lay-blank" min="0" max="60" placeholder="0"></div></div>
+<label class="ck"><input type="checkbox" id="pad-no" checked> Number the blank rows</label>
+<div class="g3"><div><label>TABLE FONT pt</label><input type="number" id="lay-tf" placeholder="auto" min="6" max="13" step=".5"></div>
+<div><label>HEADER ROW</label><select id="tbl-th"><option value="#ececec">Grey</option><option value="transparent">None</option><option value="#d9d9d9">Dark grey</option></select></div>
+<div><label>STRIPES</label><select id="tbl-z"><option value="">Off</option><option value="1">On</option></select></div></div>
+<div class="g2"><div><label>GRID LINES</label><select id="tbl-gw"><option value="1">Thin</option><option value="1.5">Medium</option><option value="2">Bold</option></select></div>
+<div><label>HEADER ROW HEIGHT mm</label><input type="number" id="tbl-hh" value="8" min="5" max="20" step=".5"></div></div>
+<label>COLUMNS · tick, rename, width in mm (blank = auto), reorder</label><div id="cols" style="display:flex;flex-direction:column;gap:5px"></div>
+<div><label>SIGNATURE / EXTRA COLUMNS (comma separated)</label><input type="text" id="sig-cols" value="Signature"></div>
+<div class="nt">Tip: for two sessions use "Forenoon, Afternoon". The table always fits the page width.</div>
 </div></details>
 
-<details><summary>6 · Signatures</summary><div class="bd">
+<details><summary>7 · Signatures</summary><div class="bd">
+<div class="r"><div class="nt" id="stinfo" style="flex:1">Loading staff…</div><button onclick="loadStaff(1)">Reload staff</button></div>
+<input type="text" id="staff-q" placeholder="Search staff by name or designation…" oninput="sigUI()">
 <div id="sigs" style="display:flex;flex-direction:column;gap:6px"></div>
-<div class="r"><select id="sig-preset"></select><button onclick="addSig()">Add</button></div>
-<div class="g2"><div><label>ALIGNMENT</label><select id="sig-al"><option value="spread">Spread evenly</option><option value="end">Right</option><option value="start">Left</option><option value="center">Center</option></select></div>
+<div class="r"><select id="sig-preset"></select><button onclick="addSig()">Add signatory</button></div>
+<div class="g2"><div><label>ALIGNMENT</label><select id="sig-al"><option value="spread">Spread evenly</option><option value="flex-end">Right</option><option value="flex-start">Left</option><option value="center">Center</option></select></div>
 <div><label>LINE STYLE</label><select id="sig-ls"><option>solid</option><option>dashed</option><option>dotted</option></select></div></div>
 <div class="g2"><div><label>SIGNING SPACE (mm)</label><input type="number" id="sig-h" value="14" min="6" max="40"></div>
-<div><label>DATE LINE</label><select id="sig-dt"><option value="">None</option><option value="1">Under every signature</option></select></div></div>
+<div><label>SEAL SPACE BESIDE SIGNATURES</label><select id="sig-stamp"><option value="">None</option><option value="l">Left</option><option value="r">Right</option></select></div></div>
+<div class="g2"><div><label>DATE LINE</label><select id="sig-dt"><option value="">None</option><option value="hod">HOD only</option><option value="all">Under every signature</option></select></div>
+<div><label>&nbsp;</label><label class="ck"><input type="checkbox" id="sig-college"> College under each</label></div></div>
+<label class="ck"><input type="checkbox" id="sig-ver"> "Verified by" row</label>
 </div></details>
 
-<details><summary>7 · Page layout</summary><div class="bd">
-<div class="g2"><div><label>PAPER</label><select id="lay-or"><option value="portrait">A4 Portrait</option><option value="landscape">A4 Landscape</option></select></div>
-<div><label>MARGIN</label><select id="lay-mg"><option value="8">Narrow</option><option value="12" selected>Normal</option><option value="18">Wide</option></select></div></div>
-<div class="g2"><div><label>ROW HEIGHT (mm)</label><input type="number" id="lay-rh" value="7.5" min="4.6" max="16" step=".5"></div>
-<div><label>FONT (pt)</label><input type="number" id="lay-fs" value="10" min="8" max="13"></div></div>
-<div><label>PAGE BORDER</label><select id="lay-bd"><option value="0">None</option><option value="1">Thin</option><option value="2">Double</option><option value="3">Box</option></select></div>
-<label class="ck"><input type="checkbox" id="lay-fit" checked> Shrink rows to fit each class on one page (min 4.6 mm)</label>
+<details><summary>8 · Page layout</summary><div class="bd">
+<div class="g2"><div><label>PAPER</label><select id="lay-paper"><option>A4</option><option>A3</option><option>A5</option><option>Letter</option><option>Legal</option></select></div>
+<div><label>ORIENTATION</label><select id="lay-or"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div>
+<div class="g2"><div><label>MARGIN</label><select id="lay-mg"><option value="8">Narrow</option><option value="12" selected>Normal</option><option value="18">Wide</option></select></div><div><label>OR CUSTOM mm</label><input type="number" id="lay-mgc" min="4" max="30" placeholder="e.g. 10"></div></div>
+<div class="g2"><div><label>BASE FONT pt</label><input type="number" id="lay-fs" value="10" min="8" max="13"></div>
+<div><label>PAGE BORDER</label><select id="lay-bd"><option value="0">None</option><option value="1">Thin</option><option value="2">Double</option><option value="3">Box</option></select></div></div>
+<div><label>CONTINUATION PAGES</label><select id="lay-hdr"><option value="compact">Compact header (event · day · class)</option><option value="full">Full header on every page</option></select></div>
+<div><label>PAGE NUMBERS</label><select id="pn-style"><option value="sheet">Per class sheet (Page 1 of 2)</option><option value="global">Whole file (Page 5 of 20)</option><option value="">Off</option></select></div>
 <label class="ck"><input type="checkbox" id="sh-tot" checked> Total enrolled / present boxes</label>
-<label class="ck"><input type="checkbox" id="sh-pn" checked> Page numbers</label>
 <div><label>FOOTER TEXT</label><input type="text" id="footer-txt"></div>
+<label class="ck"><input type="checkbox" id="ft-date"> Add "Printed on" date to footer</label>
 </div></details>
 </aside>
 
@@ -146,73 +211,129 @@ main{overflow:auto;padding:14px;display:flex;flex-direction:column;align-items:c
 <div id="empty">Live preview appears here.</div><div id="pv"></div></main>
 </div>
 <div id="probe"></div><div id="toast"></div>
-<style id="sheetcss-note"></style>
-
 <script>
 const GAS='https://script.google.com/macros/s/AKfycbxWWpiTVJZ6O-oPXIJ4h6W4JMmOfABONQfrwcQ0rh-K_6TnRFWHrFI7mYwjEZLadTjWsw/exec';
 const $=i=>document.getElementById(i),g=i=>{const e=$(i);return!e?'':e.type==='checkbox'?e.checked:e.value.trim()};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-async function gas(a,p){const r=await fetch(GAS+'?'+new URLSearchParams({action:a,payload:JSON.stringify(p||{})}));if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
-function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3200)}
-const R=(()=>{let t;return()=>{clearTimeout(t);t=setTimeout(render,250)}})();
-let ST=[],STAFF=[],AY=[],CLS=[],CFG={};
+async function gas(a,p){const r=await fetch(GAS+'?'+new URLSearchParams({action:a,payload:JSON.stringify(p||{})}));if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();if(j&&j.ok===false)throw Error(j.error||'Request failed');return j}
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3600)}
+const R=(()=>{let t;return()=>{clearTimeout(t);t=setTimeout(()=>{render();saveS()},250)}})();
+let ST=[],STAFF=[],AY=[],CLS=[],CFG={},STAFF_ERR='';
 const pd=s=>{if(!s)return null;const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return new Date(+m[1],m[2]-1,+m[3]);const d=new Date(s);return isNaN(d)?null:d};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const fd=(d,l)=>d?d.toLocaleDateString('en-IN',{day:'2-digit',month:l?'long':'short',year:'numeric'}):'';
 const wd=d=>d.toLocaleDateString('en-US',{weekday:'long'});
 const ft=t=>{if(!t)return'';const[h,m]=t.split(':').map(Number);return(h%12||12)+':'+String(m).padStart(2,'0')+(h>=12?' PM':' AM')};
 const mv=(a,i,d,f)=>{const j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];f();R()};
+const PAPER={A4:[210,297],A3:[297,420],A5:[148,210],Letter:[215.9,279.4],Legal:[215.9,355.6]};
+function openAll(on){document.querySelectorAll('aside details').forEach(d=>d.open=!!on)}
+let DR=null;
+function dgs(a,i,e){DR={a,i};e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain','x')}catch(x){}}
+function dgo(e){if(DR)e.preventDefault()}
+function dgp(a,i,f,e){e.preventDefault();if(!DR||DR.a!==a||DR.i===i){DR=null;return}const m=a.splice(DR.i,1)[0];a.splice(i,0,m);DR=null;f();R()}
 
-/* ---------- state lists ---------- */
-const SHOWS=[['class','Class',1],['ay','Academic year',1],['evtype','Event type',1],['sem','Semester',0],['shift','Shift',0],['venue','Venue',1],['date','Date',1],['time','Time',1],['rp','Resource person',1],['org','Organised by',1],['ref','Ref. no.',0],['title','"— Attendance Sheet —" label',1]];
-$('shows').innerHTML=SHOWS.map(s=>`<label class="ck"><input type="checkbox" id="sh-${s[0]}" ${s[2]?'checked':''} onchange="R()"> ${s[1]}</label>`).join('');
-let COLS=[{id:'sno',l:'S.No.',en:1,w:10},{id:'deptno',l:'Dept. No.',en:1,w:26},{id:'name',l:'Student Name',en:1,w:''},{id:'gender',l:'Gender',w:16},{id:'class',l:'Class'},{id:'batch',l:'Batch',w:16},{id:'sem',l:'Sem',w:12},{id:'shift',l:'Shift',w:14},{id:'sec',l:'Section',w:14},{id:'dob',l:'DOB',w:24},{id:'contact',l:'Contact'},{id:'email',l:'Email'},{id:'father',l:"Father's Name"},{id:'pcon',l:'Parent Contact'}];
-const VAL={deptno:s=>s.DeptNo,name:s=>s.Name,gender:s=>s.Gender,class:s=>s.Class,batch:s=>s.Batch,sem:s=>s.Semester,shift:s=>s.Shift,sec:s=>s.Section,dob:s=>fd(pd(s.DOB)),contact:s=>s.Contact,email:s=>s.Email,father:s=>s.Father,pcon:s=>s.ParentContact};
-const LEFT=['name','class','contact','email','father','pcon'];
-function colUI(){$('cols').innerHTML=COLS.map((c,i)=>`<div class="r"><input type="checkbox" ${c.en?'checked':''} ${c.id==='sno'||c.id==='name'?'disabled':''} onchange="COLS[${i}].en=this.checked;R()" style="flex:0 0 auto"><span style="flex:2">${esc(c.l)}</span><input type="number" placeholder="auto mm" value="${c.w||''}" style="max-width:76px" oninput="COLS[${i}].w=this.value;R()"><button onclick="mv(COLS,${i},-1,colUI)">↑</button><button onclick="mv(COLS,${i},1,colUI)">↓</button></div>`).join('')}
+/* ---------- lists ---------- */
+const SHOWS=[['day','Day label in details box ("Day 1 of 3")',1],['banner','Day banner under the event title',0],['class','Class',1],['ay','Academic year',1],['evtype','Event type',1],['sem','Semester',0],['shift','Shift',0],['venue','Venue',1],['date','Date',1],['time','Time',1],['rp','Resource person',1],['org','Organising committee',1],['ref','Ref. no.',0],['title','Sheet label ("— Attendance Sheet —")',1]];
+$('shows').innerHTML=SHOWS.map(s=>`<label class="ck"><input type="checkbox" id="sh-${s[0]}" ${s[2]?'checked':''}> ${s[1]}</label>`).join('');
+const DEFCOLS=()=>[{id:'sno',l:'S.No.',en:1,w:10},{id:'deptno',l:'Dept. No.',en:1,w:26},{id:'name',l:'Student Name',en:1,w:''},{id:'gender',l:'Gender',w:16},{id:'class',l:'Class'},{id:'batch',l:'Batch',w:16},{id:'sem',l:'Semester',w:16},{id:'shift',l:'Shift',w:14},{id:'sec',l:'Section',w:14},{id:'dob',l:'Date of Birth',w:24},{id:'contact',l:'Contact No.'},{id:'email',l:'Email'},{id:'father',l:"Father's Name"},{id:'mother',l:"Mother's Name"},{id:'pcon',l:'Parent Contact'},{id:'addr',l:'Address'}];
+let COLS=DEFCOLS();
+const VAL={deptno:s=>s.DeptNo,name:s=>s.Name,gender:s=>s.Gender,class:s=>s.Class,batch:s=>s.Batch,sem:s=>s.Semester,shift:s=>s.Shift,sec:s=>s.Section,dob:s=>fd(pd(s.DOB)),contact:s=>s.Contact,email:s=>s.Email,father:s=>s.Father,mother:s=>s.Mother,pcon:s=>s.ParentContact,addr:s=>s.Address};
+const LEFT=['name','class','contact','email','father','mother','pcon','addr'];
+function nameFmt(v){v=String(v||'');const m=g('nm-case');if(m==='up')return v.toUpperCase();if(m==='title')return v.toLowerCase().replace(/(^|[\s.'-])([a-z])/g,(a,b,c)=>b+c.toUpperCase());return v}
+function colUI(){$('cols').innerHTML=COLS.map((c,i)=>{const fx=c.id==='sno'||c.id==='name';return`<div class="r" ondragover="dgo(event)" ondrop="dgp(COLS,${i},colUI,event)"><span class="f0 dh" draggable="true" ondragstart="dgs(COLS,${i},event)" title="Drag to reorder">⠿</span><input type="checkbox" class="f0" ${c.en?'checked':''} ${fx?'disabled':''} onchange="COLS[${i}].en=this.checked;R()"><input type="text" value="${esc(c.l)}" style="flex:2" oninput="COLS[${i}].l=this.value;R()"><input type="number" placeholder="auto" value="${c.w||''}" style="max-width:62px" oninput="COLS[${i}].w=this.value;R()"><button onclick="mv(COLS,${i},-1,colUI)">↑</button><button onclick="mv(COLS,${i},1,colUI)">↓</button></div>`}).join('')}
 let LOGOS=[];
-function logoUI(){$('logos').innerHTML=LOGOS.map((l,i)=>`<div class="it"><div class="r"><input type="checkbox" ${l.en?'checked':''} onchange="LOGOS[${i}].en=this.checked;R()" style="flex:0 0 auto"><img src="${esc(l.url)}" style="height:26px;max-width:40px;object-fit:contain;flex:0 0 auto" onerror="this.style.opacity=.2"><input type="text" value="${esc(l.label)}" oninput="LOGOS[${i}].label=this.value"><button onclick="mv(LOGOS,${i},-1,logoUI)">↑</button><button onclick="mv(LOGOS,${i},1,logoUI)">↓</button><button onclick="LOGOS.splice(${i},1);logoUI();R()">×</button></div></div>`).join('')}
+function logoUI(){$('logos').innerHTML=LOGOS.map((l,i)=>`<div class="it" ondragover="dgo(event)" ondrop="dgp(LOGOS,${i},logoUI,event)"><div class="r"><span class="f0 dh" draggable="true" ondragstart="dgs(LOGOS,${i},event)" title="Drag to reorder">⠿</span><input type="checkbox" class="f0" ${l.en?'checked':''} onchange="LOGOS[${i}].en=this.checked;R()"><img class="f0" src="${esc(l.url)}" style="height:26px;max-width:40px;object-fit:contain" onerror="this.style.opacity=.2"><input type="text" value="${esc(l.label)}" oninput="LOGOS[${i}].label=this.value"><button onclick="mv(LOGOS,${i},-1,logoUI)">↑</button><button onclick="mv(LOGOS,${i},1,logoUI)">↓</button><button onclick="LOGOS.splice(${i},1);logoUI();R()">×</button></div></div>`).join('');const w=$('wm-logo');if(w){const cur=w.value||'0';w.innerHTML=LOGOS.map((l,i)=>`<option value="${i}">${esc(l.label)}</option>`).join('');w.value=cur}}
 function addLogo(){const u=g('logo-new');if(!u)return;LOGOS.push({url:u,label:'Custom',en:1});$('logo-new').value='';logoUI();R()}
-const PRE=['Head of the Department','Staff In-charge','Attendance Secretary (Student)','Association Secretary','Principal','Rector','Vice Principal','Custom'];
-$('sig-preset').innerHTML=PRE.map(p=>`<option>${p}</option>`).join('');
-let SIGS=[{n:'',d:'Head of the Department',x:''}];
-function addSig(){const p=g('sig-preset');SIGS.push({n:'',d:p==='Custom'?'':p,x:''});sigUI();R()}
-function sigStaff(i,id){const s=STAFF.find(x=>x.ID===id);if(!s)return;SIGS[i].n=s.Name;if(s.Designation&&!/^(Head|Staff In|Attend|Assoc)/.test(SIGS[i].d))SIGS[i].d=s.Designation;SIGS[i].x=SIGS[i].x||s.Department||'';sigUI();R()}
-function sigUI(){const opts='<option value="">Fill from staff…</option>'+STAFF.filter(x=>x.Active!=='FALSE').map(x=>`<option value="${esc(x.ID)}">${esc(x.Name)}</option>`).join('');
-$('sigs').innerHTML=SIGS.map((s,i)=>`<div class="it"><div class="r"><b>${i+1}</b><select onchange="sigStaff(${i},this.value)">${opts}</select><button onclick="mv(SIGS,${i},-1,sigUI)">↑</button><button onclick="mv(SIGS,${i},1,sigUI)">↓</button><button onclick="SIGS.splice(${i},1);sigUI();R()">×</button></div>
-<input type="text" placeholder="Name" value="${esc(s.n)}" oninput="SIGS[${i}].n=this.value;R()"><input type="text" placeholder="Designation" value="${esc(s.d)}" oninput="SIGS[${i}].d=this.value;R()"><input type="text" placeholder="Department / extra line (optional)" value="${esc(s.x)}" oninput="SIGS[${i}].x=this.value;R()"></div>`).join('')}
+const PRE=[['hod','Head of the Department'],['rector','Rector'],['corr','Secretary & Correspondent'],['principal','Principal'],['vpadmin','Vice Principal (Administration)'],['vpacad','Vice Principal (Academic)'],['vpinfra','Vice Principal (Infrastructure)'],['vpdisc','Vice Principal (Discipline)'],['inc','Staff In-charge'],['sec','Attendance Secretary (Student)'],['assoc','Association Secretary'],['cus','Custom']];
+$('sig-preset').innerHTML=PRE.map(p=>`<option value="${p[0]}">${p[1]}</option>`).join('');
+let SIGS=[{k:'hod',n:'',d:'Head of the Department',x:'',col:'',role:'',shift:'',id:'',man:0}];
+function addSig(){const k=g('sig-preset'),p=PRE.find(x=>x[0]===k);SIGS.push({k,n:'',d:k==='cus'?'':p[1],x:'',col:'',role:'',shift:'',id:'',man:0});sigUI();R()}
+function sigStaff(i,id){const s=SIGS[i];s.id=id;const f=STAFF.find(x=>x.ID===id);if(f&&!s.man){s.n=f.Name;if(f.Designation&&['hod','inc','cus'].includes(s.k))s.d=f.Designation;s.x=s.x||f.Department||'';s.col=s.col||f.College||''}sigUI();R()}
+function sigUI(){
+  const q=($('staff-q')?$('staff-q').value:'').trim().toLowerCase();
+  const act=STAFF.filter(x=>x.Active!=='FALSE');
+  const shown=q?act.filter(x=>(x.Name+' '+(x.Designation||'')+' '+(x.Department||'')).toLowerCase().includes(q)):act;
+  $('stinfo').textContent=STAFF_ERR?('Staff not loaded: '+STAFF_ERR):act.length+' staff loaded'+(q?' · '+shown.length+' match':'');
+  $('sigs').innerHTML=SIGS.map((s,i)=>{const ro=s.id&&!s.man?'readonly':'';
+    let list=shown.slice();const cur=act.find(x=>x.ID===s.id);if(cur&&!list.includes(cur))list.unshift(cur);
+    const opts='<option value="">— select staff —</option>'+list.map(x=>`<option value="${esc(x.ID)}" ${x.ID===s.id?'selected':''}>${esc(x.Name)}${x.Designation?' — '+esc(x.Designation):''}</option>`).join('');
+    return`<div class="it" ondragover="dgo(event)" ondrop="dgp(SIGS,${i},sigUI,event)"><div class="r"><span class="f0 dh" draggable="true" ondragstart="dgs(SIGS,${i},event)" title="Drag to reorder">⠿</span><b>${i+1}</b><select onchange="sigStaff(${i},this.value)">${opts}</select><button onclick="mv(SIGS,${i},-1,sigUI)">↑</button><button onclick="mv(SIGS,${i},1,sigUI)">↓</button><button onclick="SIGS.splice(${i},1);sigUI();R()">×</button></div>
+<label class="ck"><input type="checkbox" ${s.man?'checked':''} onchange="SIGS[${i}].man=this.checked?1:0;sigUI()"> Edit name / designation manually</label>
+<input type="text" placeholder="Full name" ${ro} value="${esc(s.n)}" oninput="SIGS[${i}].n=this.value;R()">
+<input type="text" placeholder="Designation" ${ro} value="${esc(s.d)}" oninput="SIGS[${i}].d=this.value;R()">
+<input type="text" placeholder="Role in event (optional)" value="${esc(s.role)}" oninput="SIGS[${i}].role=this.value;R()">
+<input type="text" placeholder="Department (optional)" value="${esc(s.x)}" oninput="SIGS[${i}].x=this.value;R()">
+<input type="text" placeholder="College (optional)" value="${esc(s.col)}" oninput="SIGS[${i}].col=this.value;R()">
+<select onchange="SIGS[${i}].shift=this.value;R()"><option value="">No shift</option><option ${s.shift==='Shift 1'?'selected':''}>Shift 1</option><option ${s.shift==='Shift 2'?'selected':''}>Shift 2</option></select></div>`}).join('')}
+async function loadStaff(manual){
+  $('stinfo').textContent='Loading staff…';
+  try{const r=await gas('getStaff');STAFF=r.data||[];STAFF_ERR=''}catch(e){STAFF_ERR=e.message}
+  sigUI();if(manual)toast(STAFF_ERR?'Staff load failed: '+STAFF_ERR:STAFF.length+' staff loaded.')
+}
+
+/* ---------- days ---------- */
+let DAYX={};
+const dayLbl=(i,n)=>(g('day-word')||'Day')+' '+(i+1)+(g('day-fmt')==='of'&&n>1?' of '+n:'');
+function days(){const a=pd(g('ev-d1')),b=pd(g('ev-d2'));if(!a)return[null];const hol=g('ev-hol').split(',').map(s=>s.trim()).filter(Boolean);if(!b||b<=a)return[a];const r=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){if(g('ev-skip')&&d.getDay()===0)continue;if(hol.includes(iso(d)))continue;r.push(new Date(d))}return r.length?r:[a]}
+function dx(k,f,v){(DAYX[k]=DAYX[k]||{})[f]=v;R()}
+function dayUI(){const D=days();$('dayx').innerHTML=D.length>1?'<label>PER-DAY TIME &amp; VENUE (blank = default above)</label>'+D.map((d,i)=>{const k=iso(d),x=DAYX[k]||{};return`<div class="it"><b style="font-size:12px">${esc(dayLbl(i,D.length))} · ${fd(d)} (${wd(d)})</b><div class="g2"><input type="time" value="${x.tf||''}" oninput="dx('${k}','tf',this.value)"><input type="time" value="${x.tt||''}" oninput="dx('${k}','tt',this.value)"></div><input type="text" placeholder="Venue for this day" value="${esc(x.v||'')}" oninput="dx('${k}','v',this.value)"></div>`}).join(''):''}
+function dayList(){return days().map((d,i,a)=>{const x=d?DAYX[iso(d)]||{}:{},tf=x.tf||g('ev-tf'),tt=x.tt||g('ev-tt');return{d,i,n:a.length,v:x.v||g('ev-venue'),t:ft(tf)&&ft(tt)?ft(tf)+' – '+ft(tt):ft(tf)||ft(tt)}})}
+
+/* ---------- presets ---------- */
+const PK='azbpresets',NOSAVE=/^(cls$|logo-new|sig-preset|preset-|staff-q|gen-ay)/;
+function getP(){try{return JSON.parse(localStorage.getItem(PK)||'{}')}catch(e){return{}}}
+function presetUI(){const p=getP();$('preset-sel').innerHTML='<option value="">— saved presets —</option>'+Object.keys(p).map(k=>`<option>${esc(k)}</option>`).join('')}
+function snap(){const o={};document.querySelectorAll('aside input[id],aside select[id]').forEach(e=>{if(NOSAVE.test(e.id))return;o[e.id]=e.type==='checkbox'?e.checked:e.value});o._C=COLS;o._S=SIGS;o._L=LOGOS;o._D=DAYX;return o}
+function savePreset(){const n=g('preset-name');if(!n)return toast('Type a preset name first.');const p=getP();p[n]=snap();try{localStorage.setItem(PK,JSON.stringify(p))}catch(e){return toast('Could not save preset.')}presetUI();$('preset-sel').value=n;toast('Preset saved.')}
+function loadPreset(){const n=g('preset-sel');if(!n)return toast('Choose a preset first.');const o=getP()[n];if(!o)return;Object.keys(o).forEach(k=>{if(k[0]==='_')return;const e=$(k);if(e){e.type==='checkbox'?e.checked=o[k]:e.value=o[k]}});if(o._C)COLS=o._C;if(o._S)SIGS=o._S;if(o._L)LOGOS=o._L;if(o._D)DAYX=o._D;colUI();logoUI();sigUI();dayUI();R();toast('Preset loaded.')}
+function delPreset(){const n=g('preset-sel');if(!n)return;if(!confirm('Delete preset "'+n+'"?'))return;const p=getP();delete p[n];try{localStorage.setItem(PK,JSON.stringify(p))}catch(e){}presetUI()}
 
 /* ---------- boot ---------- */
 async function boot(){
-  colUI();sigUI();
-  const dl=['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png','Loyola College'],d2=['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/100.png','Centenary'],d3=['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png','Department'];
-  try{
-    const[a,b,c,d,e]=await Promise.all([gas('getStudents'),gas('getStaff'),gas('getAcademicYears'),gas('getClasses'),gas('getConfig')]);
-    ST=a.data||[];STAFF=b.data||[];AY=c.data||[];CLS=d.data||[];CFG=e.data||{};
-  }catch(x){toast('Could not load data: '+x.message)}
+  colUI();sigUI();presetUI();
+  const dl=[['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/loyola.png','Loyola College'],['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/100.png','Centenary'],['https://loyolazoology.github.io/administrative-cell/attendance-sheet/assets/azbt-logo.png','Department']];
+  const names=['getStudents','getStaff','getAcademicYears','getClasses','getConfig'];
+  const res=await Promise.allSettled(names.map(n=>gas(n)));
+  const bad=[];
+  res.forEach((r,i)=>{if(r.status!=='fulfilled'){bad.push(names[i].replace('get','')+': '+r.reason.message);if(i===1)STAFF_ERR=r.reason.message;return}const d=r.value.data;if(i===0)ST=d||[];else if(i===1){STAFF=d||[];STAFF_ERR=''}else if(i===2)AY=d||[];else if(i===3)CLS=d||[];else CFG=d||{}});
+  if(bad.length)toast('Could not load: '+bad.join(' · '));
   $('hdr-college').value=CFG.college_name||'Loyola College (Autonomous), Chennai – 600 034';
-  $('hdr-est').value=CFG.college_est||'';$('hdr-dept').value=CFG.dept_name||'';
-  $('hdr-sub1').value=CFG.subtitle1||'';$('hdr-sub2').value=CFG.subtitle2||'';$('footer-txt').value=CFG.watermark||'';
+  $('hdr-est').value=CFG.college_est||'';$('hdr-dept').value=CFG.dept_name||'';$('hdr-sub1').value=CFG.subtitle1||'';$('hdr-sub2').value=CFG.subtitle2||'';$('footer-txt').value=CFG.watermark||'';
   let L=[];try{L=JSON.parse(CFG.logos||'[]')}catch(e){}
   if(!L.length&&CFG.logo1_url)L=[{url:CFG.logo1_url,label:'College'}];
   if(CFG.logo2_url)L.push({url:CFG.logo2_url,label:'Second logo'});
   LOGOS=L.filter(x=>x.url).map(x=>({url:x.url,label:x.label||'Logo',en:1}));
-  [dl,d2,d3].forEach(x=>{if(!LOGOS.some(l=>l.url===x[0]))LOGOS.push({url:x[0],label:x[1],en:0})});
-  logoUI();
+  dl.forEach(x=>{if(!LOGOS.some(l=>l.url===x[0]))LOGOS.push({url:x[0],label:x[1],en:LOGOS.length?0:1})});
+  loadS();logoUI();colUI();sigUI();
   const act=AY.find(x=>String(x.Active).toUpperCase()==='TRUE');
   $('gen-ay').innerHTML=AY.map(x=>`<option ${act&&x.ID===act.ID?'selected':''}>${esc(x.Label)}</option>`).join('');
-  buildCls();
-  document.querySelectorAll('aside input,aside select').forEach(el=>{if(!el.hasAttribute('oninput')&&!el.hasAttribute('onchange')){el.addEventListener('input',R);el.addEventListener('change',R)}});
+  buildCls();dayUI();
+  document.querySelectorAll('aside input[id],aside select[id]').forEach(el=>{if(!el.hasAttribute('oninput')&&!el.hasAttribute('onchange')&&!el.closest('#cls')){el.addEventListener('input',R);el.addEventListener('change',R)}});
+  ['ev-d1','ev-d2','ev-skip','ev-hol','day-word','day-fmt'].forEach(i=>{$(i).addEventListener('input',dayUI);$(i).addEventListener('change',dayUI)});
   $('gen-ay').addEventListener('change',buildCls);
+  $('ev-name').addEventListener('change',()=>{if($('ev-name').value.trim().length>60&&!g('ev-short'))askShort()});
   render();
 }
+let askedFor='';
+function askShort(){
+  const n=g('ev-name');if(!n)return toast('Type the event name first.');
+  let sug=n.length>40?n.slice(0,40).replace(/\s+\S*$/,''):n;
+  const v=prompt('The event name is long. Enter a short name for continuation headers, footers and the file name (leave blank to skip):',g('ev-short')||sug);
+  askedFor=n;if(v&&v.trim()){$('ev-short').value=v.trim();R()}
+}
+const SKIP=/^(ev-|gen-|cls|logo-new|sig-preset|preset-|staff-q|hdr-(college|est|dept|sub1|sub2)|footer-txt|day-word|day-fmt)/;
+function saveS(){try{const o={};document.querySelectorAll('aside input[id],aside select[id]').forEach(e=>{if(SKIP.test(e.id))return;o[e.id]=e.type==='checkbox'?e.checked:e.value});o._C=COLS;o._S=SIGS;localStorage.setItem('azbgen3',JSON.stringify(o))}catch(e){}}
+function loadS(){try{const o=JSON.parse(localStorage.getItem('azbgen3')||'null');if(!o)return;Object.keys(o).forEach(k=>{const e=$(k);if(e&&k[0]!=='_'){e.type==='checkbox'?e.checked=o[k]:e.value=o[k]}});if(o._C&&o._C.length===COLS.length)COLS=o._C;if(o._S&&o._S.length)SIGS=o._S}catch(e){}}
+function resetAll(){if(!confirm('Reset every setting on this page?'))return;try{localStorage.removeItem('azbgen3')}catch(e){}location.reload()}
 function uniq(a){const m=new Map();a.forEach(s=>m.set(s.DeptNo||(s.Name+'|'+s.DOB),s));return[...m.values()]}
 function buildCls(){
   const ay=g('gen-ay'),sts=uniq(ST.filter(s=>s.AcademicYear===ay&&s.Active!=='FALSE')),map={};
   sts.forEach(s=>{const k=s.Class+(s.Section?' — '+s.Section:'');map[k]=(map[k]||0)+1});
   const ord=CLS.map(c=>c.Label),keys=Object.keys(map).sort((a,b)=>{const x=ord.findIndex(o=>a.startsWith(o)),y=ord.findIndex(o=>b.startsWith(o));return(x<0?99:x)-(y<0?99:y)||a.localeCompare(b)});
-  $('cls').innerHTML=keys.map(k=>`<label class="ck"><input type="checkbox" value="${esc(k)}" onchange="R()"> ${esc(short(k))} <span style="color:var(--c3)">(${map[k]})</span></label>`).join('')||'<span style="color:var(--c3)">No students for this year.</span>';
+  $('cls').innerHTML=keys.map(k=>`<label class="ck"><input type="checkbox" value="${esc(k)}" onchange="R()"> <span style="flex:1">${esc(short(k))}</span><span class="nt">${map[k]}</span></label>`).join('')||'<span class="nt">No students for this year.</span>';
   R();
 }
+function selCls(on){document.querySelectorAll('#cls input').forEach(i=>i.checked=!!on);R()}
 function short(k){const p=k.split(' — '),c=CLS.find(x=>x.Label===p[0]);return(c&&c.Short||p[0])+(p[1]?' — '+p[1]:'')}
 function students(chip){
   const p=chip.split(' — '),cls=p[0],sec=p[1],ay=g('gen-ay');
@@ -220,104 +341,120 @@ function students(chip){
   if(sec)s=s.filter(x=>x.Section===sec);
   if(g('gen-sem'))s=s.filter(x=>x.Semester===g('gen-sem'));
   if(g('gen-shift'))s=s.filter(x=>x.Shift===g('gen-shift'));
-  if(g('gen-g'))s=s.filter(x=>x.Gender===g('gen-g'));
+  if(g('gen-sec'))s=s.filter(x=>(x.Section||'').toUpperCase()===g('gen-sec').toUpperCase());
+  const gf=[g('gf-m')&&'Male',g('gf-f')&&'Female',g('gf-t')&&'Transgender'].filter(Boolean);if(gf.length)s=s.filter(x=>gf.includes(x.Gender));
   const k=g('gen-sort');
   return s.sort((a,b)=>k==='name'?(a.Name||'').localeCompare(b.Name||''):k==='batch'?(a.Batch||'').localeCompare(b.Batch||''):(a.DeptNo||'').localeCompare(b.DeptNo||'',undefined,{numeric:true}));
 }
-function days(){const a=pd(g('ev-d1')),b=pd(g('ev-d2'));if(!a)return[null];if(!b||b<=a)return[a];const r=[];for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){if(g('ev-skip')&&d.getDay()===0)continue;r.push(new Date(d))}return r.length?r:[a]}
 
 /* ---------- sheet html ---------- */
-function hdr(c){
-  const o=c.o,lg=LOGOS.filter(l=>l.en).map(l=>`<img src="${esc(l.url)}" crossorigin="anonymous" onerror="this.style.display='none'">`);
-  const tx=`<div class="tx"><div class="cn">${esc(g('hdr-college'))}</div>${g('hdr-est')?`<div class="es">${esc(g('hdr-est'))}</div>`:''}<div class="dn">${esc(g('hdr-dept'))}</div>${g('hdr-sub1')?`<div class="sb">${esc(g('hdr-sub1'))}</div>`:''}${g('hdr-sub2')?`<div class="sb">${esc(g('hdr-sub2'))}</div>`:''}</div>`;
-  let top;
-  if(g('logo-lay')==='flank'&&lg.length>1){const h=Math.ceil(lg.length/2);top=`<div class="fl"><div class="lgs" style="--lj:flex-start">${lg.slice(0,h).join('')}</div>${tx}<div class="lgs" style="--lj:flex-end">${lg.slice(h).join('')}</div></div>`}
+function O(){
+  const p=PAPER[g('lay-paper')]||PAPER.A4,land=g('lay-or')==='landscape',mgc=parseFloat(g('lay-mgc')),name=g('ev-name');
+  let ts=+g('ev-sz')||13;if(name.length>50)ts=Math.max(9,ts*50/name.length);
+  return{W:land?p[1]:p[0],H:land?p[0]:p[1],land,mg:mgc>0?mgc:+g('lay-mg'),bd:g('lay-bd'),fs:+g('lay-fs')||10,cs:+g('hdr-sz')||15,ds:+g('dept-sz')||12,ts:+ts.toFixed(1),lh:+g('logo-h')||16,lj:g('logo-pos'),rule:g('hdr-rule'),ff:g('hdr-ff'),al:g('sig-al'),sh:+g('sig-h')||14,ls:g('sig-ls'),thbg:g('tbl-th'),z:g('tbl-z'),gw:+g('tbl-gw')||1,thh:+g('tbl-hh')||8,full:g('lay-hdr')==='full',wm:g('wm-type'),wo:(+g('wm-op')||8)/100}
+}
+function shell(o,inner,vars){
+  let wm='';if(o.wm==='logo'){const l=LOGOS[+g('wm-logo')||0]||LOGOS.find(x=>x.en);if(l)wm=`<div class="wm"><img src="${esc(l.url)}" crossorigin="anonymous" onerror="this.style.display='none'"></div>`}else if(o.wm==='text'&&g('wm-text'))wm=`<div class="wm"><span>${esc(g('wm-text'))}</span></div>`;
+  return`<div class="pg" style="--w:${o.W}mm;--h:${o.H}mm;--mg:${o.mg}mm;--ip:${o.bd>0?'3mm':'0'};--fs:${o.fs}pt;--cs:${o.cs}pt;--ds:${o.ds}pt;--ts:${o.ts}pt;--lh:${o.lh}mm;--lj:${o.lj};--sh:${o.sh}mm;--ls:${o.ls};--ff:${o.ff};--thbg:${o.thbg};--gw:${o.gw}px;--thh:${o.thh}mm;--wo:${o.wo};${vars||''}">${wm}<div class="in b${o.bd}">${inner}</div></div>`}
+function hdrTop(o){
+  const lg=LOGOS.filter(l=>l.en).map(l=>`<img src="${esc(l.url)}" crossorigin="anonymous" onerror="this.style.display='none'">`);
+  const tx=`<div class="tx"><div class="cn">${esc(g('hdr-college'))}</div>${g('hdr-est')?`<div class="es">${esc(g('hdr-est'))}</div>`:''}<div class="dn">${esc(g('hdr-dept'))}</div>${['hdr-sub1','hdr-sub2'].map(i=>g(i)?`<div class="sb">${esc(g(i))}</div>`:'').join('')}${g('hdr-motto')?`<div class="sb" style="font-style:normal;font-weight:600">${esc(g('hdr-motto'))}</div>`:''}</div>`;
+  let top;if(g('logo-lay')==='flank'&&lg.length>1){const h=Math.ceil(lg.length/2);top=`<div class="fl"><div class="lgs" style="--lj:flex-start">${lg.slice(0,h).join('')}</div>${tx}<div class="lgs" style="--lj:flex-end">${lg.slice(h).join('')}</div></div>`}
   else top=(lg.length?`<div class="lgs" style="margin-bottom:1.5mm">${lg.join('')}</div>`:'')+tx;
-  const M=[['Class',c.sn,'class'],['Academic Year',g('gen-ay'),'ay'],['Semester',g('gen-sem'),'sem'],['Shift',g('gen-shift'),'shift'],['Venue',g('ev-venue'),'venue'],['Date',c.dtxt,'date'],['Time',c.time,'time'],['Resource Person',g('ev-rp'),'rp'],['Organised by',g('ev-org'),'org'],['Ref. No.',g('ev-ref'),'ref']].filter(m=>m[1]&&g('sh-'+m[2]));
-  const mt=M.map((m,i)=>`<div class="${i===M.length-1&&M.length%2?'fu':''}"><b>${m[0]}:</b><span>${esc(m[1])}</span></div>`).join('');
-  return`<div class="hd">${top}${o.rule?`<hr class="rl ${o.rule}">`:'<div style="height:2mm"></div>'}</div>
-  <div class="ev"><span class="en">${esc(g('ev-name'))}</span>${g('sh-evtype')&&g('ev-type')?`<div class="et">${esc(g('ev-type'))}</div>`:''}${g('sh-title')?'<div class="al">— Attendance Sheet —</div>':''}</div>${mt?`<div class="mt">${mt}</div>`:''}`;
-}
+  return`<div class="hd">${top}${o.rule?`<hr class="rl ${o.rule}">`:'<div style="height:2mm"></div>'}</div>`}
+function meta(items){items=items.filter(m=>m[1]&&g('sh-'+m[2]));if(!items.length)return'';const one=g('mt-cols')==='1',n=items.length;
+  return`<div class="mt ${one?'one':''}">${items.map((m,i)=>{const fu=!one&&i===n-1&&n%2===1,lr=one?i===n-1:i>=n-(n%2?1:2);return`<div class="${fu?'fu':''} ${lr?'lr':''}"><b>${m[0]}:</b><span>${esc(m[1])}</span></div>`}).join('')}</div>`}
+function hdr(c){
+  const multi=c.day.n>1,d=c.day.d,dl=dayLbl(c.day.i,c.day.n);
+  const M=[[g('day-word')||'Day',multi?dl.replace(/^\S+\s/,''):'','day'],['Class',c.sn,'class'],['Academic Year',g('gen-ay'),'ay'],['Semester',g('gen-sem'),'sem'],['Shift',g('gen-shift'),'shift'],['Venue',c.day.v,'venue'],['Date',d?`${fd(d,1)} (${wd(d)})`:'','date'],['Time',c.day.t,'time'],['Resource Person',g('ev-rp'),'rp'],['Organising Committee',g('ev-org'),'org'],['Ref. No.',g('ev-ref'),'ref']];
+  const tc=g('ev-tc')||'uppercase',lbl=g('lbl-text');
+  const banner=multi&&g('sh-banner')?`<div><span class="dayb">${esc(dl)}${d?' · '+esc(fd(d,1)):''}</span></div>`:'';
+  return hdrTop(c.o)+`<div class="ev"><span class="en ${g('ev-ul')?'':'nu'}" style="text-transform:${tc}">${esc(g('ev-name'))}</span>${g('sh-evtype')&&g('ev-type')?`<div class="et">${esc(g('ev-type'))}</div>`:''}${g('sh-title')&&lbl?`<div class="al">— ${esc(lbl)} —</div>`:''}${banner}</div>`+meta(M)}
 function tbl(c,p){
-  const th=c.cols.map(x=>`<th ${c.two?'rowspan="2"':''}>${esc(x.l)}</th>`).join('');
-  let h;
-  if(c.multi&&c.names.length>1)h=`<tr>${th}${c.D.map((d,i)=>`<th colspan="${c.names.length}">Day ${i+1}<small>${fd(d)}</small></th>`).join('')}</tr><tr>${c.D.map(()=>c.names.map(n=>`<th>${esc(n)}</th>`).join('')).join('')}</tr>`;
-  else if(c.multi)h=`<tr>${th}${c.D.map((d,i)=>`<th>Day ${i+1}<small>${fd(d)}</small></th>`).join('')}</tr>`;
-  else h=`<tr>${th}${c.names.map(n=>`<th>${esc(n)}</th>`).join('')}</tr>`;
-  const cg='<colgroup>'+c.w.map(w=>`<col style="width:${w}mm">`).join('')+'</colgroup>';
-  const sg=c.multi?c.D.length*c.names.length:c.names.length;
-  const body=p.rows.map((s,i)=>`<tr>${c.cols.map(x=>`<td class="${LEFT.includes(x.id)?'l':''}">${x.id==='sno'?p.start+i+1:esc(VAL[x.id](s)||'')}</td>`).join('')}${'<td></td>'.repeat(sg)}</tr>`).join('');
-  return`<table class="sh">${cg}<thead>${h}</thead><tbody>${body}</tbody></table>`;
-}
+  const th=c.cols.map(x=>`<th>${esc(x.l)}</th>`).join('')+c.names.map(n=>`<th>${esc(n)}</th>`).join('');
+  const cg='<colgroup>'+c.w.map(w=>`<col style="width:${w}%">`).join('')+'</colgroup>';
+  const body=p.rows.map((s,i)=>`<tr>${c.cols.map(x=>`<td class="${LEFT.includes(x.id)?'l':''}">${x.id==='sno'?((s._b&&!g('pad-no'))?'':p.start+i+1):x.id==='name'?esc(nameFmt(s.Name)):esc(VAL[x.id](s)||'')}</td>`).join('')}${'<td></td>'.repeat(c.names.length)}</tr>`).join('');
+  return`<table class="sh ${c.o.z?'z':''}">${cg}<thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`}
 function foot(c){
-  const o=c.o,S=SIGS.filter(s=>s.n||s.d),n=Math.max(1,Math.min(S.length,5));
-  const cols=o.al==='spread'?`repeat(${n},1fr)`:`repeat(${n},minmax(0,48mm))`;
-  const sg=S.length?`<div class="sg" style="grid-template-columns:${cols};justify-content:${o.al==='spread'?'stretch':o.al}">${S.map(s=>`<div><div class="sl"></div><b>${esc(s.n)}</b><i>${esc(s.d)}</i>${s.x?`<small>${esc(s.x)}</small>`:''}${g('sig-dt')?'<div class="dt">Date: ____ / ____ / ______</div>':''}</div>`).join('')}</div>`:'';
+  const o=c.o,S=SIGS.filter(s=>s.n||s.d),st=g('sig-stamp');
+  let cells=S.map(s=>{const dt=g('sig-dt')==='all'||(g('sig-dt')==='hod'&&s.k==='hod')?'<div class="dt">Date: ____ / ____ / ______</div>':'',des=(s.d||'')+(s.shift?' ('+s.shift+')':''),col=s.col||(g('sig-college')?g('hdr-college'):'');
+    return`<div><div class="sl"></div><b>${esc(s.n)}</b>${s.role?`<i>${esc(s.role)}</i>`:''}<b class="ds">${esc(des)}</b>${s.x?`<small>${esc(s.x)}</small>`:''}${col?`<small>${esc(col)}</small>`:''}${dt}</div>`});
+  const seal='<div><div class="sl sealb"><span></span></div><small>Seal</small></div>';
+  if(st==='l')cells.unshift(seal);if(st==='r')cells.push(seal);
+  const n=Math.max(1,Math.min(cells.length,6));
+  const sg=cells.length?`<div class="sg" style="grid-template-columns:${o.al==='spread'?`repeat(${n},1fr)`:`repeat(${n},minmax(0,48mm))`};justify-content:${o.al==='spread'?'stretch':o.al}">${cells.join('')}</div>`:'';
   const t=g('sh-tot')?`<div class="tot"><div><span>TOTAL ENROLLED</span><em>${c.N}</em></div><div><span>TOTAL PRESENT</span><em></em></div></div>`:'';
-  return`<div class="ft">${t}${sg}</div>`;
-}
+  return`<div class="ft">${t}${sg}${g('sig-ver')?'<div class="vr">Verified by:<span></span></div>':''}</div>`}
 function pageHTML(c,p){
-  const head=p.first?hdr(c):`<div class="ch"><b>${esc(g('ev-name'))}</b><span>${esc(c.dtxt)}${c.dtxt?' | ':''}${esc(c.sn)}</span></div>`;
-  const pn=g('sh-pn')?`<div class="pn">Page ${p.idx} of ${p.n} | ${esc(c.sn)}</div>`:'',fx=g('footer-txt')?`<div class="fx">${esc(g('footer-txt'))}</div>`:'';
-  const o=c.o;
-  return`<div class="pg" style="--w:${o.W}mm;--h:${o.H}mm;--mg:${o.mg}mm;--ip:${o.bd?'3mm':'0'};--fs:${o.fs}pt;--cs:${o.cs}pt;--lh:${o.lh}mm;--lj:${o.lj};--rh:${c.rh}mm;--tf:${c.tf}pt;--sh:${o.sh}mm;--ls:${o.ls}"><div class="in b${o.bd}">${head}<div class="ta">${tbl(c,p)}</div>${p.last?foot(c):''}${pn}${fx}</div></div>`;
-}
-function cap(c,first,last){
-  const h=$('probe');h.innerHTML=pageHTML(c,{first,last,rows:[{Name:'x'}],start:0,idx:1,n:1});
-  const ta=h.querySelector('.ta'),th=h.querySelector('thead'),tr=h.querySelector('tbody tr');
-  return Math.max(1,Math.floor((ta.clientHeight-th.offsetHeight-4)/tr.offsetHeight));
-}
+  const o=c.o,sName=g('ev-short')||g('ev-name');
+  const head=p.first||o.full?hdr(c):`<div class="ch"><b>${esc(sName)}</b><span>${c.day.n>1?esc(dayLbl(c.day.i,c.day.n))+' | ':''}${c.day.d?esc(fd(c.day.d))+' | ':''}${esc(c.sn)}${p.n>1?' | Pg '+p.idx+'/'+p.n:''}</span></div>`;
+  const ps=g('pn-style'),pn=ps?`<div class="pn">${ps==='global'?`Page ${p.g||1} of ${p.G||1}`:`Page ${p.idx} of ${p.n}`} | ${esc(c.sn)}${c.day.n>1?' | '+esc(dayLbl(c.day.i,c.day.n)):''}${g('ev-short')?' | '+esc(g('ev-short')):''}</div>`:'';
+  const ftx=[g('footer-txt'),g('ft-date')?'Printed on '+fd(new Date(),1):''].filter(Boolean).join(' · ');
+  const fx=ftx?`<div class="fx">${esc(ftx)}</div>`:'';
+  return shell(o,`${head}<div class="ta">${tbl(c,p)}</div>${p.last?foot(c):''}${pn}${fx}`,`--rh:${c.rh}mm;--tf:${c.tf}pt`)}
+function measure(c,first,last,n){
+  const h=$('probe');h.innerHTML=pageHTML(c,{first,last,rows:Array(n).fill({Name:'x'}),start:0,idx:1,n:1});
+  const ta=h.querySelector('.ta'),th=h.querySelector('thead'),tr=h.querySelector('tbody tr');return{ta:ta.clientHeight,th:th.offsetHeight,tr:tr.offsetHeight}}
+function capH(c,f,l){const m=measure(c,f,l,1);return Math.max(1,Math.floor((m.ta-m.th-8)/m.tr))}
+function cover(o,D,units,G){
+  const multi=D.length>1,d0=D[0],dN=D[D.length-1];
+  const E=[['Event type',g('ev-type'),'evtype'],['Academic Year',g('gen-ay'),'ay'],['Venue',multi?'':d0.v,'venue'],['Date',multi?`${fd(d0.d,1)} – ${fd(dN.d,1)}  (${D.length} days)`:d0.d?`${fd(d0.d,1)} (${wd(d0.d)})`:'','date'],['Time',multi?'':d0.t,'time'],['Semester',g('gen-sem'),'sem'],['Shift',g('gen-shift'),'shift'],['Resource Person',g('ev-rp'),'rp'],['Organising Committee',g('ev-org'),'org'],['Ref. No.',g('ev-ref'),'ref']].filter(m=>m[1]&&g('sh-'+m[2]));
+  if(g('cv-sheets'))E.push(['Total Sheets',String(G),'sheets']);
+  const det=g('cv-det')&&E.length?`<div class="cvb"><h3>Event Details</h3><div class="cvg">${E.map(m=>`<b>${m[0]}:</b><span>${esc(m[1])}</span>`).join('')}</div></div>`:'';
+  const idx=g('cv-idx')?`<table class="cvx"><thead><tr><th>${multi?esc(g('day-word')||'Day'):'No.'}</th><th>Date</th><th>Venue</th><th>Time</th><th>Sheet pages</th></tr></thead><tbody>${D.map((x,i)=>{const us=units.filter(u=>u.day.i===i);if(!us.length)return'';const a=us[0].g0+1,b=us[us.length-1].g0+us[us.length-1].L.length;return`<tr><td>${multi?esc(dayLbl(i,D.length)):'—'}</td><td>${x.d?esc(fd(x.d))+(multi?' ('+wd(x.d).slice(0,3)+')':''):'—'}</td><td class="l">${esc(x.v||'—')}</td><td>${esc(x.t||'—')}</td><td>${a===b?a:a+' – '+b}</td></tr>`}).join('')}</tbody></table>`:'';
+  const first=units.filter(u=>u.day.i===0);let tot=0;
+  const pc=g('cv-pd')&&multi&&D.length<=6?D.length:1,pth=pc>1?D.map((x,i)=>`<th>${esc(dayLbl(i,D.length).replace(/ of \d+$/,''))} present</th>`).join(''):'<th>Present</th>';
+  const blanks='<td></td>'.repeat(g('cv-pd')?pc:1);
+  const cls=g('cv-cls')?`${g('cv-tt')?`<h3 class="cvh">${esc(g('cv-tt'))}</h3>`:''}<table class="cvx"><thead><tr><th style="text-align:left">Class / Section</th><th>Enrolled</th>${g('cv-pd')?pth:''}</tr></thead><tbody>${first.map(u=>{tot+=u.c.N;return`<tr><td class="l">${esc(u.c.sn)}</td><td>${u.c.N}</td>${g('cv-pd')?blanks:''}</tr>`}).join('')}${first.length>1?`<tr style="font-weight:700"><td class="l">TOTAL</td><td>${tot}</td>${g('cv-pd')?blanks:''}</tr>`:''}</tbody></table>`:'';
+  const seal=g('cv-seal')?`<div class="cvs" style="justify-content:${g('cv-seal')}"><div>Seal</div></div>`:'';
+  const note=g('cv-note')?`<div class="cvn">${esc(g('cv-note'))}</div>`:'';
+  return shell(o,`${g('cv-hd')?hdrTop(o):''}<div class="cvt"><h1>${esc(g('cv-title')||'Attendance Register')}</h1><p>${esc(g('ev-name'))}</p>${g('sh-evtype')&&g('ev-type')?`<em>${esc(g('ev-type'))}</em>`:''}</div>${note}${det}${idx}${cls}${seal||'<div style="flex:1"></div>'}${g('cv-ft')?`<div class="cvf">${esc(g('footer-txt')||g('hdr-dept')+' · '+g('hdr-college'))}</div>`:''}`,'--rh:7mm;--tf:9pt')}
 function build(){
   const sel=[...document.querySelectorAll('#cls input:checked')].map(i=>i.value);
   if(!g('ev-name')||!sel.length)return{html:'',n:0};
-  const land=g('lay-or')==='landscape',mg=+g('lay-mg'),cs=+g('hdr-sz');
-  const o={W:land?297:210,H:land?210:297,land,mg,bd:g('lay-bd'),fs:+g('lay-fs')||10,cs,lh:+g('logo-h')||16,lj:g('logo-pos'),rule:g('hdr-rule'),al:g('sig-al'),sh:+g('sig-h')||14,ls:g('sig-ls')};
-  const D=days(),sep=D.length>1&&g('ev-mode')==='sep',multi=D.length>1&&!sep;
-  const names=(g('sig-cols')||'Signature').split(',').map(s=>s.trim()).filter(Boolean);
-  const enc=COLS.filter(c=>c.en||c.id==='sno'||c.id==='name');
-  const time=ft(g('ev-tf'))&&ft(g('ev-tt'))?ft(g('ev-tf'))+' – '+ft(g('ev-tt')):ft(g('ev-tf'))||ft(g('ev-tt'));
-  let html='',total=0;const units=[];
-  sel.forEach(chip=>{const sts=students(chip);if(!sts.length)return;(sep?D:[D[0]]).forEach((d,i)=>units.push({chip,sts,d,i}))});
-  units.forEach(u=>{
-    const dtxt=sep?`${fd(u.d,1)} (${wd(u.d)}) — Day ${u.i+1} of ${D.length}`:multi?`${fd(D[0],1)} – ${fd(D[D.length-1],1)}`:u.d?`${fd(u.d,1)} (${wd(u.d)})`:'';
-    const sgN=multi?D.length*names.length:names.length;
-    const availW=o.W-2*mg-(o.bd?6:0);
+  const o=O(),D=dayList(),names=(g('sig-cols')||'Signature').split(',').map(s=>s.trim()).filter(Boolean);
+  const enc=COLS.filter(c=>c.en||c.id==='sno'||c.id==='name'),rpp=+g('lay-rpp')||999;
+  const cache={};sel.forEach(k=>cache[k]=students(k));
+  const rhBase=parseFloat(g('lay-rhc'))>0?parseFloat(g('lay-rhc')):+g('lay-rh');
+  const tfOf=rh=>+g('lay-tf')||Math.min(o.fs-.5,Math.max(6.5,(rh*2.83-1.5)/1.25));
+  const units=[];let G=0;
+  D.forEach(day=>sel.forEach(chip=>{const sts=cache[chip];if(!sts.length)return;
+    const pad=Math.max(0,(+g('lay-min')||0)-sts.length)+(+g('lay-blank')||0);
+    const all=sts.concat(Array.from({length:pad},()=>({_b:1})));
     let fixed=0,wt=0;enc.forEach(x=>{if(+x.w)fixed+=+x.w;else wt+=x.id==='name'?2:1});
-    const sw=sgN<=2?2.2:1.3;wt+=sgN*sw;const unit=Math.max(4,(availW-fixed)/wt);
-    const w=enc.map(x=>+x.w||unit*(x.id==='name'?2:1)).concat(Array(sgN).fill(unit*sw)).map(v=>v.toFixed(2));
-    const c={o,cols:enc,names,D,multi,two:multi&&names.length>1,w,dtxt,time,sn:short(u.chip),N:u.sts.length,rh:+g('lay-rh')||7.5,tf:o.fs-.5};
-    const tfOf=rh=>Math.min(o.fs-.5,Math.max(6.5,(rh*2.83-1.5)/1.25));
-    c.tf=tfOf(c.rh);
-    if(g('lay-fit')){const base=c.rh;let ok=false;for(let rh=base;rh>=4.6;rh-=.2){c.rh=+rh.toFixed(2);c.tf=tfOf(c.rh);if(cap(c,1,1)>=c.N){ok=true;break}}if(!ok){c.rh=base;c.tf=tfOf(base)}}
-    const c1l=cap(c,1,1),c1=cap(c,1,0),cml=cap(c,0,1),cm=cap(c,0,0),L=[];
-    let pos=0,first=1;const N=c.N;
-    while(pos<N){const rem=N-pos,cl=first?c1l:cml,cn=first?c1:cm;
+    const avail=o.W-2*o.mg-(o.bd>0?6:0)-2,sw=names.length<=2?2.2:1.3;wt+=names.length*sw;const unit=Math.max(4,(avail-fixed)/wt);
+    const raw=enc.map(x=>+x.w||unit*(x.id==='name'?2:1)).concat(Array(names.length).fill(unit*sw)),sum=raw.reduce((a,b)=>a+b,0);
+    const w=raw.map(v=>(v/sum*100).toFixed(3));
+    const c={o,cols:enc,names,w,day,sn:short(chip),N:sts.length,T:all.length,rh:rhBase,tf:tfOf(rhBase)};
+    const cap=(f,l)=>Math.min(rpp,capH(c,f,l));
+    if(g('lay-fit')&&rpp>=c.T){let ok=false;for(let rh=rhBase;rh>=4.6;rh-=.2){c.rh=+rh.toFixed(2);c.tf=tfOf(c.rh);if(capH(c,1,1)>=c.T){ok=true;break}}if(!ok){c.rh=rhBase;c.tf=tfOf(rhBase)}}
+    const L=[];let pos=0,first=1;
+    while(pos<c.T){const rem=c.T-pos,c1=cap(first,0),cl=cap(first,1),cm=cap(0,0),cml=cap(0,1);
       if(rem<=cl){L.push([pos,rem,first,1]);break}
-      let t=rem<=cn?rem-Math.min(cml,rem-1):cn;t=Math.max(1,t);L.push([pos,t,first,0]);pos+=t;first=0}
-    L.forEach((p,i)=>{html+=pageHTML(c,{first:p[2],last:p[3],rows:u.sts.slice(p[0],p[0]+p[1]),start:p[0],idx:i+1,n:L.length});total++});
-  });
-  return{html,n:total,o};
+      let t=rem<=c1?rem-Math.min(cml,rem-1):c1;t=Math.max(1,t);L.push([pos,t,first,0]);pos+=t;first=0}
+    if(g('lay-str')){let best=99;L.forEach(p=>{const m=measure(c,p[2],p[3],p[1]);const per=(m.ta-m.th-8)/p[1],f=per/m.tr;best=Math.min(best,c.rh*f)});if(best>c.rh&&best<30){c.rh=+(best*.99).toFixed(2);c.tf=tfOf(c.rh)}}
+    units.push({chip,sts:all,c,L,day,g0:G});G+=L.length}));
+  const cov=g('cv-mode')==='yes'||(g('cv-mode')==='auto'&&D.length>1);
+  let html=cov?cover(o,D,units,G):'';
+  units.forEach(u=>u.L.forEach((p,i)=>{html+=pageHTML(u.c,{first:p[2],last:p[3],rows:u.sts.slice(p[0],p[0]+p[1]),start:p[0],idx:i+1,n:u.L.length,g:u.g0+i+1,G})}));
+  return{html,n:G+(cov?1:0),o};
 }
 function render(){
-  const{html,n}=build(),pv=$('pv');
-  $('probe').innerHTML='';
-  if(!n){pv.innerHTML='';$('empty').style.display='block';$('cnt').textContent=g('ev-name')?'Pick at least one class':'Fill the event name and pick a class';return}
+  const nm=g('ev-name'),pv=$('pv');$('nmwarn').style.display=nm.length>60&&!g('ev-short')?'block':'none';
+  const{html,n,o}=build();$('probe').innerHTML='';
+  if(!n){pv.innerHTML='';$('empty').style.display='block';$('cnt').textContent=nm?'Pick at least one class':'Fill the event name and pick a class';return}
   $('empty').style.display='none';pv.innerHTML=html;
-  const land=g('lay-or')==='landscape',pw=(land?297:210)*3.7795,ph=(land?210:297)*3.7795,sc=Math.min(1,($('pv').parentElement.clientWidth-30)/pw);
+  const pw=o.W*3.7795,ph=o.H*3.7795,sc=Math.min(1,(pv.parentElement.clientWidth-30)/pw);
   pv.querySelectorAll('.pg').forEach(p=>{const w=document.createElement('div');w.className='pw';w.style.cssText=`width:${pw*sc}px;height:${ph*sc}px;overflow:hidden`;p.replaceWith(w);w.appendChild(p);p.style.transform=`scale(${sc})`});
-  $('cnt').textContent=n+' page'+(n>1?'s':'')+' · '+(land?'A4 landscape':'A4 portrait');
+  $('cnt').textContent=`${n} page${n>1?'s':''} · ${g('lay-paper')} ${o.land?'landscape':'portrait'}`;
 }
-function sheetCSS(){return[...document.styleSheets].flatMap(s=>{try{return[...s.cssRules]}catch(e){return[]}}).map(r=>r.cssText).filter(t=>/^\.(pg|in|hd|lgs|fl|cn|es|dn|sb|rl|ev|en|et|al|mt|ch|ta|sh|ft|tot|sg|sl|pn|fx)\b/.test(t)).join('\n')}
 function doPrint(){
   const{html,n,o}=build();if(!n)return toast('Enter the event name and select a class.');
   const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);
-  f.contentDocument.open();f.contentDocument.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(g('ev-name'))}</title><style>${sheetCSS()}@page{size:A4 ${o.land?'landscape':'portrait'};margin:0}html,body{margin:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>${html}</body></html>`);
-  f.contentDocument.close();
-  const go=()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),4000)};
-  const imgs=[...f.contentDocument.images];Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r}))).then(()=>setTimeout(go,150));
+  f.contentDocument.open();f.contentDocument.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(g('ev-short')||g('ev-name'))}</title><style>${$('sheetcss').textContent}@page{size:${o.W}mm ${o.H}mm;margin:0}html,body{margin:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>${html}</body></html>`);f.contentDocument.close();
+  Promise.all([...f.contentDocument.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r}))).then(()=>setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),4000)},150));
   logIt(n);
 }
-let H2P;
 async function dlPDF(){
   const{html,n,o}=build();if(!n)return toast('Enter the event name and select a class.');
   toast('Preparing PDF…');
@@ -325,12 +462,13 @@ async function dlPDF(){
   if(!window.html2pdf)return;
   const h=document.createElement('div');h.style.cssText='position:fixed;left:0;top:0;z-index:-1';h.innerHTML=html;document.body.appendChild(h);
   h.querySelectorAll('.pg').forEach(p=>p.style.setProperty('--h',(o.H-.6)+'mm'));
-  const name=`${short([...document.querySelectorAll('#cls input:checked')][0].value).replace(/[^\w ]/g,' ').trim().slice(0,20)} - ${g('ev-name').replace(/[^\w ]/g,' ').slice(0,20).trim()}.pdf`;
-  try{await html2pdf().set({margin:0,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,scrollY:0,scrollX:0},jsPDF:{unit:'mm',format:'a4',orientation:o.land?'landscape':'portrait'},pagebreak:{mode:['css'],after:'.pg'}}).from(h).save();toast('PDF downloaded.');logIt(n)}
+  const name=((g('ev-short')||g('ev-name')).replace(/[^\w ]/g,' ').replace(/\s+/g,' ').trim().slice(0,40)||'Attendance')+(g('ev-d1')?' - '+g('ev-d1'):'')+'.pdf';
+  const mn=Math.min(o.W,o.H),mx=Math.max(o.W,o.H);
+  try{await html2pdf().set({margin:0,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,scrollY:0,scrollX:0},jsPDF:{unit:'mm',format:[mn,mx],orientation:o.land?'landscape':'portrait'},pagebreak:{mode:['css'],after:'.pg'}}).from(h).save();toast('PDF downloaded.');logIt(n)}
   catch(e){toast('PDF failed: '+e.message+' — use Print → Save as PDF.')}
   h.remove();
 }
-function logIt(n){gas('addLog',{user:(()=>{try{return JSON.parse(sessionStorage.getItem('azb_user')).username}catch(e){return'user'}})(),action:'SHEET GENERATED',detail:`"${g('ev-name')}" — ${n} page(s)`}).catch(()=>{})}
+function logIt(n){let u='user';try{u=JSON.parse(sessionStorage.getItem('azb_user')).username}catch(e){try{u=JSON.parse(window.parent.sessionStorage.getItem('azb_user')).username}catch(e2){}}gas('addLog',{user:u,action:'SHEET GENERATED',detail:`"${g('ev-name')}" — ${n} page(s)`}).catch(()=>{})}
 window.addEventListener('resize',R);
 boot();
 </script></body></html>
